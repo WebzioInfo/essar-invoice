@@ -1,11 +1,9 @@
-import InvoiceForm from "./components/InvoiceForm";
+import InvoiceForm from "./components/invoice/InvoiceForm";
 
 export default function Home() {
   return (
-    <div className="">
-    
-   <InvoiceForm />;
-
-    </div>
+    <>
+      <InvoiceForm />;
+    </>
   );
 }
