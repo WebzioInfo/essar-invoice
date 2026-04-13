@@ -77,10 +77,11 @@ export default function InvoicePreview({ invoice }: Props) {
           <div className="space-y-1">
             <h2 className="text-2xl font-black text-slate-900 tracking-tight leading-none uppercase">ESSAR Enterprises</h2>
             <div className="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-relaxed">
-              MP 4/3 IIA, MOONIYUR<br />
-              VELIMUKKU PO, MALAPPURAM DIST - 676317<br />
-              <span className="text-slate-900">GSTIN: 32BMAPJ5504M1Z9</span><br />
-              Mobile: +91 85531 85300 | Email: essarenterprises@gmail.com
+              SITE NO.9, SEEGAHALLI VILLAGE<br />
+              KR PURAM HOBLI,<br />
+              BANGALORE - 560049, KARNATAKA<br />
+              <span className="text-slate-900">GSTIN: 29AOPPM7487J1ZV</span><br />
+              Mobile: +91 85531 85300 | Email: essarwater.info@gmail.com
             </div>
           </div>
         </div>
@@ -255,11 +256,11 @@ export default function InvoicePreview({ invoice }: Props) {
             </div>
             <div className="flex justify-between border-b border-slate-200/50 pb-1.5 font-mono">
               <span className="font-bold text-slate-400 uppercase tracking-widest">Identifier 1</span>
-              <span className="font-black text-slate-900 font-mono tracking-tighter text-xs underline decoration-primary-500/20 underline-offset-4">16470200011150 </span>
+              <span className="font-black text-slate-900 font-mono tracking-tighter text-xs underline decoration-primary-500/20 underline-offset-4">21650200003173</span>
             </div>
             <div className="flex justify-between font-mono">
               <span className="font-bold text-slate-400 uppercase tracking-widest text-[9px]">IFSC PROTOCOL</span>
-              <span className="font-black text-slate-900 font-mono tracking-widest text-xs uppercase">FDRL0001647</span>
+              <span className="font-black text-slate-900 font-mono tracking-widest text-xs uppercase">FDRL0002165</span>
             </div>
           </div>
         </div>

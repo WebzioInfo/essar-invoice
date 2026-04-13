@@ -10,16 +10,16 @@ export async function generateInvoicePDF(invoice: any, settings: any) {
     // Use default values if settings are missing
     const company = {
         name: settings?.companyName || "ESSAR ENTERPRISES",
-        gstin: settings?.gstin || "32BMAPJ5504M1Z9",
-        address1: settings?.address1 || "MP 4/3 IIA",
-        address2: settings?.address2 || "MOONIYUR, VELIMUKKU PO, MALAPPURAM DIST - 676317",
+        gstin: settings?.gstin || "29AOPPM7487J1ZV",
+        address1: settings?.address1 || "SITE NO.9, SEEGAHALLI VILLAGE",
+        address2: settings?.address2 || "KR PURAM HOBLI",
         phone: settings?.phone || "+91 85531 85300",
-        email: settings?.email || "essarenterprises@gmail.com",
+        email: settings?.email || "essarwater.info@gmail.com",
         bank: {
             name: settings?.bankName || "FEDERAL BANK",
-            branch: settings?.bankBranch || "CHELARI",
-            accNo: settings?.bankAccountNo || "16470200011150 ",
-            ifsc: settings?.bankIfsc || "FDRL0001647",
+            branch: settings?.bankBranch || "DOMMASANDRA",
+            accNo: settings?.bankAccountNo || "21650200003173",
+            ifsc: settings?.bankIfsc || "FDRL0002165",
             accName: settings?.bankAccountName || "ESSAR ENTERPRISES",
         }
     };
@@ -34,29 +34,32 @@ export async function generateInvoicePDF(invoice: any, settings: any) {
 
     /* COMPANY HEADER */
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(16);
-    doc.text(company.name, 56, 16);
+    doc.setFontSize(22);
+    doc.setTextColor(0, 0, 0);
+    doc.text(company.name.toUpperCase(), 10, 40);
 
     doc.setFontSize(9);
     doc.setFont("helvetica", "normal");
+    doc.setTextColor(80, 80, 80);
     doc.text(
         `${company.address1}
 ${company.address2}
+${settings?.city} - ${settings?.pincode}, ${settings?.state.toUpperCase()}
 GSTIN: ${company.gstin}
-Mobile: ${company.phone}
-Email: ${company.email}`,
-        56, 22
+Email: ${company.email} | Mobile: ${company.phone}`,
+        10, 46
     );
 
-    doc.line(10, 45, 200, 45);
+    doc.line(10, 75, 200, 75);
 
     /* INVOICE INFO */
     doc.setFontSize(10);
-    doc.text(`Invoice No: ${invoice.invoiceNo}`, 10, 52);
-    doc.text(`Date: ${formatDateDMY(new Date(invoice.date))}`, 150, 52);
+    doc.setTextColor(0, 0, 0);
+    doc.text(`Invoice No: ${invoice.invoiceNo}`, 10, 82);
+    doc.text(`Date: ${formatDateDMY(new Date(invoice.date))}`, 150, 82);
 
     /* TRANSPORT DETAILS (OPTIONAL) */
-    let transportY = 58;
+    let transportY = 88;
     doc.setFontSize(9);
 
     if (invoice.ewayBill) {
@@ -118,7 +121,7 @@ State: ${invoice.client.state}
     });
 
     autoTable(doc, {
-        startY: 105,
+        startY: 130,
         head: [tableHead],
         body: tableBody,
         styles: { fontSize: 9, valign: "middle", halign: "center" },

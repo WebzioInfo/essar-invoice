@@ -71,17 +71,18 @@ export async function POST(req: NextRequest) {
 
         const settings = await db.companySetting.findFirst() || {
             companyName: "ESSAR ENTERPRISES",
-            gstin: "32BMAPJ5504M1Z9",
-            address1: "MP 4/3 IIA, MOONIYUR",
-            address2: "VELIMUKKU PO, MALAPPURAM DIST",
-            city: "Malappuram",
-            pincode: "676317",
+            gstin: "29AOPPM7487J1ZV",
+            address1: "SITE NO.9, SEEGAHALLI VILLAGE",
+            address2: "KR PURAM HOBLI",
+            city: "BANGALORE",
+            pincode: "560049",
+            state: "Karnataka",
             phone: "+91 85531 85300",
-            email: "essarenterprises@gmail.com",
+            email: "essarwater.info@gmail.com",
             bankName: "FEDERAL BANK",
-            bankBranch: "CHELARI",
-            bankAccountNo: "16470200011150 ",
-            bankIfsc: "FDRL0001647",
+            bankBranch: "DOMMASANDRA",
+            bankAccountNo: "21650200003173",
+            bankIfsc: "FDRL0002165",
             bankAccountName: "ESSAR ENTERPRISES",
             showPkgDetails: true
         };
@@ -105,29 +106,40 @@ export async function POST(req: NextRequest) {
         const W = doc.internal.pageSize.getWidth();
         let y = 15;
 
+        // --- LOGO (TOP LEFT) ---
+        try {
+            const logoPath = path.join(process.cwd(), "public", "logo.png");
+            if (fs.existsSync(logoPath)) {
+                const logoBase64 = fs.readFileSync(logoPath).toString("base64");
+                doc.addImage(`data:image/png;base64,${logoBase64}`, "PNG", LEFT_MARGIN, 15, 30, 15);
+                y = 35; // Start text below logo
+            }
+        } catch (err) {
+            console.error("Logo failed to load in PDF:", err);
+            y = 15;
+        }
 
-        // --- COMPANY HEADER (LEFT) ---
+        // --- COMPANY HEADER ---
         doc.setFont("helvetica", "bold");
-        doc.setFontSize(18);
+        doc.setFontSize(22);
         doc.setTextColor(...TEXT_BLACK);
-        // Position company name to the right of logo if logo exists, or at margin
-        const companyX = LEFT_MARGIN;
-        doc.text(settings.companyName.toUpperCase(), companyX, 16);
+        doc.text(settings.companyName.toUpperCase(), LEFT_MARGIN, y + 5);
 
         doc.setFont("helvetica", "normal");
         doc.setFontSize(8.5);
         doc.setTextColor(...TEXT_GRAY);
-        doc.text(`${settings.address1}, ${settings.address2 || ""}`, companyX, 22);
-        doc.text(`${settings.city} - ${settings.pincode} | GSTIN: ${settings.gstin}`, companyX, 27);
-        doc.text(`Email: ${settings.email} | Mobile: ${settings.phone}`, companyX, 31);
+        doc.text(`${settings.address1}, ${settings.address2 || ""}`, LEFT_MARGIN, y + 11);
+        doc.text(`${settings.city} - ${settings.pincode}, ${settings.state.toUpperCase()}`, LEFT_MARGIN, y + 16);
+        doc.text(`GSTIN: ${settings.gstin} | Email: ${settings.email}`, LEFT_MARGIN, y + 21);
+        doc.text(`Mobile: ${settings.phone}`, LEFT_MARGIN, y + 26);
 
         // --- TITLE (RIGHT) ---
         doc.setFont("helvetica", "bold");
         doc.setFontSize(26);
         doc.setTextColor(...TEXT_BLACK);
-        doc.text("TAX INVOICE", W - RIGHT_MARGIN, 22, { align: "right" });
+        doc.text("TAX INVOICE", W - RIGHT_MARGIN, y + 10, { align: "right" });
 
-        y = 45;
+        y += 40;
         doc.setDrawColor(220, 220, 220);
         doc.line(LEFT_MARGIN, y, W - RIGHT_MARGIN, y);
         y += 10;
