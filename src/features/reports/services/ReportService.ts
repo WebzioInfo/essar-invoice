@@ -5,44 +5,53 @@ export class ReportService {
    * Aggregates revenue and tax totals for a given date range.
    */
   static async getRevenueSummary(startDate: Date, endDate: Date) {
-    const invoices = await db.invoice.findMany({
+    const aggregate = await db.invoice.aggregate({
       where: {
         deletedAt: null,
         date: { gte: startDate, lte: endDate },
-        status: { in: ["PAID", "PARTIAL", "SENT"] }, // Include billed but unpaid for and revenue tracking
+        status: { in: ["PAID", "PARTIAL", "SENT"] },
       },
-      select: {
+      _sum: {
         grandTotal: true,
         subTotal: true,
         taxTotal: true,
-        gstType: true,
-        date: true,
       },
-      orderBy: { date: "asc" },
+      _count: {
+        id: true,
+      },
+    });
+
+    // For GST breakdown, we still might need a more granular view 
+    // but we can use groupBy for that if needed. 
+    // For now, let's get the grouped sums for CGST/SGST/IGST
+    const gstGroups = await db.invoice.groupBy({
+      by: ["gstType"],
+      where: {
+        deletedAt: null,
+        date: { gte: startDate, lte: endDate },
+        status: { in: ["PAID", "PARTIAL", "SENT"] },
+      },
+      _sum: {
+        taxTotal: true,
+      },
     });
 
     const summary = {
-      totalRevenue: 0,
-      totalTax: 0,
+      totalRevenue: aggregate._sum.grandTotal?.toNumber() || 0,
+      totalTax: aggregate._sum.taxTotal?.toNumber() || 0,
       cgst: 0,
       sgst: 0,
       igst: 0,
-      count: invoices.length,
+      count: aggregate._count.id || 0,
     };
 
-    invoices.forEach((inv) => {
-      const gTotal = inv.grandTotal.toNumber();
-      const sTotal = inv.subTotal.toNumber();
-      const tTotal = inv.taxTotal.toNumber();
-
-      summary.totalRevenue += gTotal;
-      summary.totalTax += tTotal;
-
-      if (inv.gstType === "CGST_SGST") {
-        summary.cgst += tTotal / 2;
-        summary.sgst += tTotal / 2;
-      } else if (inv.gstType === "IGST") {
-        summary.igst += tTotal;
+    gstGroups.forEach((group) => {
+      const tax = group._sum.taxTotal?.toNumber() || 0;
+      if (group.gstType === "CGST_SGST") {
+        summary.cgst += tax / 2;
+        summary.sgst += tax / 2;
+      } else if (group.gstType === "IGST") {
+        summary.igst += tax;
       }
     });
 
@@ -94,9 +103,9 @@ export class ReportService {
       },
     });
 
-    const clientData = clients.map((c) => ({
+    const clientData = clients.map((c: any) => ({
       name: c.name,
-      value: c.invoices.reduce((sum, inv) => sum + inv.grandTotal.toNumber(), 0),
+      value: c.invoices.reduce((sum: number, inv: any) => sum + inv.grandTotal.toNumber(), 0),
     }))
     .filter(c => c.value > 0)
     .sort((a, b) => b.value - a.value)

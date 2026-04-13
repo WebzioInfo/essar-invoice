@@ -35,7 +35,7 @@ export class PaymentService {
         select: { amount: true },
       });
 
-      const totalPaid = allPayments.reduce((sum, p) => sum + p.amount.toNumber(), 0);
+      const totalPaid = allPayments.reduce((sum: number, p: any) => sum + p.amount.toNumber(), 0);
 
       // 3. Fetch invoice grand total
       const invoice = await tx.invoice.findUnique({

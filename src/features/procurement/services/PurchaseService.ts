@@ -5,9 +5,10 @@ import { Prisma } from "@prisma/client";
 const purchaseRepo = new PurchaseRepository();
 
 export class PurchaseService {
-  async getAllPurchases() {
-    return await purchaseRepo.model.findMany({
-      where: { deletedAt: null },
+  async getAllPurchases(page?: number, limit?: number) {
+    return await purchaseRepo.findPaginated({
+      page,
+      limit,
       include: { vendor: true },
       orderBy: { date: 'desc' }
     });

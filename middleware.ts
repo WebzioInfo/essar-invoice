@@ -1,12 +1,19 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { verifySessionCookie } from '@/lib/auth';
+import { rateLimit } from '@/lib/rate-limit';
 
 const PUBLIC_ROUTES = ['/login', '/register', '/forgot-password', '/'];
 const API_ROUTES_PREFIX = '/api';
 
+// Initializing rate limiters
+const globalLimiter = rateLimit({ interval: 15 * 60 * 1000, uniqueTokenPerInterval: 500 });
+const authLimiter = rateLimit({ interval: 15 * 60 * 1000, uniqueTokenPerInterval: 200 });
+const apiLimiter = rateLimit({ interval: 15 * 60 * 1000, uniqueTokenPerInterval: 500 });
+
 export async function middleware(req: NextRequest) {
     const path = req.nextUrl.pathname;
+    const ip = req.ip || '127.0.0.1';
 
     const isPublicRoute = PUBLIC_ROUTES.includes(path);
     const isApiRoute = path.startsWith(API_ROUTES_PREFIX);
@@ -16,10 +23,23 @@ export async function middleware(req: NextRequest) {
         return NextResponse.next();
     }
 
-    // 1. Verify Session
+    // 1. Rate Limiting Logic (Tiered)
+    try {
+        if (path === '/login' || path === '/register') {
+            await authLimiter.check(req, 10, `auth_${ip}`); // 10 attempts per 15min
+        } else if (isApiRoute) {
+            await apiLimiter.check(req, 100, `api_${ip}`); // 100 API calls per ip per 15min
+        } else {
+            await globalLimiter.check(req, 1000, `global_${ip}`); // 1000 total reqs per ip per 15min
+        }
+    } catch {
+        return NextResponse.json({ error: 'Too Many Requests', retryAfter: '15m' }, { status: 429 });
+    }
+
+    // 2. Verify Session
     const session = await verifySessionCookie();
 
-    // 2. Route Guarding Logic
+    // 3. Route Guarding Logic
     if (!session && !isPublicRoute) {
         // Redirect unauthenticated users to login
         if (isApiRoute) {
@@ -33,7 +53,7 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL('/dashboard', req.nextUrl));
     }
 
-    // 3. Security Headers (Anti-Clickjacking, Prevent Sniffing, CSP)
+    // 4. Security Headers
     const response = NextResponse.next();
     
     // Security Best Practices

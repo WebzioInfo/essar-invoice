@@ -47,6 +47,7 @@ model Client {
 
   @@index([deletedAt])
   @@index([active])
+  @@index([active, deletedAt])
   @@map("clients")
 }
 
@@ -68,6 +69,7 @@ model Product {
 
   @@index([deletedAt])
   @@index([active])
+  @@index([active, deletedAt])
   @@map("products")
 }
 
@@ -113,6 +115,8 @@ model Invoice {
   @@index([status])
   @@index([clientId, deletedAt])
   @@index([invoiceNo, deletedAt])
+  @@index([date, deletedAt])
+  @@index([status, deletedAt])
   @@map("invoices")
 }
 
@@ -130,6 +134,7 @@ model Payment {
   invoice    Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
 
   @@index([invoiceId])
+  @@index([paidAt])
   @@map("payments")
 }
 
@@ -170,6 +175,8 @@ model Quotation {
   @@index([date])
   @@index([status])
   @@index([clientId], map: "quotations_clientId_fkey")
+  @@index([date, deletedAt])
+  @@index([status, deletedAt])
   @@map("quotations")
 }
 
@@ -248,5 +255,7 @@ model AuditLog {
 
   @@index([createdAt])
   @@index([userId], map: "audit_logs_userId_fkey")
+  @@index([entityType, entityId])
+  @@index([action])
   @@map("audit_logs")
 }

@@ -76,7 +76,7 @@ export default async function InvoiceDetailPage({ params }: PageProps) {
   if (!invoice) notFound();
 
   const grandTotal = invoice.grandTotal.toNumber();
-  const totalPaid = invoice.payments.reduce((sum, p) => sum + p.amount.toNumber(), 0);
+  const totalPaid = invoice.payments.reduce((sum: number, p: any) => sum + p.amount.toNumber(), 0);
   const balanceDue = grandTotal - totalPaid;
 
   return (

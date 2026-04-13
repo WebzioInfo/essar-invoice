@@ -1,12 +1,17 @@
 import { PrismaClient } from '../src/db/generated/client/index.js'
-import bcrypt from 'bcryptjs'
+import * as argon2 from 'argon2'
 
 const prisma = new PrismaClient()
 
 async function main() {
   const email = 'admin@essar.com'
   const password = 'admin123'
-  const hashedPassword = await bcrypt.hash(password, 10)
+  const hashedPassword = await argon2.hash(password, {
+    type: argon2.argon2id,
+    memoryCost: 65536,
+    timeCost: 3,
+    parallelism: 4
+  })
 
   console.log(`Seeding user: ${email}...`)
 

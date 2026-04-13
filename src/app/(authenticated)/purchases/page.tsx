@@ -12,8 +12,8 @@ export default async function PurchasesPage() {
     const purchaseService = new PurchaseService();
     const purchases = await purchaseService.getAllPurchases();
 
-    const totalInputGst = purchases.reduce((sum, p) => sum + Number(p.taxTotal), 0);
-    const totalPurchaseValue = purchases.reduce((sum, p) => sum + Number(p.grandTotal), 0);
+    const totalInputGst = purchases.reduce((sum: number, p: any) => sum + Number(p.taxTotal), 0);
+    const totalPurchaseValue = purchases.reduce((sum: number, p: any) => sum + Number(p.grandTotal), 0);
 
     return (
         <div className="space-y-12 animate-in fade-in duration-700 pb-20">

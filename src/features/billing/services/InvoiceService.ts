@@ -105,12 +105,14 @@ export class InvoiceService {
     }, { timeout: 15000 });
   }
 
-  async getInvoices() {
-    const invoices = await invoiceRepo.findAll({
+  async getInvoices(page?: number, limit?: number) {
+    const result = await invoiceRepo.findPaginated({
+      page,
+      limit,
       include: { client: { select: { name: true } } },
       orderBy: { date: 'desc' }
     });
-    return serializePrisma(invoices);
+    return serializePrisma(result);
   }
 
   async updateInvoice(invoiceId: string, userId: string, rawData: any) {

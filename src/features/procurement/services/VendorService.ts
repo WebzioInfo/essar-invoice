@@ -4,8 +4,12 @@ import { db } from "@/db/prisma/client";
 const vendorRepo = new VendorRepository();
 
 export class VendorService {
-  async getAllVendors() {
-    return await vendorRepo.findAll();
+  async getAllVendors(page?: number, limit?: number) {
+    return await vendorRepo.findPaginated({
+        page,
+        limit,
+        orderBy: { name: 'asc' }
+    });
   }
 
   async getVendorById(id: string) {

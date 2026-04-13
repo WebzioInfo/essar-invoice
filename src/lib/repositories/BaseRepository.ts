@@ -36,6 +36,42 @@ export abstract class BaseRepository<T extends { id: string; deletedAt?: Date | 
     });
   }
 
+  async findPaginated(options: { 
+    page?: number; 
+    limit?: number; 
+    where?: any; 
+    include?: any; 
+    orderBy?: any 
+  } = {}) {
+    const page = Math.max(Number(options.page) || 1, 1);
+    const limit = Math.min(Math.max(Number(options.limit) || 20, 1), 100);
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await Promise.all([
+      this.model.findMany({
+        where: { deletedAt: null, ...options.where },
+        take: limit,
+        skip,
+        include: options.include,
+        orderBy: options.orderBy || { createdAt: 'desc' },
+      }),
+      this.model.count({
+        where: { deletedAt: null, ...options.where }
+      })
+    ]);
+
+    return {
+      data,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+        hasMore: skip + data.length < total
+      }
+    };
+  }
+
   async softDelete(id: string, userId?: string): Promise<T> {
     return await this.model.update({
       where: { id },

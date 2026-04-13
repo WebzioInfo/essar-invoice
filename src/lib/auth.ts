@@ -15,8 +15,9 @@ export async function createSessionCookie(payload: SessionPayload) {
 
     const token = await new SignJWT({ ...payload })
         .setProtectedHeader({ alg: "HS256" })
-        .setExpirationTime("1d")
+        .setSubject(payload.userId)
         .setIssuedAt()
+        .setExpirationTime("1d")
         .sign(SECRET_KEY);
 
     const cookieStore = await cookies();
@@ -24,7 +25,7 @@ export async function createSessionCookie(payload: SessionPayload) {
     cookieStore.set(SESSION_COOKIE_NAME, token, {
         httpOnly: true,
         secure: env.NODE_ENV === "production",
-        sameSite: "lax",
+        sameSite: "strict",
         path: "/",
         expires,
     });
