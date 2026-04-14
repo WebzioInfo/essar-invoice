@@ -63,6 +63,21 @@ export type InvoiceLineItem = $Result.DefaultSelection<Prisma.$InvoiceLineItemPa
  * 
  */
 export type AuditLog = $Result.DefaultSelection<Prisma.$AuditLogPayload>
+/**
+ * Model Vendor
+ * 
+ */
+export type Vendor = $Result.DefaultSelection<Prisma.$VendorPayload>
+/**
+ * Model Purchase
+ * 
+ */
+export type Purchase = $Result.DefaultSelection<Prisma.$PurchasePayload>
+/**
+ * Model PurchaseLineItem
+ * 
+ */
+export type PurchaseLineItem = $Result.DefaultSelection<Prisma.$PurchaseLineItemPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -281,6 +296,36 @@ export class PrismaClient<
     * ```
     */
   get auditLog(): Prisma.AuditLogDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.vendor`: Exposes CRUD operations for the **Vendor** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Vendors
+    * const vendors = await prisma.vendor.findMany()
+    * ```
+    */
+  get vendor(): Prisma.VendorDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.purchase`: Exposes CRUD operations for the **Purchase** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Purchases
+    * const purchases = await prisma.purchase.findMany()
+    * ```
+    */
+  get purchase(): Prisma.PurchaseDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.purchaseLineItem`: Exposes CRUD operations for the **PurchaseLineItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PurchaseLineItems
+    * const purchaseLineItems = await prisma.purchaseLineItem.findMany()
+    * ```
+    */
+  get purchaseLineItem(): Prisma.PurchaseLineItemDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -731,7 +776,10 @@ export namespace Prisma {
     QuotationLineItem: 'QuotationLineItem',
     CompanySetting: 'CompanySetting',
     InvoiceLineItem: 'InvoiceLineItem',
-    AuditLog: 'AuditLog'
+    AuditLog: 'AuditLog',
+    Vendor: 'Vendor',
+    Purchase: 'Purchase',
+    PurchaseLineItem: 'PurchaseLineItem'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -750,7 +798,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "client" | "product" | "invoice" | "payment" | "quotation" | "quotationLineItem" | "companySetting" | "invoiceLineItem" | "auditLog"
+      modelProps: "user" | "client" | "product" | "invoice" | "payment" | "quotation" | "quotationLineItem" | "companySetting" | "invoiceLineItem" | "auditLog" | "vendor" | "purchase" | "purchaseLineItem"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1414,6 +1462,204 @@ export namespace Prisma {
           }
         }
       }
+      Vendor: {
+        payload: Prisma.$VendorPayload<ExtArgs>
+        fields: Prisma.VendorFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.VendorFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VendorPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.VendorFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VendorPayload>
+          }
+          findFirst: {
+            args: Prisma.VendorFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VendorPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.VendorFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VendorPayload>
+          }
+          findMany: {
+            args: Prisma.VendorFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VendorPayload>[]
+          }
+          create: {
+            args: Prisma.VendorCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VendorPayload>
+          }
+          createMany: {
+            args: Prisma.VendorCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.VendorDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VendorPayload>
+          }
+          update: {
+            args: Prisma.VendorUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VendorPayload>
+          }
+          deleteMany: {
+            args: Prisma.VendorDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.VendorUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.VendorUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VendorPayload>
+          }
+          aggregate: {
+            args: Prisma.VendorAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateVendor>
+          }
+          groupBy: {
+            args: Prisma.VendorGroupByArgs<ExtArgs>
+            result: $Utils.Optional<VendorGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.VendorCountArgs<ExtArgs>
+            result: $Utils.Optional<VendorCountAggregateOutputType> | number
+          }
+        }
+      }
+      Purchase: {
+        payload: Prisma.$PurchasePayload<ExtArgs>
+        fields: Prisma.PurchaseFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PurchaseFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PurchasePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PurchaseFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PurchasePayload>
+          }
+          findFirst: {
+            args: Prisma.PurchaseFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PurchasePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PurchaseFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PurchasePayload>
+          }
+          findMany: {
+            args: Prisma.PurchaseFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PurchasePayload>[]
+          }
+          create: {
+            args: Prisma.PurchaseCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PurchasePayload>
+          }
+          createMany: {
+            args: Prisma.PurchaseCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.PurchaseDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PurchasePayload>
+          }
+          update: {
+            args: Prisma.PurchaseUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PurchasePayload>
+          }
+          deleteMany: {
+            args: Prisma.PurchaseDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PurchaseUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PurchaseUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PurchasePayload>
+          }
+          aggregate: {
+            args: Prisma.PurchaseAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePurchase>
+          }
+          groupBy: {
+            args: Prisma.PurchaseGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PurchaseGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PurchaseCountArgs<ExtArgs>
+            result: $Utils.Optional<PurchaseCountAggregateOutputType> | number
+          }
+        }
+      }
+      PurchaseLineItem: {
+        payload: Prisma.$PurchaseLineItemPayload<ExtArgs>
+        fields: Prisma.PurchaseLineItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PurchaseLineItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PurchaseLineItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PurchaseLineItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PurchaseLineItemPayload>
+          }
+          findFirst: {
+            args: Prisma.PurchaseLineItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PurchaseLineItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PurchaseLineItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PurchaseLineItemPayload>
+          }
+          findMany: {
+            args: Prisma.PurchaseLineItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PurchaseLineItemPayload>[]
+          }
+          create: {
+            args: Prisma.PurchaseLineItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PurchaseLineItemPayload>
+          }
+          createMany: {
+            args: Prisma.PurchaseLineItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.PurchaseLineItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PurchaseLineItemPayload>
+          }
+          update: {
+            args: Prisma.PurchaseLineItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PurchaseLineItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.PurchaseLineItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PurchaseLineItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PurchaseLineItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PurchaseLineItemPayload>
+          }
+          aggregate: {
+            args: Prisma.PurchaseLineItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePurchaseLineItem>
+          }
+          groupBy: {
+            args: Prisma.PurchaseLineItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PurchaseLineItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PurchaseLineItemCountArgs<ExtArgs>
+            result: $Utils.Optional<PurchaseLineItemCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1520,6 +1766,9 @@ export namespace Prisma {
     companySetting?: CompanySettingOmit
     invoiceLineItem?: InvoiceLineItemOmit
     auditLog?: AuditLogOmit
+    vendor?: VendorOmit
+    purchase?: PurchaseOmit
+    purchaseLineItem?: PurchaseLineItemOmit
   }
 
   /* Types for Logging */
@@ -1734,6 +1983,68 @@ export namespace Prisma {
    */
   export type QuotationCountOutputTypeCountLineItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: QuotationLineItemWhereInput
+  }
+
+
+  /**
+   * Count Type VendorCountOutputType
+   */
+
+  export type VendorCountOutputType = {
+    purchases: number
+  }
+
+  export type VendorCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    purchases?: boolean | VendorCountOutputTypeCountPurchasesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * VendorCountOutputType without action
+   */
+  export type VendorCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VendorCountOutputType
+     */
+    select?: VendorCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * VendorCountOutputType without action
+   */
+  export type VendorCountOutputTypeCountPurchasesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PurchaseWhereInput
+  }
+
+
+  /**
+   * Count Type PurchaseCountOutputType
+   */
+
+  export type PurchaseCountOutputType = {
+    lineItems: number
+  }
+
+  export type PurchaseCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lineItems?: boolean | PurchaseCountOutputTypeCountLineItemsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PurchaseCountOutputType without action
+   */
+  export type PurchaseCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PurchaseCountOutputType
+     */
+    select?: PurchaseCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PurchaseCountOutputType without action
+   */
+  export type PurchaseCountOutputTypeCountLineItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PurchaseLineItemWhereInput
   }
 
 
@@ -12696,6 +13007,3257 @@ export namespace Prisma {
 
 
   /**
+   * Model Vendor
+   */
+
+  export type AggregateVendor = {
+    _count: VendorCountAggregateOutputType | null
+    _min: VendorMinAggregateOutputType | null
+    _max: VendorMaxAggregateOutputType | null
+  }
+
+  export type VendorMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    gst: string | null
+    email: string | null
+    phone: string | null
+    address1: string | null
+    address2: string | null
+    state: string | null
+    pinCode: string | null
+    active: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    deletedAt: Date | null
+  }
+
+  export type VendorMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    gst: string | null
+    email: string | null
+    phone: string | null
+    address1: string | null
+    address2: string | null
+    state: string | null
+    pinCode: string | null
+    active: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    deletedAt: Date | null
+  }
+
+  export type VendorCountAggregateOutputType = {
+    id: number
+    name: number
+    gst: number
+    email: number
+    phone: number
+    address1: number
+    address2: number
+    state: number
+    pinCode: number
+    active: number
+    createdAt: number
+    updatedAt: number
+    deletedAt: number
+    _all: number
+  }
+
+
+  export type VendorMinAggregateInputType = {
+    id?: true
+    name?: true
+    gst?: true
+    email?: true
+    phone?: true
+    address1?: true
+    address2?: true
+    state?: true
+    pinCode?: true
+    active?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
+  }
+
+  export type VendorMaxAggregateInputType = {
+    id?: true
+    name?: true
+    gst?: true
+    email?: true
+    phone?: true
+    address1?: true
+    address2?: true
+    state?: true
+    pinCode?: true
+    active?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
+  }
+
+  export type VendorCountAggregateInputType = {
+    id?: true
+    name?: true
+    gst?: true
+    email?: true
+    phone?: true
+    address1?: true
+    address2?: true
+    state?: true
+    pinCode?: true
+    active?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
+    _all?: true
+  }
+
+  export type VendorAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Vendor to aggregate.
+     */
+    where?: VendorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Vendors to fetch.
+     */
+    orderBy?: VendorOrderByWithRelationInput | VendorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: VendorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Vendors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Vendors.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Vendors
+    **/
+    _count?: true | VendorCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: VendorMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: VendorMaxAggregateInputType
+  }
+
+  export type GetVendorAggregateType<T extends VendorAggregateArgs> = {
+        [P in keyof T & keyof AggregateVendor]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateVendor[P]>
+      : GetScalarType<T[P], AggregateVendor[P]>
+  }
+
+
+
+
+  export type VendorGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VendorWhereInput
+    orderBy?: VendorOrderByWithAggregationInput | VendorOrderByWithAggregationInput[]
+    by: VendorScalarFieldEnum[] | VendorScalarFieldEnum
+    having?: VendorScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: VendorCountAggregateInputType | true
+    _min?: VendorMinAggregateInputType
+    _max?: VendorMaxAggregateInputType
+  }
+
+  export type VendorGroupByOutputType = {
+    id: string
+    name: string
+    gst: string | null
+    email: string | null
+    phone: string | null
+    address1: string
+    address2: string | null
+    state: string
+    pinCode: string | null
+    active: boolean
+    createdAt: Date
+    updatedAt: Date
+    deletedAt: Date | null
+    _count: VendorCountAggregateOutputType | null
+    _min: VendorMinAggregateOutputType | null
+    _max: VendorMaxAggregateOutputType | null
+  }
+
+  type GetVendorGroupByPayload<T extends VendorGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<VendorGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof VendorGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], VendorGroupByOutputType[P]>
+            : GetScalarType<T[P], VendorGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type VendorSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    gst?: boolean
+    email?: boolean
+    phone?: boolean
+    address1?: boolean
+    address2?: boolean
+    state?: boolean
+    pinCode?: boolean
+    active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
+    purchases?: boolean | Vendor$purchasesArgs<ExtArgs>
+    _count?: boolean | VendorCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["vendor"]>
+
+
+
+  export type VendorSelectScalar = {
+    id?: boolean
+    name?: boolean
+    gst?: boolean
+    email?: boolean
+    phone?: boolean
+    address1?: boolean
+    address2?: boolean
+    state?: boolean
+    pinCode?: boolean
+    active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
+  }
+
+  export type VendorOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "gst" | "email" | "phone" | "address1" | "address2" | "state" | "pinCode" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["vendor"]>
+  export type VendorInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    purchases?: boolean | Vendor$purchasesArgs<ExtArgs>
+    _count?: boolean | VendorCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $VendorPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Vendor"
+    objects: {
+      purchases: Prisma.$PurchasePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      gst: string | null
+      email: string | null
+      phone: string | null
+      address1: string
+      address2: string | null
+      state: string
+      pinCode: string | null
+      active: boolean
+      createdAt: Date
+      updatedAt: Date
+      deletedAt: Date | null
+    }, ExtArgs["result"]["vendor"]>
+    composites: {}
+  }
+
+  type VendorGetPayload<S extends boolean | null | undefined | VendorDefaultArgs> = $Result.GetResult<Prisma.$VendorPayload, S>
+
+  type VendorCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<VendorFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: VendorCountAggregateInputType | true
+    }
+
+  export interface VendorDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Vendor'], meta: { name: 'Vendor' } }
+    /**
+     * Find zero or one Vendor that matches the filter.
+     * @param {VendorFindUniqueArgs} args - Arguments to find a Vendor
+     * @example
+     * // Get one Vendor
+     * const vendor = await prisma.vendor.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends VendorFindUniqueArgs>(args: SelectSubset<T, VendorFindUniqueArgs<ExtArgs>>): Prisma__VendorClient<$Result.GetResult<Prisma.$VendorPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Vendor that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {VendorFindUniqueOrThrowArgs} args - Arguments to find a Vendor
+     * @example
+     * // Get one Vendor
+     * const vendor = await prisma.vendor.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends VendorFindUniqueOrThrowArgs>(args: SelectSubset<T, VendorFindUniqueOrThrowArgs<ExtArgs>>): Prisma__VendorClient<$Result.GetResult<Prisma.$VendorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Vendor that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VendorFindFirstArgs} args - Arguments to find a Vendor
+     * @example
+     * // Get one Vendor
+     * const vendor = await prisma.vendor.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends VendorFindFirstArgs>(args?: SelectSubset<T, VendorFindFirstArgs<ExtArgs>>): Prisma__VendorClient<$Result.GetResult<Prisma.$VendorPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Vendor that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VendorFindFirstOrThrowArgs} args - Arguments to find a Vendor
+     * @example
+     * // Get one Vendor
+     * const vendor = await prisma.vendor.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends VendorFindFirstOrThrowArgs>(args?: SelectSubset<T, VendorFindFirstOrThrowArgs<ExtArgs>>): Prisma__VendorClient<$Result.GetResult<Prisma.$VendorPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Vendors that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VendorFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Vendors
+     * const vendors = await prisma.vendor.findMany()
+     * 
+     * // Get first 10 Vendors
+     * const vendors = await prisma.vendor.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const vendorWithIdOnly = await prisma.vendor.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends VendorFindManyArgs>(args?: SelectSubset<T, VendorFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VendorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Vendor.
+     * @param {VendorCreateArgs} args - Arguments to create a Vendor.
+     * @example
+     * // Create one Vendor
+     * const Vendor = await prisma.vendor.create({
+     *   data: {
+     *     // ... data to create a Vendor
+     *   }
+     * })
+     * 
+     */
+    create<T extends VendorCreateArgs>(args: SelectSubset<T, VendorCreateArgs<ExtArgs>>): Prisma__VendorClient<$Result.GetResult<Prisma.$VendorPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Vendors.
+     * @param {VendorCreateManyArgs} args - Arguments to create many Vendors.
+     * @example
+     * // Create many Vendors
+     * const vendor = await prisma.vendor.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends VendorCreateManyArgs>(args?: SelectSubset<T, VendorCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Vendor.
+     * @param {VendorDeleteArgs} args - Arguments to delete one Vendor.
+     * @example
+     * // Delete one Vendor
+     * const Vendor = await prisma.vendor.delete({
+     *   where: {
+     *     // ... filter to delete one Vendor
+     *   }
+     * })
+     * 
+     */
+    delete<T extends VendorDeleteArgs>(args: SelectSubset<T, VendorDeleteArgs<ExtArgs>>): Prisma__VendorClient<$Result.GetResult<Prisma.$VendorPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Vendor.
+     * @param {VendorUpdateArgs} args - Arguments to update one Vendor.
+     * @example
+     * // Update one Vendor
+     * const vendor = await prisma.vendor.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends VendorUpdateArgs>(args: SelectSubset<T, VendorUpdateArgs<ExtArgs>>): Prisma__VendorClient<$Result.GetResult<Prisma.$VendorPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Vendors.
+     * @param {VendorDeleteManyArgs} args - Arguments to filter Vendors to delete.
+     * @example
+     * // Delete a few Vendors
+     * const { count } = await prisma.vendor.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends VendorDeleteManyArgs>(args?: SelectSubset<T, VendorDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Vendors.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VendorUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Vendors
+     * const vendor = await prisma.vendor.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends VendorUpdateManyArgs>(args: SelectSubset<T, VendorUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Vendor.
+     * @param {VendorUpsertArgs} args - Arguments to update or create a Vendor.
+     * @example
+     * // Update or create a Vendor
+     * const vendor = await prisma.vendor.upsert({
+     *   create: {
+     *     // ... data to create a Vendor
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Vendor we want to update
+     *   }
+     * })
+     */
+    upsert<T extends VendorUpsertArgs>(args: SelectSubset<T, VendorUpsertArgs<ExtArgs>>): Prisma__VendorClient<$Result.GetResult<Prisma.$VendorPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Vendors.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VendorCountArgs} args - Arguments to filter Vendors to count.
+     * @example
+     * // Count the number of Vendors
+     * const count = await prisma.vendor.count({
+     *   where: {
+     *     // ... the filter for the Vendors we want to count
+     *   }
+     * })
+    **/
+    count<T extends VendorCountArgs>(
+      args?: Subset<T, VendorCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], VendorCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Vendor.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VendorAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends VendorAggregateArgs>(args: Subset<T, VendorAggregateArgs>): Prisma.PrismaPromise<GetVendorAggregateType<T>>
+
+    /**
+     * Group by Vendor.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VendorGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends VendorGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: VendorGroupByArgs['orderBy'] }
+        : { orderBy?: VendorGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, VendorGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetVendorGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Vendor model
+   */
+  readonly fields: VendorFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Vendor.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__VendorClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    purchases<T extends Vendor$purchasesArgs<ExtArgs> = {}>(args?: Subset<T, Vendor$purchasesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Vendor model
+   */
+  interface VendorFieldRefs {
+    readonly id: FieldRef<"Vendor", 'String'>
+    readonly name: FieldRef<"Vendor", 'String'>
+    readonly gst: FieldRef<"Vendor", 'String'>
+    readonly email: FieldRef<"Vendor", 'String'>
+    readonly phone: FieldRef<"Vendor", 'String'>
+    readonly address1: FieldRef<"Vendor", 'String'>
+    readonly address2: FieldRef<"Vendor", 'String'>
+    readonly state: FieldRef<"Vendor", 'String'>
+    readonly pinCode: FieldRef<"Vendor", 'String'>
+    readonly active: FieldRef<"Vendor", 'Boolean'>
+    readonly createdAt: FieldRef<"Vendor", 'DateTime'>
+    readonly updatedAt: FieldRef<"Vendor", 'DateTime'>
+    readonly deletedAt: FieldRef<"Vendor", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Vendor findUnique
+   */
+  export type VendorFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vendor
+     */
+    select?: VendorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vendor
+     */
+    omit?: VendorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VendorInclude<ExtArgs> | null
+    /**
+     * Filter, which Vendor to fetch.
+     */
+    where: VendorWhereUniqueInput
+  }
+
+  /**
+   * Vendor findUniqueOrThrow
+   */
+  export type VendorFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vendor
+     */
+    select?: VendorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vendor
+     */
+    omit?: VendorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VendorInclude<ExtArgs> | null
+    /**
+     * Filter, which Vendor to fetch.
+     */
+    where: VendorWhereUniqueInput
+  }
+
+  /**
+   * Vendor findFirst
+   */
+  export type VendorFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vendor
+     */
+    select?: VendorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vendor
+     */
+    omit?: VendorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VendorInclude<ExtArgs> | null
+    /**
+     * Filter, which Vendor to fetch.
+     */
+    where?: VendorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Vendors to fetch.
+     */
+    orderBy?: VendorOrderByWithRelationInput | VendorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Vendors.
+     */
+    cursor?: VendorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Vendors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Vendors.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Vendors.
+     */
+    distinct?: VendorScalarFieldEnum | VendorScalarFieldEnum[]
+  }
+
+  /**
+   * Vendor findFirstOrThrow
+   */
+  export type VendorFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vendor
+     */
+    select?: VendorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vendor
+     */
+    omit?: VendorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VendorInclude<ExtArgs> | null
+    /**
+     * Filter, which Vendor to fetch.
+     */
+    where?: VendorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Vendors to fetch.
+     */
+    orderBy?: VendorOrderByWithRelationInput | VendorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Vendors.
+     */
+    cursor?: VendorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Vendors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Vendors.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Vendors.
+     */
+    distinct?: VendorScalarFieldEnum | VendorScalarFieldEnum[]
+  }
+
+  /**
+   * Vendor findMany
+   */
+  export type VendorFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vendor
+     */
+    select?: VendorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vendor
+     */
+    omit?: VendorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VendorInclude<ExtArgs> | null
+    /**
+     * Filter, which Vendors to fetch.
+     */
+    where?: VendorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Vendors to fetch.
+     */
+    orderBy?: VendorOrderByWithRelationInput | VendorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Vendors.
+     */
+    cursor?: VendorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Vendors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Vendors.
+     */
+    skip?: number
+    distinct?: VendorScalarFieldEnum | VendorScalarFieldEnum[]
+  }
+
+  /**
+   * Vendor create
+   */
+  export type VendorCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vendor
+     */
+    select?: VendorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vendor
+     */
+    omit?: VendorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VendorInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Vendor.
+     */
+    data: XOR<VendorCreateInput, VendorUncheckedCreateInput>
+  }
+
+  /**
+   * Vendor createMany
+   */
+  export type VendorCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Vendors.
+     */
+    data: VendorCreateManyInput | VendorCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Vendor update
+   */
+  export type VendorUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vendor
+     */
+    select?: VendorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vendor
+     */
+    omit?: VendorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VendorInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Vendor.
+     */
+    data: XOR<VendorUpdateInput, VendorUncheckedUpdateInput>
+    /**
+     * Choose, which Vendor to update.
+     */
+    where: VendorWhereUniqueInput
+  }
+
+  /**
+   * Vendor updateMany
+   */
+  export type VendorUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Vendors.
+     */
+    data: XOR<VendorUpdateManyMutationInput, VendorUncheckedUpdateManyInput>
+    /**
+     * Filter which Vendors to update
+     */
+    where?: VendorWhereInput
+    /**
+     * Limit how many Vendors to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Vendor upsert
+   */
+  export type VendorUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vendor
+     */
+    select?: VendorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vendor
+     */
+    omit?: VendorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VendorInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Vendor to update in case it exists.
+     */
+    where: VendorWhereUniqueInput
+    /**
+     * In case the Vendor found by the `where` argument doesn't exist, create a new Vendor with this data.
+     */
+    create: XOR<VendorCreateInput, VendorUncheckedCreateInput>
+    /**
+     * In case the Vendor was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<VendorUpdateInput, VendorUncheckedUpdateInput>
+  }
+
+  /**
+   * Vendor delete
+   */
+  export type VendorDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vendor
+     */
+    select?: VendorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vendor
+     */
+    omit?: VendorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VendorInclude<ExtArgs> | null
+    /**
+     * Filter which Vendor to delete.
+     */
+    where: VendorWhereUniqueInput
+  }
+
+  /**
+   * Vendor deleteMany
+   */
+  export type VendorDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Vendors to delete
+     */
+    where?: VendorWhereInput
+    /**
+     * Limit how many Vendors to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Vendor.purchases
+   */
+  export type Vendor$purchasesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Purchase
+     */
+    select?: PurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Purchase
+     */
+    omit?: PurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PurchaseInclude<ExtArgs> | null
+    where?: PurchaseWhereInput
+    orderBy?: PurchaseOrderByWithRelationInput | PurchaseOrderByWithRelationInput[]
+    cursor?: PurchaseWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PurchaseScalarFieldEnum | PurchaseScalarFieldEnum[]
+  }
+
+  /**
+   * Vendor without action
+   */
+  export type VendorDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vendor
+     */
+    select?: VendorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vendor
+     */
+    omit?: VendorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VendorInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Purchase
+   */
+
+  export type AggregatePurchase = {
+    _count: PurchaseCountAggregateOutputType | null
+    _avg: PurchaseAvgAggregateOutputType | null
+    _sum: PurchaseSumAggregateOutputType | null
+    _min: PurchaseMinAggregateOutputType | null
+    _max: PurchaseMaxAggregateOutputType | null
+  }
+
+  export type PurchaseAvgAggregateOutputType = {
+    sequenceNumber: number | null
+    subTotal: Decimal | null
+    taxTotal: Decimal | null
+    grandTotal: Decimal | null
+  }
+
+  export type PurchaseSumAggregateOutputType = {
+    sequenceNumber: number | null
+    subTotal: Decimal | null
+    taxTotal: Decimal | null
+    grandTotal: Decimal | null
+  }
+
+  export type PurchaseMinAggregateOutputType = {
+    id: string | null
+    vendorId: string | null
+    sequenceNumber: number | null
+    purchaseNo: string | null
+    date: Date | null
+    gstType: string | null
+    subTotal: Decimal | null
+    taxTotal: Decimal | null
+    grandTotal: Decimal | null
+    status: string | null
+    ewayBill: string | null
+    ewayBillUrl: string | null
+    vehicleNo: string | null
+    notes: string | null
+    createdById: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    deletedAt: Date | null
+  }
+
+  export type PurchaseMaxAggregateOutputType = {
+    id: string | null
+    vendorId: string | null
+    sequenceNumber: number | null
+    purchaseNo: string | null
+    date: Date | null
+    gstType: string | null
+    subTotal: Decimal | null
+    taxTotal: Decimal | null
+    grandTotal: Decimal | null
+    status: string | null
+    ewayBill: string | null
+    ewayBillUrl: string | null
+    vehicleNo: string | null
+    notes: string | null
+    createdById: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    deletedAt: Date | null
+  }
+
+  export type PurchaseCountAggregateOutputType = {
+    id: number
+    vendorId: number
+    sequenceNumber: number
+    purchaseNo: number
+    date: number
+    gstType: number
+    subTotal: number
+    taxTotal: number
+    grandTotal: number
+    status: number
+    ewayBill: number
+    ewayBillUrl: number
+    vehicleNo: number
+    notes: number
+    createdById: number
+    createdAt: number
+    updatedAt: number
+    deletedAt: number
+    _all: number
+  }
+
+
+  export type PurchaseAvgAggregateInputType = {
+    sequenceNumber?: true
+    subTotal?: true
+    taxTotal?: true
+    grandTotal?: true
+  }
+
+  export type PurchaseSumAggregateInputType = {
+    sequenceNumber?: true
+    subTotal?: true
+    taxTotal?: true
+    grandTotal?: true
+  }
+
+  export type PurchaseMinAggregateInputType = {
+    id?: true
+    vendorId?: true
+    sequenceNumber?: true
+    purchaseNo?: true
+    date?: true
+    gstType?: true
+    subTotal?: true
+    taxTotal?: true
+    grandTotal?: true
+    status?: true
+    ewayBill?: true
+    ewayBillUrl?: true
+    vehicleNo?: true
+    notes?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
+  }
+
+  export type PurchaseMaxAggregateInputType = {
+    id?: true
+    vendorId?: true
+    sequenceNumber?: true
+    purchaseNo?: true
+    date?: true
+    gstType?: true
+    subTotal?: true
+    taxTotal?: true
+    grandTotal?: true
+    status?: true
+    ewayBill?: true
+    ewayBillUrl?: true
+    vehicleNo?: true
+    notes?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
+  }
+
+  export type PurchaseCountAggregateInputType = {
+    id?: true
+    vendorId?: true
+    sequenceNumber?: true
+    purchaseNo?: true
+    date?: true
+    gstType?: true
+    subTotal?: true
+    taxTotal?: true
+    grandTotal?: true
+    status?: true
+    ewayBill?: true
+    ewayBillUrl?: true
+    vehicleNo?: true
+    notes?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
+    _all?: true
+  }
+
+  export type PurchaseAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Purchase to aggregate.
+     */
+    where?: PurchaseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Purchases to fetch.
+     */
+    orderBy?: PurchaseOrderByWithRelationInput | PurchaseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PurchaseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Purchases from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Purchases.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Purchases
+    **/
+    _count?: true | PurchaseCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PurchaseAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PurchaseSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PurchaseMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PurchaseMaxAggregateInputType
+  }
+
+  export type GetPurchaseAggregateType<T extends PurchaseAggregateArgs> = {
+        [P in keyof T & keyof AggregatePurchase]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePurchase[P]>
+      : GetScalarType<T[P], AggregatePurchase[P]>
+  }
+
+
+
+
+  export type PurchaseGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PurchaseWhereInput
+    orderBy?: PurchaseOrderByWithAggregationInput | PurchaseOrderByWithAggregationInput[]
+    by: PurchaseScalarFieldEnum[] | PurchaseScalarFieldEnum
+    having?: PurchaseScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PurchaseCountAggregateInputType | true
+    _avg?: PurchaseAvgAggregateInputType
+    _sum?: PurchaseSumAggregateInputType
+    _min?: PurchaseMinAggregateInputType
+    _max?: PurchaseMaxAggregateInputType
+  }
+
+  export type PurchaseGroupByOutputType = {
+    id: string
+    vendorId: string
+    sequenceNumber: number
+    purchaseNo: string
+    date: Date
+    gstType: string
+    subTotal: Decimal
+    taxTotal: Decimal
+    grandTotal: Decimal
+    status: string
+    ewayBill: string | null
+    ewayBillUrl: string | null
+    vehicleNo: string | null
+    notes: string | null
+    createdById: string | null
+    createdAt: Date
+    updatedAt: Date
+    deletedAt: Date | null
+    _count: PurchaseCountAggregateOutputType | null
+    _avg: PurchaseAvgAggregateOutputType | null
+    _sum: PurchaseSumAggregateOutputType | null
+    _min: PurchaseMinAggregateOutputType | null
+    _max: PurchaseMaxAggregateOutputType | null
+  }
+
+  type GetPurchaseGroupByPayload<T extends PurchaseGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PurchaseGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PurchaseGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PurchaseGroupByOutputType[P]>
+            : GetScalarType<T[P], PurchaseGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PurchaseSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    vendorId?: boolean
+    sequenceNumber?: boolean
+    purchaseNo?: boolean
+    date?: boolean
+    gstType?: boolean
+    subTotal?: boolean
+    taxTotal?: boolean
+    grandTotal?: boolean
+    status?: boolean
+    ewayBill?: boolean
+    ewayBillUrl?: boolean
+    vehicleNo?: boolean
+    notes?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
+    vendor?: boolean | VendorDefaultArgs<ExtArgs>
+    lineItems?: boolean | Purchase$lineItemsArgs<ExtArgs>
+    _count?: boolean | PurchaseCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["purchase"]>
+
+
+
+  export type PurchaseSelectScalar = {
+    id?: boolean
+    vendorId?: boolean
+    sequenceNumber?: boolean
+    purchaseNo?: boolean
+    date?: boolean
+    gstType?: boolean
+    subTotal?: boolean
+    taxTotal?: boolean
+    grandTotal?: boolean
+    status?: boolean
+    ewayBill?: boolean
+    ewayBillUrl?: boolean
+    vehicleNo?: boolean
+    notes?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
+  }
+
+  export type PurchaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "vendorId" | "sequenceNumber" | "purchaseNo" | "date" | "gstType" | "subTotal" | "taxTotal" | "grandTotal" | "status" | "ewayBill" | "ewayBillUrl" | "vehicleNo" | "notes" | "createdById" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["purchase"]>
+  export type PurchaseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    vendor?: boolean | VendorDefaultArgs<ExtArgs>
+    lineItems?: boolean | Purchase$lineItemsArgs<ExtArgs>
+    _count?: boolean | PurchaseCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $PurchasePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Purchase"
+    objects: {
+      vendor: Prisma.$VendorPayload<ExtArgs>
+      lineItems: Prisma.$PurchaseLineItemPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      vendorId: string
+      sequenceNumber: number
+      purchaseNo: string
+      date: Date
+      gstType: string
+      subTotal: Prisma.Decimal
+      taxTotal: Prisma.Decimal
+      grandTotal: Prisma.Decimal
+      status: string
+      ewayBill: string | null
+      ewayBillUrl: string | null
+      vehicleNo: string | null
+      notes: string | null
+      createdById: string | null
+      createdAt: Date
+      updatedAt: Date
+      deletedAt: Date | null
+    }, ExtArgs["result"]["purchase"]>
+    composites: {}
+  }
+
+  type PurchaseGetPayload<S extends boolean | null | undefined | PurchaseDefaultArgs> = $Result.GetResult<Prisma.$PurchasePayload, S>
+
+  type PurchaseCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PurchaseFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PurchaseCountAggregateInputType | true
+    }
+
+  export interface PurchaseDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Purchase'], meta: { name: 'Purchase' } }
+    /**
+     * Find zero or one Purchase that matches the filter.
+     * @param {PurchaseFindUniqueArgs} args - Arguments to find a Purchase
+     * @example
+     * // Get one Purchase
+     * const purchase = await prisma.purchase.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PurchaseFindUniqueArgs>(args: SelectSubset<T, PurchaseFindUniqueArgs<ExtArgs>>): Prisma__PurchaseClient<$Result.GetResult<Prisma.$PurchasePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Purchase that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PurchaseFindUniqueOrThrowArgs} args - Arguments to find a Purchase
+     * @example
+     * // Get one Purchase
+     * const purchase = await prisma.purchase.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PurchaseFindUniqueOrThrowArgs>(args: SelectSubset<T, PurchaseFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PurchaseClient<$Result.GetResult<Prisma.$PurchasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Purchase that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PurchaseFindFirstArgs} args - Arguments to find a Purchase
+     * @example
+     * // Get one Purchase
+     * const purchase = await prisma.purchase.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PurchaseFindFirstArgs>(args?: SelectSubset<T, PurchaseFindFirstArgs<ExtArgs>>): Prisma__PurchaseClient<$Result.GetResult<Prisma.$PurchasePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Purchase that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PurchaseFindFirstOrThrowArgs} args - Arguments to find a Purchase
+     * @example
+     * // Get one Purchase
+     * const purchase = await prisma.purchase.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PurchaseFindFirstOrThrowArgs>(args?: SelectSubset<T, PurchaseFindFirstOrThrowArgs<ExtArgs>>): Prisma__PurchaseClient<$Result.GetResult<Prisma.$PurchasePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Purchases that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PurchaseFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Purchases
+     * const purchases = await prisma.purchase.findMany()
+     * 
+     * // Get first 10 Purchases
+     * const purchases = await prisma.purchase.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const purchaseWithIdOnly = await prisma.purchase.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PurchaseFindManyArgs>(args?: SelectSubset<T, PurchaseFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Purchase.
+     * @param {PurchaseCreateArgs} args - Arguments to create a Purchase.
+     * @example
+     * // Create one Purchase
+     * const Purchase = await prisma.purchase.create({
+     *   data: {
+     *     // ... data to create a Purchase
+     *   }
+     * })
+     * 
+     */
+    create<T extends PurchaseCreateArgs>(args: SelectSubset<T, PurchaseCreateArgs<ExtArgs>>): Prisma__PurchaseClient<$Result.GetResult<Prisma.$PurchasePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Purchases.
+     * @param {PurchaseCreateManyArgs} args - Arguments to create many Purchases.
+     * @example
+     * // Create many Purchases
+     * const purchase = await prisma.purchase.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PurchaseCreateManyArgs>(args?: SelectSubset<T, PurchaseCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Purchase.
+     * @param {PurchaseDeleteArgs} args - Arguments to delete one Purchase.
+     * @example
+     * // Delete one Purchase
+     * const Purchase = await prisma.purchase.delete({
+     *   where: {
+     *     // ... filter to delete one Purchase
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PurchaseDeleteArgs>(args: SelectSubset<T, PurchaseDeleteArgs<ExtArgs>>): Prisma__PurchaseClient<$Result.GetResult<Prisma.$PurchasePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Purchase.
+     * @param {PurchaseUpdateArgs} args - Arguments to update one Purchase.
+     * @example
+     * // Update one Purchase
+     * const purchase = await prisma.purchase.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PurchaseUpdateArgs>(args: SelectSubset<T, PurchaseUpdateArgs<ExtArgs>>): Prisma__PurchaseClient<$Result.GetResult<Prisma.$PurchasePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Purchases.
+     * @param {PurchaseDeleteManyArgs} args - Arguments to filter Purchases to delete.
+     * @example
+     * // Delete a few Purchases
+     * const { count } = await prisma.purchase.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PurchaseDeleteManyArgs>(args?: SelectSubset<T, PurchaseDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Purchases.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PurchaseUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Purchases
+     * const purchase = await prisma.purchase.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PurchaseUpdateManyArgs>(args: SelectSubset<T, PurchaseUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Purchase.
+     * @param {PurchaseUpsertArgs} args - Arguments to update or create a Purchase.
+     * @example
+     * // Update or create a Purchase
+     * const purchase = await prisma.purchase.upsert({
+     *   create: {
+     *     // ... data to create a Purchase
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Purchase we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PurchaseUpsertArgs>(args: SelectSubset<T, PurchaseUpsertArgs<ExtArgs>>): Prisma__PurchaseClient<$Result.GetResult<Prisma.$PurchasePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Purchases.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PurchaseCountArgs} args - Arguments to filter Purchases to count.
+     * @example
+     * // Count the number of Purchases
+     * const count = await prisma.purchase.count({
+     *   where: {
+     *     // ... the filter for the Purchases we want to count
+     *   }
+     * })
+    **/
+    count<T extends PurchaseCountArgs>(
+      args?: Subset<T, PurchaseCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PurchaseCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Purchase.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PurchaseAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PurchaseAggregateArgs>(args: Subset<T, PurchaseAggregateArgs>): Prisma.PrismaPromise<GetPurchaseAggregateType<T>>
+
+    /**
+     * Group by Purchase.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PurchaseGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PurchaseGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PurchaseGroupByArgs['orderBy'] }
+        : { orderBy?: PurchaseGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PurchaseGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPurchaseGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Purchase model
+   */
+  readonly fields: PurchaseFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Purchase.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PurchaseClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    vendor<T extends VendorDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VendorDefaultArgs<ExtArgs>>): Prisma__VendorClient<$Result.GetResult<Prisma.$VendorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    lineItems<T extends Purchase$lineItemsArgs<ExtArgs> = {}>(args?: Subset<T, Purchase$lineItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PurchaseLineItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Purchase model
+   */
+  interface PurchaseFieldRefs {
+    readonly id: FieldRef<"Purchase", 'String'>
+    readonly vendorId: FieldRef<"Purchase", 'String'>
+    readonly sequenceNumber: FieldRef<"Purchase", 'Int'>
+    readonly purchaseNo: FieldRef<"Purchase", 'String'>
+    readonly date: FieldRef<"Purchase", 'DateTime'>
+    readonly gstType: FieldRef<"Purchase", 'String'>
+    readonly subTotal: FieldRef<"Purchase", 'Decimal'>
+    readonly taxTotal: FieldRef<"Purchase", 'Decimal'>
+    readonly grandTotal: FieldRef<"Purchase", 'Decimal'>
+    readonly status: FieldRef<"Purchase", 'String'>
+    readonly ewayBill: FieldRef<"Purchase", 'String'>
+    readonly ewayBillUrl: FieldRef<"Purchase", 'String'>
+    readonly vehicleNo: FieldRef<"Purchase", 'String'>
+    readonly notes: FieldRef<"Purchase", 'String'>
+    readonly createdById: FieldRef<"Purchase", 'String'>
+    readonly createdAt: FieldRef<"Purchase", 'DateTime'>
+    readonly updatedAt: FieldRef<"Purchase", 'DateTime'>
+    readonly deletedAt: FieldRef<"Purchase", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Purchase findUnique
+   */
+  export type PurchaseFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Purchase
+     */
+    select?: PurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Purchase
+     */
+    omit?: PurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PurchaseInclude<ExtArgs> | null
+    /**
+     * Filter, which Purchase to fetch.
+     */
+    where: PurchaseWhereUniqueInput
+  }
+
+  /**
+   * Purchase findUniqueOrThrow
+   */
+  export type PurchaseFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Purchase
+     */
+    select?: PurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Purchase
+     */
+    omit?: PurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PurchaseInclude<ExtArgs> | null
+    /**
+     * Filter, which Purchase to fetch.
+     */
+    where: PurchaseWhereUniqueInput
+  }
+
+  /**
+   * Purchase findFirst
+   */
+  export type PurchaseFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Purchase
+     */
+    select?: PurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Purchase
+     */
+    omit?: PurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PurchaseInclude<ExtArgs> | null
+    /**
+     * Filter, which Purchase to fetch.
+     */
+    where?: PurchaseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Purchases to fetch.
+     */
+    orderBy?: PurchaseOrderByWithRelationInput | PurchaseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Purchases.
+     */
+    cursor?: PurchaseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Purchases from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Purchases.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Purchases.
+     */
+    distinct?: PurchaseScalarFieldEnum | PurchaseScalarFieldEnum[]
+  }
+
+  /**
+   * Purchase findFirstOrThrow
+   */
+  export type PurchaseFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Purchase
+     */
+    select?: PurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Purchase
+     */
+    omit?: PurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PurchaseInclude<ExtArgs> | null
+    /**
+     * Filter, which Purchase to fetch.
+     */
+    where?: PurchaseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Purchases to fetch.
+     */
+    orderBy?: PurchaseOrderByWithRelationInput | PurchaseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Purchases.
+     */
+    cursor?: PurchaseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Purchases from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Purchases.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Purchases.
+     */
+    distinct?: PurchaseScalarFieldEnum | PurchaseScalarFieldEnum[]
+  }
+
+  /**
+   * Purchase findMany
+   */
+  export type PurchaseFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Purchase
+     */
+    select?: PurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Purchase
+     */
+    omit?: PurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PurchaseInclude<ExtArgs> | null
+    /**
+     * Filter, which Purchases to fetch.
+     */
+    where?: PurchaseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Purchases to fetch.
+     */
+    orderBy?: PurchaseOrderByWithRelationInput | PurchaseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Purchases.
+     */
+    cursor?: PurchaseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Purchases from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Purchases.
+     */
+    skip?: number
+    distinct?: PurchaseScalarFieldEnum | PurchaseScalarFieldEnum[]
+  }
+
+  /**
+   * Purchase create
+   */
+  export type PurchaseCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Purchase
+     */
+    select?: PurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Purchase
+     */
+    omit?: PurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PurchaseInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Purchase.
+     */
+    data: XOR<PurchaseCreateInput, PurchaseUncheckedCreateInput>
+  }
+
+  /**
+   * Purchase createMany
+   */
+  export type PurchaseCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Purchases.
+     */
+    data: PurchaseCreateManyInput | PurchaseCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Purchase update
+   */
+  export type PurchaseUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Purchase
+     */
+    select?: PurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Purchase
+     */
+    omit?: PurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PurchaseInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Purchase.
+     */
+    data: XOR<PurchaseUpdateInput, PurchaseUncheckedUpdateInput>
+    /**
+     * Choose, which Purchase to update.
+     */
+    where: PurchaseWhereUniqueInput
+  }
+
+  /**
+   * Purchase updateMany
+   */
+  export type PurchaseUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Purchases.
+     */
+    data: XOR<PurchaseUpdateManyMutationInput, PurchaseUncheckedUpdateManyInput>
+    /**
+     * Filter which Purchases to update
+     */
+    where?: PurchaseWhereInput
+    /**
+     * Limit how many Purchases to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Purchase upsert
+   */
+  export type PurchaseUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Purchase
+     */
+    select?: PurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Purchase
+     */
+    omit?: PurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PurchaseInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Purchase to update in case it exists.
+     */
+    where: PurchaseWhereUniqueInput
+    /**
+     * In case the Purchase found by the `where` argument doesn't exist, create a new Purchase with this data.
+     */
+    create: XOR<PurchaseCreateInput, PurchaseUncheckedCreateInput>
+    /**
+     * In case the Purchase was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PurchaseUpdateInput, PurchaseUncheckedUpdateInput>
+  }
+
+  /**
+   * Purchase delete
+   */
+  export type PurchaseDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Purchase
+     */
+    select?: PurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Purchase
+     */
+    omit?: PurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PurchaseInclude<ExtArgs> | null
+    /**
+     * Filter which Purchase to delete.
+     */
+    where: PurchaseWhereUniqueInput
+  }
+
+  /**
+   * Purchase deleteMany
+   */
+  export type PurchaseDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Purchases to delete
+     */
+    where?: PurchaseWhereInput
+    /**
+     * Limit how many Purchases to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Purchase.lineItems
+   */
+  export type Purchase$lineItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PurchaseLineItem
+     */
+    select?: PurchaseLineItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PurchaseLineItem
+     */
+    omit?: PurchaseLineItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PurchaseLineItemInclude<ExtArgs> | null
+    where?: PurchaseLineItemWhereInput
+    orderBy?: PurchaseLineItemOrderByWithRelationInput | PurchaseLineItemOrderByWithRelationInput[]
+    cursor?: PurchaseLineItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PurchaseLineItemScalarFieldEnum | PurchaseLineItemScalarFieldEnum[]
+  }
+
+  /**
+   * Purchase without action
+   */
+  export type PurchaseDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Purchase
+     */
+    select?: PurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Purchase
+     */
+    omit?: PurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PurchaseInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PurchaseLineItem
+   */
+
+  export type AggregatePurchaseLineItem = {
+    _count: PurchaseLineItemCountAggregateOutputType | null
+    _avg: PurchaseLineItemAvgAggregateOutputType | null
+    _sum: PurchaseLineItemSumAggregateOutputType | null
+    _min: PurchaseLineItemMinAggregateOutputType | null
+    _max: PurchaseLineItemMaxAggregateOutputType | null
+  }
+
+  export type PurchaseLineItemAvgAggregateOutputType = {
+    qty: number | null
+    rate: Decimal | null
+    taxPercent: Decimal | null
+    taxAmount: Decimal | null
+    totalAmount: Decimal | null
+    pkgCount: number | null
+  }
+
+  export type PurchaseLineItemSumAggregateOutputType = {
+    qty: number | null
+    rate: Decimal | null
+    taxPercent: Decimal | null
+    taxAmount: Decimal | null
+    totalAmount: Decimal | null
+    pkgCount: number | null
+  }
+
+  export type PurchaseLineItemMinAggregateOutputType = {
+    id: string | null
+    purchaseId: string | null
+    productId: string | null
+    description: string | null
+    hsn: string | null
+    qty: number | null
+    rate: Decimal | null
+    taxPercent: Decimal | null
+    taxAmount: Decimal | null
+    totalAmount: Decimal | null
+    pkgCount: number | null
+    pkgType: string | null
+  }
+
+  export type PurchaseLineItemMaxAggregateOutputType = {
+    id: string | null
+    purchaseId: string | null
+    productId: string | null
+    description: string | null
+    hsn: string | null
+    qty: number | null
+    rate: Decimal | null
+    taxPercent: Decimal | null
+    taxAmount: Decimal | null
+    totalAmount: Decimal | null
+    pkgCount: number | null
+    pkgType: string | null
+  }
+
+  export type PurchaseLineItemCountAggregateOutputType = {
+    id: number
+    purchaseId: number
+    productId: number
+    description: number
+    hsn: number
+    qty: number
+    rate: number
+    taxPercent: number
+    taxAmount: number
+    totalAmount: number
+    pkgCount: number
+    pkgType: number
+    _all: number
+  }
+
+
+  export type PurchaseLineItemAvgAggregateInputType = {
+    qty?: true
+    rate?: true
+    taxPercent?: true
+    taxAmount?: true
+    totalAmount?: true
+    pkgCount?: true
+  }
+
+  export type PurchaseLineItemSumAggregateInputType = {
+    qty?: true
+    rate?: true
+    taxPercent?: true
+    taxAmount?: true
+    totalAmount?: true
+    pkgCount?: true
+  }
+
+  export type PurchaseLineItemMinAggregateInputType = {
+    id?: true
+    purchaseId?: true
+    productId?: true
+    description?: true
+    hsn?: true
+    qty?: true
+    rate?: true
+    taxPercent?: true
+    taxAmount?: true
+    totalAmount?: true
+    pkgCount?: true
+    pkgType?: true
+  }
+
+  export type PurchaseLineItemMaxAggregateInputType = {
+    id?: true
+    purchaseId?: true
+    productId?: true
+    description?: true
+    hsn?: true
+    qty?: true
+    rate?: true
+    taxPercent?: true
+    taxAmount?: true
+    totalAmount?: true
+    pkgCount?: true
+    pkgType?: true
+  }
+
+  export type PurchaseLineItemCountAggregateInputType = {
+    id?: true
+    purchaseId?: true
+    productId?: true
+    description?: true
+    hsn?: true
+    qty?: true
+    rate?: true
+    taxPercent?: true
+    taxAmount?: true
+    totalAmount?: true
+    pkgCount?: true
+    pkgType?: true
+    _all?: true
+  }
+
+  export type PurchaseLineItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PurchaseLineItem to aggregate.
+     */
+    where?: PurchaseLineItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PurchaseLineItems to fetch.
+     */
+    orderBy?: PurchaseLineItemOrderByWithRelationInput | PurchaseLineItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PurchaseLineItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PurchaseLineItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PurchaseLineItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PurchaseLineItems
+    **/
+    _count?: true | PurchaseLineItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PurchaseLineItemAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PurchaseLineItemSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PurchaseLineItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PurchaseLineItemMaxAggregateInputType
+  }
+
+  export type GetPurchaseLineItemAggregateType<T extends PurchaseLineItemAggregateArgs> = {
+        [P in keyof T & keyof AggregatePurchaseLineItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePurchaseLineItem[P]>
+      : GetScalarType<T[P], AggregatePurchaseLineItem[P]>
+  }
+
+
+
+
+  export type PurchaseLineItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PurchaseLineItemWhereInput
+    orderBy?: PurchaseLineItemOrderByWithAggregationInput | PurchaseLineItemOrderByWithAggregationInput[]
+    by: PurchaseLineItemScalarFieldEnum[] | PurchaseLineItemScalarFieldEnum
+    having?: PurchaseLineItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PurchaseLineItemCountAggregateInputType | true
+    _avg?: PurchaseLineItemAvgAggregateInputType
+    _sum?: PurchaseLineItemSumAggregateInputType
+    _min?: PurchaseLineItemMinAggregateInputType
+    _max?: PurchaseLineItemMaxAggregateInputType
+  }
+
+  export type PurchaseLineItemGroupByOutputType = {
+    id: string
+    purchaseId: string
+    productId: string | null
+    description: string
+    hsn: string | null
+    qty: number
+    rate: Decimal
+    taxPercent: Decimal
+    taxAmount: Decimal
+    totalAmount: Decimal
+    pkgCount: number
+    pkgType: string
+    _count: PurchaseLineItemCountAggregateOutputType | null
+    _avg: PurchaseLineItemAvgAggregateOutputType | null
+    _sum: PurchaseLineItemSumAggregateOutputType | null
+    _min: PurchaseLineItemMinAggregateOutputType | null
+    _max: PurchaseLineItemMaxAggregateOutputType | null
+  }
+
+  type GetPurchaseLineItemGroupByPayload<T extends PurchaseLineItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PurchaseLineItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PurchaseLineItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PurchaseLineItemGroupByOutputType[P]>
+            : GetScalarType<T[P], PurchaseLineItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PurchaseLineItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    purchaseId?: boolean
+    productId?: boolean
+    description?: boolean
+    hsn?: boolean
+    qty?: boolean
+    rate?: boolean
+    taxPercent?: boolean
+    taxAmount?: boolean
+    totalAmount?: boolean
+    pkgCount?: boolean
+    pkgType?: boolean
+    purchase?: boolean | PurchaseDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["purchaseLineItem"]>
+
+
+
+  export type PurchaseLineItemSelectScalar = {
+    id?: boolean
+    purchaseId?: boolean
+    productId?: boolean
+    description?: boolean
+    hsn?: boolean
+    qty?: boolean
+    rate?: boolean
+    taxPercent?: boolean
+    taxAmount?: boolean
+    totalAmount?: boolean
+    pkgCount?: boolean
+    pkgType?: boolean
+  }
+
+  export type PurchaseLineItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "purchaseId" | "productId" | "description" | "hsn" | "qty" | "rate" | "taxPercent" | "taxAmount" | "totalAmount" | "pkgCount" | "pkgType", ExtArgs["result"]["purchaseLineItem"]>
+  export type PurchaseLineItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    purchase?: boolean | PurchaseDefaultArgs<ExtArgs>
+  }
+
+  export type $PurchaseLineItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PurchaseLineItem"
+    objects: {
+      purchase: Prisma.$PurchasePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      purchaseId: string
+      productId: string | null
+      description: string
+      hsn: string | null
+      qty: number
+      rate: Prisma.Decimal
+      taxPercent: Prisma.Decimal
+      taxAmount: Prisma.Decimal
+      totalAmount: Prisma.Decimal
+      pkgCount: number
+      pkgType: string
+    }, ExtArgs["result"]["purchaseLineItem"]>
+    composites: {}
+  }
+
+  type PurchaseLineItemGetPayload<S extends boolean | null | undefined | PurchaseLineItemDefaultArgs> = $Result.GetResult<Prisma.$PurchaseLineItemPayload, S>
+
+  type PurchaseLineItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PurchaseLineItemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PurchaseLineItemCountAggregateInputType | true
+    }
+
+  export interface PurchaseLineItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PurchaseLineItem'], meta: { name: 'PurchaseLineItem' } }
+    /**
+     * Find zero or one PurchaseLineItem that matches the filter.
+     * @param {PurchaseLineItemFindUniqueArgs} args - Arguments to find a PurchaseLineItem
+     * @example
+     * // Get one PurchaseLineItem
+     * const purchaseLineItem = await prisma.purchaseLineItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PurchaseLineItemFindUniqueArgs>(args: SelectSubset<T, PurchaseLineItemFindUniqueArgs<ExtArgs>>): Prisma__PurchaseLineItemClient<$Result.GetResult<Prisma.$PurchaseLineItemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PurchaseLineItem that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PurchaseLineItemFindUniqueOrThrowArgs} args - Arguments to find a PurchaseLineItem
+     * @example
+     * // Get one PurchaseLineItem
+     * const purchaseLineItem = await prisma.purchaseLineItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PurchaseLineItemFindUniqueOrThrowArgs>(args: SelectSubset<T, PurchaseLineItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PurchaseLineItemClient<$Result.GetResult<Prisma.$PurchaseLineItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PurchaseLineItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PurchaseLineItemFindFirstArgs} args - Arguments to find a PurchaseLineItem
+     * @example
+     * // Get one PurchaseLineItem
+     * const purchaseLineItem = await prisma.purchaseLineItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PurchaseLineItemFindFirstArgs>(args?: SelectSubset<T, PurchaseLineItemFindFirstArgs<ExtArgs>>): Prisma__PurchaseLineItemClient<$Result.GetResult<Prisma.$PurchaseLineItemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PurchaseLineItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PurchaseLineItemFindFirstOrThrowArgs} args - Arguments to find a PurchaseLineItem
+     * @example
+     * // Get one PurchaseLineItem
+     * const purchaseLineItem = await prisma.purchaseLineItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PurchaseLineItemFindFirstOrThrowArgs>(args?: SelectSubset<T, PurchaseLineItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__PurchaseLineItemClient<$Result.GetResult<Prisma.$PurchaseLineItemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PurchaseLineItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PurchaseLineItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PurchaseLineItems
+     * const purchaseLineItems = await prisma.purchaseLineItem.findMany()
+     * 
+     * // Get first 10 PurchaseLineItems
+     * const purchaseLineItems = await prisma.purchaseLineItem.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const purchaseLineItemWithIdOnly = await prisma.purchaseLineItem.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PurchaseLineItemFindManyArgs>(args?: SelectSubset<T, PurchaseLineItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PurchaseLineItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PurchaseLineItem.
+     * @param {PurchaseLineItemCreateArgs} args - Arguments to create a PurchaseLineItem.
+     * @example
+     * // Create one PurchaseLineItem
+     * const PurchaseLineItem = await prisma.purchaseLineItem.create({
+     *   data: {
+     *     // ... data to create a PurchaseLineItem
+     *   }
+     * })
+     * 
+     */
+    create<T extends PurchaseLineItemCreateArgs>(args: SelectSubset<T, PurchaseLineItemCreateArgs<ExtArgs>>): Prisma__PurchaseLineItemClient<$Result.GetResult<Prisma.$PurchaseLineItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PurchaseLineItems.
+     * @param {PurchaseLineItemCreateManyArgs} args - Arguments to create many PurchaseLineItems.
+     * @example
+     * // Create many PurchaseLineItems
+     * const purchaseLineItem = await prisma.purchaseLineItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PurchaseLineItemCreateManyArgs>(args?: SelectSubset<T, PurchaseLineItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a PurchaseLineItem.
+     * @param {PurchaseLineItemDeleteArgs} args - Arguments to delete one PurchaseLineItem.
+     * @example
+     * // Delete one PurchaseLineItem
+     * const PurchaseLineItem = await prisma.purchaseLineItem.delete({
+     *   where: {
+     *     // ... filter to delete one PurchaseLineItem
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PurchaseLineItemDeleteArgs>(args: SelectSubset<T, PurchaseLineItemDeleteArgs<ExtArgs>>): Prisma__PurchaseLineItemClient<$Result.GetResult<Prisma.$PurchaseLineItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PurchaseLineItem.
+     * @param {PurchaseLineItemUpdateArgs} args - Arguments to update one PurchaseLineItem.
+     * @example
+     * // Update one PurchaseLineItem
+     * const purchaseLineItem = await prisma.purchaseLineItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PurchaseLineItemUpdateArgs>(args: SelectSubset<T, PurchaseLineItemUpdateArgs<ExtArgs>>): Prisma__PurchaseLineItemClient<$Result.GetResult<Prisma.$PurchaseLineItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PurchaseLineItems.
+     * @param {PurchaseLineItemDeleteManyArgs} args - Arguments to filter PurchaseLineItems to delete.
+     * @example
+     * // Delete a few PurchaseLineItems
+     * const { count } = await prisma.purchaseLineItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PurchaseLineItemDeleteManyArgs>(args?: SelectSubset<T, PurchaseLineItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PurchaseLineItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PurchaseLineItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PurchaseLineItems
+     * const purchaseLineItem = await prisma.purchaseLineItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PurchaseLineItemUpdateManyArgs>(args: SelectSubset<T, PurchaseLineItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PurchaseLineItem.
+     * @param {PurchaseLineItemUpsertArgs} args - Arguments to update or create a PurchaseLineItem.
+     * @example
+     * // Update or create a PurchaseLineItem
+     * const purchaseLineItem = await prisma.purchaseLineItem.upsert({
+     *   create: {
+     *     // ... data to create a PurchaseLineItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PurchaseLineItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PurchaseLineItemUpsertArgs>(args: SelectSubset<T, PurchaseLineItemUpsertArgs<ExtArgs>>): Prisma__PurchaseLineItemClient<$Result.GetResult<Prisma.$PurchaseLineItemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PurchaseLineItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PurchaseLineItemCountArgs} args - Arguments to filter PurchaseLineItems to count.
+     * @example
+     * // Count the number of PurchaseLineItems
+     * const count = await prisma.purchaseLineItem.count({
+     *   where: {
+     *     // ... the filter for the PurchaseLineItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends PurchaseLineItemCountArgs>(
+      args?: Subset<T, PurchaseLineItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PurchaseLineItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PurchaseLineItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PurchaseLineItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PurchaseLineItemAggregateArgs>(args: Subset<T, PurchaseLineItemAggregateArgs>): Prisma.PrismaPromise<GetPurchaseLineItemAggregateType<T>>
+
+    /**
+     * Group by PurchaseLineItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PurchaseLineItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PurchaseLineItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PurchaseLineItemGroupByArgs['orderBy'] }
+        : { orderBy?: PurchaseLineItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PurchaseLineItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPurchaseLineItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PurchaseLineItem model
+   */
+  readonly fields: PurchaseLineItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PurchaseLineItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PurchaseLineItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    purchase<T extends PurchaseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PurchaseDefaultArgs<ExtArgs>>): Prisma__PurchaseClient<$Result.GetResult<Prisma.$PurchasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PurchaseLineItem model
+   */
+  interface PurchaseLineItemFieldRefs {
+    readonly id: FieldRef<"PurchaseLineItem", 'String'>
+    readonly purchaseId: FieldRef<"PurchaseLineItem", 'String'>
+    readonly productId: FieldRef<"PurchaseLineItem", 'String'>
+    readonly description: FieldRef<"PurchaseLineItem", 'String'>
+    readonly hsn: FieldRef<"PurchaseLineItem", 'String'>
+    readonly qty: FieldRef<"PurchaseLineItem", 'Int'>
+    readonly rate: FieldRef<"PurchaseLineItem", 'Decimal'>
+    readonly taxPercent: FieldRef<"PurchaseLineItem", 'Decimal'>
+    readonly taxAmount: FieldRef<"PurchaseLineItem", 'Decimal'>
+    readonly totalAmount: FieldRef<"PurchaseLineItem", 'Decimal'>
+    readonly pkgCount: FieldRef<"PurchaseLineItem", 'Int'>
+    readonly pkgType: FieldRef<"PurchaseLineItem", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PurchaseLineItem findUnique
+   */
+  export type PurchaseLineItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PurchaseLineItem
+     */
+    select?: PurchaseLineItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PurchaseLineItem
+     */
+    omit?: PurchaseLineItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PurchaseLineItemInclude<ExtArgs> | null
+    /**
+     * Filter, which PurchaseLineItem to fetch.
+     */
+    where: PurchaseLineItemWhereUniqueInput
+  }
+
+  /**
+   * PurchaseLineItem findUniqueOrThrow
+   */
+  export type PurchaseLineItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PurchaseLineItem
+     */
+    select?: PurchaseLineItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PurchaseLineItem
+     */
+    omit?: PurchaseLineItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PurchaseLineItemInclude<ExtArgs> | null
+    /**
+     * Filter, which PurchaseLineItem to fetch.
+     */
+    where: PurchaseLineItemWhereUniqueInput
+  }
+
+  /**
+   * PurchaseLineItem findFirst
+   */
+  export type PurchaseLineItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PurchaseLineItem
+     */
+    select?: PurchaseLineItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PurchaseLineItem
+     */
+    omit?: PurchaseLineItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PurchaseLineItemInclude<ExtArgs> | null
+    /**
+     * Filter, which PurchaseLineItem to fetch.
+     */
+    where?: PurchaseLineItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PurchaseLineItems to fetch.
+     */
+    orderBy?: PurchaseLineItemOrderByWithRelationInput | PurchaseLineItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PurchaseLineItems.
+     */
+    cursor?: PurchaseLineItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PurchaseLineItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PurchaseLineItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PurchaseLineItems.
+     */
+    distinct?: PurchaseLineItemScalarFieldEnum | PurchaseLineItemScalarFieldEnum[]
+  }
+
+  /**
+   * PurchaseLineItem findFirstOrThrow
+   */
+  export type PurchaseLineItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PurchaseLineItem
+     */
+    select?: PurchaseLineItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PurchaseLineItem
+     */
+    omit?: PurchaseLineItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PurchaseLineItemInclude<ExtArgs> | null
+    /**
+     * Filter, which PurchaseLineItem to fetch.
+     */
+    where?: PurchaseLineItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PurchaseLineItems to fetch.
+     */
+    orderBy?: PurchaseLineItemOrderByWithRelationInput | PurchaseLineItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PurchaseLineItems.
+     */
+    cursor?: PurchaseLineItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PurchaseLineItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PurchaseLineItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PurchaseLineItems.
+     */
+    distinct?: PurchaseLineItemScalarFieldEnum | PurchaseLineItemScalarFieldEnum[]
+  }
+
+  /**
+   * PurchaseLineItem findMany
+   */
+  export type PurchaseLineItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PurchaseLineItem
+     */
+    select?: PurchaseLineItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PurchaseLineItem
+     */
+    omit?: PurchaseLineItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PurchaseLineItemInclude<ExtArgs> | null
+    /**
+     * Filter, which PurchaseLineItems to fetch.
+     */
+    where?: PurchaseLineItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PurchaseLineItems to fetch.
+     */
+    orderBy?: PurchaseLineItemOrderByWithRelationInput | PurchaseLineItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PurchaseLineItems.
+     */
+    cursor?: PurchaseLineItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PurchaseLineItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PurchaseLineItems.
+     */
+    skip?: number
+    distinct?: PurchaseLineItemScalarFieldEnum | PurchaseLineItemScalarFieldEnum[]
+  }
+
+  /**
+   * PurchaseLineItem create
+   */
+  export type PurchaseLineItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PurchaseLineItem
+     */
+    select?: PurchaseLineItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PurchaseLineItem
+     */
+    omit?: PurchaseLineItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PurchaseLineItemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PurchaseLineItem.
+     */
+    data: XOR<PurchaseLineItemCreateInput, PurchaseLineItemUncheckedCreateInput>
+  }
+
+  /**
+   * PurchaseLineItem createMany
+   */
+  export type PurchaseLineItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PurchaseLineItems.
+     */
+    data: PurchaseLineItemCreateManyInput | PurchaseLineItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PurchaseLineItem update
+   */
+  export type PurchaseLineItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PurchaseLineItem
+     */
+    select?: PurchaseLineItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PurchaseLineItem
+     */
+    omit?: PurchaseLineItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PurchaseLineItemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PurchaseLineItem.
+     */
+    data: XOR<PurchaseLineItemUpdateInput, PurchaseLineItemUncheckedUpdateInput>
+    /**
+     * Choose, which PurchaseLineItem to update.
+     */
+    where: PurchaseLineItemWhereUniqueInput
+  }
+
+  /**
+   * PurchaseLineItem updateMany
+   */
+  export type PurchaseLineItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PurchaseLineItems.
+     */
+    data: XOR<PurchaseLineItemUpdateManyMutationInput, PurchaseLineItemUncheckedUpdateManyInput>
+    /**
+     * Filter which PurchaseLineItems to update
+     */
+    where?: PurchaseLineItemWhereInput
+    /**
+     * Limit how many PurchaseLineItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PurchaseLineItem upsert
+   */
+  export type PurchaseLineItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PurchaseLineItem
+     */
+    select?: PurchaseLineItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PurchaseLineItem
+     */
+    omit?: PurchaseLineItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PurchaseLineItemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PurchaseLineItem to update in case it exists.
+     */
+    where: PurchaseLineItemWhereUniqueInput
+    /**
+     * In case the PurchaseLineItem found by the `where` argument doesn't exist, create a new PurchaseLineItem with this data.
+     */
+    create: XOR<PurchaseLineItemCreateInput, PurchaseLineItemUncheckedCreateInput>
+    /**
+     * In case the PurchaseLineItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PurchaseLineItemUpdateInput, PurchaseLineItemUncheckedUpdateInput>
+  }
+
+  /**
+   * PurchaseLineItem delete
+   */
+  export type PurchaseLineItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PurchaseLineItem
+     */
+    select?: PurchaseLineItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PurchaseLineItem
+     */
+    omit?: PurchaseLineItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PurchaseLineItemInclude<ExtArgs> | null
+    /**
+     * Filter which PurchaseLineItem to delete.
+     */
+    where: PurchaseLineItemWhereUniqueInput
+  }
+
+  /**
+   * PurchaseLineItem deleteMany
+   */
+  export type PurchaseLineItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PurchaseLineItems to delete
+     */
+    where?: PurchaseLineItemWhereInput
+    /**
+     * Limit how many PurchaseLineItems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PurchaseLineItem without action
+   */
+  export type PurchaseLineItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PurchaseLineItem
+     */
+    select?: PurchaseLineItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PurchaseLineItem
+     */
+    omit?: PurchaseLineItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PurchaseLineItemInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -12934,6 +16496,67 @@ export namespace Prisma {
   export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
+  export const VendorScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    gst: 'gst',
+    email: 'email',
+    phone: 'phone',
+    address1: 'address1',
+    address2: 'address2',
+    state: 'state',
+    pinCode: 'pinCode',
+    active: 'active',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt'
+  };
+
+  export type VendorScalarFieldEnum = (typeof VendorScalarFieldEnum)[keyof typeof VendorScalarFieldEnum]
+
+
+  export const PurchaseScalarFieldEnum: {
+    id: 'id',
+    vendorId: 'vendorId',
+    sequenceNumber: 'sequenceNumber',
+    purchaseNo: 'purchaseNo',
+    date: 'date',
+    gstType: 'gstType',
+    subTotal: 'subTotal',
+    taxTotal: 'taxTotal',
+    grandTotal: 'grandTotal',
+    status: 'status',
+    ewayBill: 'ewayBill',
+    ewayBillUrl: 'ewayBillUrl',
+    vehicleNo: 'vehicleNo',
+    notes: 'notes',
+    createdById: 'createdById',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt'
+  };
+
+  export type PurchaseScalarFieldEnum = (typeof PurchaseScalarFieldEnum)[keyof typeof PurchaseScalarFieldEnum]
+
+
+  export const PurchaseLineItemScalarFieldEnum: {
+    id: 'id',
+    purchaseId: 'purchaseId',
+    productId: 'productId',
+    description: 'description',
+    hsn: 'hsn',
+    qty: 'qty',
+    rate: 'rate',
+    taxPercent: 'taxPercent',
+    taxAmount: 'taxAmount',
+    totalAmount: 'totalAmount',
+    pkgCount: 'pkgCount',
+    pkgType: 'pkgType'
+  };
+
+  export type PurchaseLineItemScalarFieldEnum = (typeof PurchaseLineItemScalarFieldEnum)[keyof typeof PurchaseLineItemScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -13118,6 +16741,49 @@ export namespace Prisma {
   };
 
   export type AuditLogOrderByRelevanceFieldEnum = (typeof AuditLogOrderByRelevanceFieldEnum)[keyof typeof AuditLogOrderByRelevanceFieldEnum]
+
+
+  export const VendorOrderByRelevanceFieldEnum: {
+    id: 'id',
+    name: 'name',
+    gst: 'gst',
+    email: 'email',
+    phone: 'phone',
+    address1: 'address1',
+    address2: 'address2',
+    state: 'state',
+    pinCode: 'pinCode'
+  };
+
+  export type VendorOrderByRelevanceFieldEnum = (typeof VendorOrderByRelevanceFieldEnum)[keyof typeof VendorOrderByRelevanceFieldEnum]
+
+
+  export const PurchaseOrderByRelevanceFieldEnum: {
+    id: 'id',
+    vendorId: 'vendorId',
+    purchaseNo: 'purchaseNo',
+    gstType: 'gstType',
+    status: 'status',
+    ewayBill: 'ewayBill',
+    ewayBillUrl: 'ewayBillUrl',
+    vehicleNo: 'vehicleNo',
+    notes: 'notes',
+    createdById: 'createdById'
+  };
+
+  export type PurchaseOrderByRelevanceFieldEnum = (typeof PurchaseOrderByRelevanceFieldEnum)[keyof typeof PurchaseOrderByRelevanceFieldEnum]
+
+
+  export const PurchaseLineItemOrderByRelevanceFieldEnum: {
+    id: 'id',
+    purchaseId: 'purchaseId',
+    productId: 'productId',
+    description: 'description',
+    hsn: 'hsn',
+    pkgType: 'pkgType'
+  };
+
+  export type PurchaseLineItemOrderByRelevanceFieldEnum = (typeof PurchaseLineItemOrderByRelevanceFieldEnum)[keyof typeof PurchaseLineItemOrderByRelevanceFieldEnum]
 
 
   /**
@@ -14323,6 +17989,321 @@ export namespace Prisma {
     details?: StringNullableWithAggregatesFilter<"AuditLog"> | string | null
     ipAddress?: StringNullableWithAggregatesFilter<"AuditLog"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"AuditLog"> | Date | string
+  }
+
+  export type VendorWhereInput = {
+    AND?: VendorWhereInput | VendorWhereInput[]
+    OR?: VendorWhereInput[]
+    NOT?: VendorWhereInput | VendorWhereInput[]
+    id?: StringFilter<"Vendor"> | string
+    name?: StringFilter<"Vendor"> | string
+    gst?: StringNullableFilter<"Vendor"> | string | null
+    email?: StringNullableFilter<"Vendor"> | string | null
+    phone?: StringNullableFilter<"Vendor"> | string | null
+    address1?: StringFilter<"Vendor"> | string
+    address2?: StringNullableFilter<"Vendor"> | string | null
+    state?: StringFilter<"Vendor"> | string
+    pinCode?: StringNullableFilter<"Vendor"> | string | null
+    active?: BoolFilter<"Vendor"> | boolean
+    createdAt?: DateTimeFilter<"Vendor"> | Date | string
+    updatedAt?: DateTimeFilter<"Vendor"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Vendor"> | Date | string | null
+    purchases?: PurchaseListRelationFilter
+  }
+
+  export type VendorOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    gst?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    address1?: SortOrder
+    address2?: SortOrderInput | SortOrder
+    state?: SortOrder
+    pinCode?: SortOrderInput | SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    purchases?: PurchaseOrderByRelationAggregateInput
+    _relevance?: VendorOrderByRelevanceInput
+  }
+
+  export type VendorWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: VendorWhereInput | VendorWhereInput[]
+    OR?: VendorWhereInput[]
+    NOT?: VendorWhereInput | VendorWhereInput[]
+    name?: StringFilter<"Vendor"> | string
+    gst?: StringNullableFilter<"Vendor"> | string | null
+    email?: StringNullableFilter<"Vendor"> | string | null
+    phone?: StringNullableFilter<"Vendor"> | string | null
+    address1?: StringFilter<"Vendor"> | string
+    address2?: StringNullableFilter<"Vendor"> | string | null
+    state?: StringFilter<"Vendor"> | string
+    pinCode?: StringNullableFilter<"Vendor"> | string | null
+    active?: BoolFilter<"Vendor"> | boolean
+    createdAt?: DateTimeFilter<"Vendor"> | Date | string
+    updatedAt?: DateTimeFilter<"Vendor"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Vendor"> | Date | string | null
+    purchases?: PurchaseListRelationFilter
+  }, "id">
+
+  export type VendorOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    gst?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    address1?: SortOrder
+    address2?: SortOrderInput | SortOrder
+    state?: SortOrder
+    pinCode?: SortOrderInput | SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    _count?: VendorCountOrderByAggregateInput
+    _max?: VendorMaxOrderByAggregateInput
+    _min?: VendorMinOrderByAggregateInput
+  }
+
+  export type VendorScalarWhereWithAggregatesInput = {
+    AND?: VendorScalarWhereWithAggregatesInput | VendorScalarWhereWithAggregatesInput[]
+    OR?: VendorScalarWhereWithAggregatesInput[]
+    NOT?: VendorScalarWhereWithAggregatesInput | VendorScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Vendor"> | string
+    name?: StringWithAggregatesFilter<"Vendor"> | string
+    gst?: StringNullableWithAggregatesFilter<"Vendor"> | string | null
+    email?: StringNullableWithAggregatesFilter<"Vendor"> | string | null
+    phone?: StringNullableWithAggregatesFilter<"Vendor"> | string | null
+    address1?: StringWithAggregatesFilter<"Vendor"> | string
+    address2?: StringNullableWithAggregatesFilter<"Vendor"> | string | null
+    state?: StringWithAggregatesFilter<"Vendor"> | string
+    pinCode?: StringNullableWithAggregatesFilter<"Vendor"> | string | null
+    active?: BoolWithAggregatesFilter<"Vendor"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"Vendor"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Vendor"> | Date | string
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"Vendor"> | Date | string | null
+  }
+
+  export type PurchaseWhereInput = {
+    AND?: PurchaseWhereInput | PurchaseWhereInput[]
+    OR?: PurchaseWhereInput[]
+    NOT?: PurchaseWhereInput | PurchaseWhereInput[]
+    id?: StringFilter<"Purchase"> | string
+    vendorId?: StringFilter<"Purchase"> | string
+    sequenceNumber?: IntFilter<"Purchase"> | number
+    purchaseNo?: StringFilter<"Purchase"> | string
+    date?: DateTimeFilter<"Purchase"> | Date | string
+    gstType?: StringFilter<"Purchase"> | string
+    subTotal?: DecimalFilter<"Purchase"> | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFilter<"Purchase"> | Decimal | DecimalJsLike | number | string
+    grandTotal?: DecimalFilter<"Purchase"> | Decimal | DecimalJsLike | number | string
+    status?: StringFilter<"Purchase"> | string
+    ewayBill?: StringNullableFilter<"Purchase"> | string | null
+    ewayBillUrl?: StringNullableFilter<"Purchase"> | string | null
+    vehicleNo?: StringNullableFilter<"Purchase"> | string | null
+    notes?: StringNullableFilter<"Purchase"> | string | null
+    createdById?: StringNullableFilter<"Purchase"> | string | null
+    createdAt?: DateTimeFilter<"Purchase"> | Date | string
+    updatedAt?: DateTimeFilter<"Purchase"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Purchase"> | Date | string | null
+    vendor?: XOR<VendorScalarRelationFilter, VendorWhereInput>
+    lineItems?: PurchaseLineItemListRelationFilter
+  }
+
+  export type PurchaseOrderByWithRelationInput = {
+    id?: SortOrder
+    vendorId?: SortOrder
+    sequenceNumber?: SortOrder
+    purchaseNo?: SortOrder
+    date?: SortOrder
+    gstType?: SortOrder
+    subTotal?: SortOrder
+    taxTotal?: SortOrder
+    grandTotal?: SortOrder
+    status?: SortOrder
+    ewayBill?: SortOrderInput | SortOrder
+    ewayBillUrl?: SortOrderInput | SortOrder
+    vehicleNo?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    vendor?: VendorOrderByWithRelationInput
+    lineItems?: PurchaseLineItemOrderByRelationAggregateInput
+    _relevance?: PurchaseOrderByRelevanceInput
+  }
+
+  export type PurchaseWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    sequenceNumber?: number
+    purchaseNo?: string
+    AND?: PurchaseWhereInput | PurchaseWhereInput[]
+    OR?: PurchaseWhereInput[]
+    NOT?: PurchaseWhereInput | PurchaseWhereInput[]
+    vendorId?: StringFilter<"Purchase"> | string
+    date?: DateTimeFilter<"Purchase"> | Date | string
+    gstType?: StringFilter<"Purchase"> | string
+    subTotal?: DecimalFilter<"Purchase"> | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFilter<"Purchase"> | Decimal | DecimalJsLike | number | string
+    grandTotal?: DecimalFilter<"Purchase"> | Decimal | DecimalJsLike | number | string
+    status?: StringFilter<"Purchase"> | string
+    ewayBill?: StringNullableFilter<"Purchase"> | string | null
+    ewayBillUrl?: StringNullableFilter<"Purchase"> | string | null
+    vehicleNo?: StringNullableFilter<"Purchase"> | string | null
+    notes?: StringNullableFilter<"Purchase"> | string | null
+    createdById?: StringNullableFilter<"Purchase"> | string | null
+    createdAt?: DateTimeFilter<"Purchase"> | Date | string
+    updatedAt?: DateTimeFilter<"Purchase"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Purchase"> | Date | string | null
+    vendor?: XOR<VendorScalarRelationFilter, VendorWhereInput>
+    lineItems?: PurchaseLineItemListRelationFilter
+  }, "id" | "sequenceNumber" | "purchaseNo">
+
+  export type PurchaseOrderByWithAggregationInput = {
+    id?: SortOrder
+    vendorId?: SortOrder
+    sequenceNumber?: SortOrder
+    purchaseNo?: SortOrder
+    date?: SortOrder
+    gstType?: SortOrder
+    subTotal?: SortOrder
+    taxTotal?: SortOrder
+    grandTotal?: SortOrder
+    status?: SortOrder
+    ewayBill?: SortOrderInput | SortOrder
+    ewayBillUrl?: SortOrderInput | SortOrder
+    vehicleNo?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    _count?: PurchaseCountOrderByAggregateInput
+    _avg?: PurchaseAvgOrderByAggregateInput
+    _max?: PurchaseMaxOrderByAggregateInput
+    _min?: PurchaseMinOrderByAggregateInput
+    _sum?: PurchaseSumOrderByAggregateInput
+  }
+
+  export type PurchaseScalarWhereWithAggregatesInput = {
+    AND?: PurchaseScalarWhereWithAggregatesInput | PurchaseScalarWhereWithAggregatesInput[]
+    OR?: PurchaseScalarWhereWithAggregatesInput[]
+    NOT?: PurchaseScalarWhereWithAggregatesInput | PurchaseScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Purchase"> | string
+    vendorId?: StringWithAggregatesFilter<"Purchase"> | string
+    sequenceNumber?: IntWithAggregatesFilter<"Purchase"> | number
+    purchaseNo?: StringWithAggregatesFilter<"Purchase"> | string
+    date?: DateTimeWithAggregatesFilter<"Purchase"> | Date | string
+    gstType?: StringWithAggregatesFilter<"Purchase"> | string
+    subTotal?: DecimalWithAggregatesFilter<"Purchase"> | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalWithAggregatesFilter<"Purchase"> | Decimal | DecimalJsLike | number | string
+    grandTotal?: DecimalWithAggregatesFilter<"Purchase"> | Decimal | DecimalJsLike | number | string
+    status?: StringWithAggregatesFilter<"Purchase"> | string
+    ewayBill?: StringNullableWithAggregatesFilter<"Purchase"> | string | null
+    ewayBillUrl?: StringNullableWithAggregatesFilter<"Purchase"> | string | null
+    vehicleNo?: StringNullableWithAggregatesFilter<"Purchase"> | string | null
+    notes?: StringNullableWithAggregatesFilter<"Purchase"> | string | null
+    createdById?: StringNullableWithAggregatesFilter<"Purchase"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Purchase"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Purchase"> | Date | string
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"Purchase"> | Date | string | null
+  }
+
+  export type PurchaseLineItemWhereInput = {
+    AND?: PurchaseLineItemWhereInput | PurchaseLineItemWhereInput[]
+    OR?: PurchaseLineItemWhereInput[]
+    NOT?: PurchaseLineItemWhereInput | PurchaseLineItemWhereInput[]
+    id?: StringFilter<"PurchaseLineItem"> | string
+    purchaseId?: StringFilter<"PurchaseLineItem"> | string
+    productId?: StringNullableFilter<"PurchaseLineItem"> | string | null
+    description?: StringFilter<"PurchaseLineItem"> | string
+    hsn?: StringNullableFilter<"PurchaseLineItem"> | string | null
+    qty?: IntFilter<"PurchaseLineItem"> | number
+    rate?: DecimalFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
+    taxPercent?: DecimalFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
+    pkgCount?: IntFilter<"PurchaseLineItem"> | number
+    pkgType?: StringFilter<"PurchaseLineItem"> | string
+    purchase?: XOR<PurchaseScalarRelationFilter, PurchaseWhereInput>
+  }
+
+  export type PurchaseLineItemOrderByWithRelationInput = {
+    id?: SortOrder
+    purchaseId?: SortOrder
+    productId?: SortOrderInput | SortOrder
+    description?: SortOrder
+    hsn?: SortOrderInput | SortOrder
+    qty?: SortOrder
+    rate?: SortOrder
+    taxPercent?: SortOrder
+    taxAmount?: SortOrder
+    totalAmount?: SortOrder
+    pkgCount?: SortOrder
+    pkgType?: SortOrder
+    purchase?: PurchaseOrderByWithRelationInput
+    _relevance?: PurchaseLineItemOrderByRelevanceInput
+  }
+
+  export type PurchaseLineItemWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PurchaseLineItemWhereInput | PurchaseLineItemWhereInput[]
+    OR?: PurchaseLineItemWhereInput[]
+    NOT?: PurchaseLineItemWhereInput | PurchaseLineItemWhereInput[]
+    purchaseId?: StringFilter<"PurchaseLineItem"> | string
+    productId?: StringNullableFilter<"PurchaseLineItem"> | string | null
+    description?: StringFilter<"PurchaseLineItem"> | string
+    hsn?: StringNullableFilter<"PurchaseLineItem"> | string | null
+    qty?: IntFilter<"PurchaseLineItem"> | number
+    rate?: DecimalFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
+    taxPercent?: DecimalFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
+    pkgCount?: IntFilter<"PurchaseLineItem"> | number
+    pkgType?: StringFilter<"PurchaseLineItem"> | string
+    purchase?: XOR<PurchaseScalarRelationFilter, PurchaseWhereInput>
+  }, "id">
+
+  export type PurchaseLineItemOrderByWithAggregationInput = {
+    id?: SortOrder
+    purchaseId?: SortOrder
+    productId?: SortOrderInput | SortOrder
+    description?: SortOrder
+    hsn?: SortOrderInput | SortOrder
+    qty?: SortOrder
+    rate?: SortOrder
+    taxPercent?: SortOrder
+    taxAmount?: SortOrder
+    totalAmount?: SortOrder
+    pkgCount?: SortOrder
+    pkgType?: SortOrder
+    _count?: PurchaseLineItemCountOrderByAggregateInput
+    _avg?: PurchaseLineItemAvgOrderByAggregateInput
+    _max?: PurchaseLineItemMaxOrderByAggregateInput
+    _min?: PurchaseLineItemMinOrderByAggregateInput
+    _sum?: PurchaseLineItemSumOrderByAggregateInput
+  }
+
+  export type PurchaseLineItemScalarWhereWithAggregatesInput = {
+    AND?: PurchaseLineItemScalarWhereWithAggregatesInput | PurchaseLineItemScalarWhereWithAggregatesInput[]
+    OR?: PurchaseLineItemScalarWhereWithAggregatesInput[]
+    NOT?: PurchaseLineItemScalarWhereWithAggregatesInput | PurchaseLineItemScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PurchaseLineItem"> | string
+    purchaseId?: StringWithAggregatesFilter<"PurchaseLineItem"> | string
+    productId?: StringNullableWithAggregatesFilter<"PurchaseLineItem"> | string | null
+    description?: StringWithAggregatesFilter<"PurchaseLineItem"> | string
+    hsn?: StringNullableWithAggregatesFilter<"PurchaseLineItem"> | string | null
+    qty?: IntWithAggregatesFilter<"PurchaseLineItem"> | number
+    rate?: DecimalWithAggregatesFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
+    taxPercent?: DecimalWithAggregatesFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalWithAggregatesFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalWithAggregatesFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
+    pkgCount?: IntWithAggregatesFilter<"PurchaseLineItem"> | number
+    pkgType?: StringWithAggregatesFilter<"PurchaseLineItem"> | string
   }
 
   export type UserCreateInput = {
@@ -15708,6 +19689,376 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type VendorCreateInput = {
+    id?: string
+    name: string
+    gst?: string | null
+    email?: string | null
+    phone?: string | null
+    address1: string
+    address2?: string | null
+    state: string
+    pinCode?: string | null
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    purchases?: PurchaseCreateNestedManyWithoutVendorInput
+  }
+
+  export type VendorUncheckedCreateInput = {
+    id?: string
+    name: string
+    gst?: string | null
+    email?: string | null
+    phone?: string | null
+    address1: string
+    address2?: string | null
+    state: string
+    pinCode?: string | null
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    purchases?: PurchaseUncheckedCreateNestedManyWithoutVendorInput
+  }
+
+  export type VendorUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    gst?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address1?: StringFieldUpdateOperationsInput | string
+    address2?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: StringFieldUpdateOperationsInput | string
+    pinCode?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    purchases?: PurchaseUpdateManyWithoutVendorNestedInput
+  }
+
+  export type VendorUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    gst?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address1?: StringFieldUpdateOperationsInput | string
+    address2?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: StringFieldUpdateOperationsInput | string
+    pinCode?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    purchases?: PurchaseUncheckedUpdateManyWithoutVendorNestedInput
+  }
+
+  export type VendorCreateManyInput = {
+    id?: string
+    name: string
+    gst?: string | null
+    email?: string | null
+    phone?: string | null
+    address1: string
+    address2?: string | null
+    state: string
+    pinCode?: string | null
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+  }
+
+  export type VendorUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    gst?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address1?: StringFieldUpdateOperationsInput | string
+    address2?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: StringFieldUpdateOperationsInput | string
+    pinCode?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type VendorUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    gst?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address1?: StringFieldUpdateOperationsInput | string
+    address2?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: StringFieldUpdateOperationsInput | string
+    pinCode?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type PurchaseCreateInput = {
+    id?: string
+    sequenceNumber: number
+    purchaseNo: string
+    date: Date | string
+    gstType?: string
+    subTotal: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    grandTotal: Decimal | DecimalJsLike | number | string
+    status?: string
+    ewayBill?: string | null
+    ewayBillUrl?: string | null
+    vehicleNo?: string | null
+    notes?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    vendor: VendorCreateNestedOneWithoutPurchasesInput
+    lineItems?: PurchaseLineItemCreateNestedManyWithoutPurchaseInput
+  }
+
+  export type PurchaseUncheckedCreateInput = {
+    id?: string
+    vendorId: string
+    sequenceNumber: number
+    purchaseNo: string
+    date: Date | string
+    gstType?: string
+    subTotal: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    grandTotal: Decimal | DecimalJsLike | number | string
+    status?: string
+    ewayBill?: string | null
+    ewayBillUrl?: string | null
+    vehicleNo?: string | null
+    notes?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    lineItems?: PurchaseLineItemUncheckedCreateNestedManyWithoutPurchaseInput
+  }
+
+  export type PurchaseUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sequenceNumber?: IntFieldUpdateOperationsInput | number
+    purchaseNo?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    gstType?: StringFieldUpdateOperationsInput | string
+    subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    grandTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    ewayBill?: NullableStringFieldUpdateOperationsInput | string | null
+    ewayBillUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    vendor?: VendorUpdateOneRequiredWithoutPurchasesNestedInput
+    lineItems?: PurchaseLineItemUpdateManyWithoutPurchaseNestedInput
+  }
+
+  export type PurchaseUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vendorId?: StringFieldUpdateOperationsInput | string
+    sequenceNumber?: IntFieldUpdateOperationsInput | number
+    purchaseNo?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    gstType?: StringFieldUpdateOperationsInput | string
+    subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    grandTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    ewayBill?: NullableStringFieldUpdateOperationsInput | string | null
+    ewayBillUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lineItems?: PurchaseLineItemUncheckedUpdateManyWithoutPurchaseNestedInput
+  }
+
+  export type PurchaseCreateManyInput = {
+    id?: string
+    vendorId: string
+    sequenceNumber: number
+    purchaseNo: string
+    date: Date | string
+    gstType?: string
+    subTotal: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    grandTotal: Decimal | DecimalJsLike | number | string
+    status?: string
+    ewayBill?: string | null
+    ewayBillUrl?: string | null
+    vehicleNo?: string | null
+    notes?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+  }
+
+  export type PurchaseUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sequenceNumber?: IntFieldUpdateOperationsInput | number
+    purchaseNo?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    gstType?: StringFieldUpdateOperationsInput | string
+    subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    grandTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    ewayBill?: NullableStringFieldUpdateOperationsInput | string | null
+    ewayBillUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type PurchaseUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vendorId?: StringFieldUpdateOperationsInput | string
+    sequenceNumber?: IntFieldUpdateOperationsInput | number
+    purchaseNo?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    gstType?: StringFieldUpdateOperationsInput | string
+    subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    grandTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    ewayBill?: NullableStringFieldUpdateOperationsInput | string | null
+    ewayBillUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type PurchaseLineItemCreateInput = {
+    id?: string
+    productId?: string | null
+    description: string
+    hsn?: string | null
+    qty: number
+    rate: Decimal | DecimalJsLike | number | string
+    taxPercent: Decimal | DecimalJsLike | number | string
+    taxAmount: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
+    pkgCount?: number
+    pkgType?: string
+    purchase: PurchaseCreateNestedOneWithoutLineItemsInput
+  }
+
+  export type PurchaseLineItemUncheckedCreateInput = {
+    id?: string
+    purchaseId: string
+    productId?: string | null
+    description: string
+    hsn?: string | null
+    qty: number
+    rate: Decimal | DecimalJsLike | number | string
+    taxPercent: Decimal | DecimalJsLike | number | string
+    taxAmount: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
+    pkgCount?: number
+    pkgType?: string
+  }
+
+  export type PurchaseLineItemUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    hsn?: NullableStringFieldUpdateOperationsInput | string | null
+    qty?: IntFieldUpdateOperationsInput | number
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    pkgCount?: IntFieldUpdateOperationsInput | number
+    pkgType?: StringFieldUpdateOperationsInput | string
+    purchase?: PurchaseUpdateOneRequiredWithoutLineItemsNestedInput
+  }
+
+  export type PurchaseLineItemUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    purchaseId?: StringFieldUpdateOperationsInput | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    hsn?: NullableStringFieldUpdateOperationsInput | string | null
+    qty?: IntFieldUpdateOperationsInput | number
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    pkgCount?: IntFieldUpdateOperationsInput | number
+    pkgType?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PurchaseLineItemCreateManyInput = {
+    id?: string
+    purchaseId: string
+    productId?: string | null
+    description: string
+    hsn?: string | null
+    qty: number
+    rate: Decimal | DecimalJsLike | number | string
+    taxPercent: Decimal | DecimalJsLike | number | string
+    taxAmount: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
+    pkgCount?: number
+    pkgType?: string
+  }
+
+  export type PurchaseLineItemUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    hsn?: NullableStringFieldUpdateOperationsInput | string | null
+    qty?: IntFieldUpdateOperationsInput | number
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    pkgCount?: IntFieldUpdateOperationsInput | number
+    pkgType?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PurchaseLineItemUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    purchaseId?: StringFieldUpdateOperationsInput | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    hsn?: NullableStringFieldUpdateOperationsInput | string | null
+    qty?: IntFieldUpdateOperationsInput | number
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    pkgCount?: IntFieldUpdateOperationsInput | number
+    pkgType?: StringFieldUpdateOperationsInput | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[]
@@ -16711,6 +21062,242 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type PurchaseListRelationFilter = {
+    every?: PurchaseWhereInput
+    some?: PurchaseWhereInput
+    none?: PurchaseWhereInput
+  }
+
+  export type PurchaseOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type VendorOrderByRelevanceInput = {
+    fields: VendorOrderByRelevanceFieldEnum | VendorOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type VendorCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    gst?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    address1?: SortOrder
+    address2?: SortOrder
+    state?: SortOrder
+    pinCode?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
+  }
+
+  export type VendorMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    gst?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    address1?: SortOrder
+    address2?: SortOrder
+    state?: SortOrder
+    pinCode?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
+  }
+
+  export type VendorMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    gst?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    address1?: SortOrder
+    address2?: SortOrder
+    state?: SortOrder
+    pinCode?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
+  }
+
+  export type VendorScalarRelationFilter = {
+    is?: VendorWhereInput
+    isNot?: VendorWhereInput
+  }
+
+  export type PurchaseLineItemListRelationFilter = {
+    every?: PurchaseLineItemWhereInput
+    some?: PurchaseLineItemWhereInput
+    none?: PurchaseLineItemWhereInput
+  }
+
+  export type PurchaseLineItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PurchaseOrderByRelevanceInput = {
+    fields: PurchaseOrderByRelevanceFieldEnum | PurchaseOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type PurchaseCountOrderByAggregateInput = {
+    id?: SortOrder
+    vendorId?: SortOrder
+    sequenceNumber?: SortOrder
+    purchaseNo?: SortOrder
+    date?: SortOrder
+    gstType?: SortOrder
+    subTotal?: SortOrder
+    taxTotal?: SortOrder
+    grandTotal?: SortOrder
+    status?: SortOrder
+    ewayBill?: SortOrder
+    ewayBillUrl?: SortOrder
+    vehicleNo?: SortOrder
+    notes?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
+  }
+
+  export type PurchaseAvgOrderByAggregateInput = {
+    sequenceNumber?: SortOrder
+    subTotal?: SortOrder
+    taxTotal?: SortOrder
+    grandTotal?: SortOrder
+  }
+
+  export type PurchaseMaxOrderByAggregateInput = {
+    id?: SortOrder
+    vendorId?: SortOrder
+    sequenceNumber?: SortOrder
+    purchaseNo?: SortOrder
+    date?: SortOrder
+    gstType?: SortOrder
+    subTotal?: SortOrder
+    taxTotal?: SortOrder
+    grandTotal?: SortOrder
+    status?: SortOrder
+    ewayBill?: SortOrder
+    ewayBillUrl?: SortOrder
+    vehicleNo?: SortOrder
+    notes?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
+  }
+
+  export type PurchaseMinOrderByAggregateInput = {
+    id?: SortOrder
+    vendorId?: SortOrder
+    sequenceNumber?: SortOrder
+    purchaseNo?: SortOrder
+    date?: SortOrder
+    gstType?: SortOrder
+    subTotal?: SortOrder
+    taxTotal?: SortOrder
+    grandTotal?: SortOrder
+    status?: SortOrder
+    ewayBill?: SortOrder
+    ewayBillUrl?: SortOrder
+    vehicleNo?: SortOrder
+    notes?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
+  }
+
+  export type PurchaseSumOrderByAggregateInput = {
+    sequenceNumber?: SortOrder
+    subTotal?: SortOrder
+    taxTotal?: SortOrder
+    grandTotal?: SortOrder
+  }
+
+  export type PurchaseScalarRelationFilter = {
+    is?: PurchaseWhereInput
+    isNot?: PurchaseWhereInput
+  }
+
+  export type PurchaseLineItemOrderByRelevanceInput = {
+    fields: PurchaseLineItemOrderByRelevanceFieldEnum | PurchaseLineItemOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type PurchaseLineItemCountOrderByAggregateInput = {
+    id?: SortOrder
+    purchaseId?: SortOrder
+    productId?: SortOrder
+    description?: SortOrder
+    hsn?: SortOrder
+    qty?: SortOrder
+    rate?: SortOrder
+    taxPercent?: SortOrder
+    taxAmount?: SortOrder
+    totalAmount?: SortOrder
+    pkgCount?: SortOrder
+    pkgType?: SortOrder
+  }
+
+  export type PurchaseLineItemAvgOrderByAggregateInput = {
+    qty?: SortOrder
+    rate?: SortOrder
+    taxPercent?: SortOrder
+    taxAmount?: SortOrder
+    totalAmount?: SortOrder
+    pkgCount?: SortOrder
+  }
+
+  export type PurchaseLineItemMaxOrderByAggregateInput = {
+    id?: SortOrder
+    purchaseId?: SortOrder
+    productId?: SortOrder
+    description?: SortOrder
+    hsn?: SortOrder
+    qty?: SortOrder
+    rate?: SortOrder
+    taxPercent?: SortOrder
+    taxAmount?: SortOrder
+    totalAmount?: SortOrder
+    pkgCount?: SortOrder
+    pkgType?: SortOrder
+  }
+
+  export type PurchaseLineItemMinOrderByAggregateInput = {
+    id?: SortOrder
+    purchaseId?: SortOrder
+    productId?: SortOrder
+    description?: SortOrder
+    hsn?: SortOrder
+    qty?: SortOrder
+    rate?: SortOrder
+    taxPercent?: SortOrder
+    taxAmount?: SortOrder
+    totalAmount?: SortOrder
+    pkgCount?: SortOrder
+    pkgType?: SortOrder
+  }
+
+  export type PurchaseLineItemSumOrderByAggregateInput = {
+    qty?: SortOrder
+    rate?: SortOrder
+    taxPercent?: SortOrder
+    taxAmount?: SortOrder
+    totalAmount?: SortOrder
+    pkgCount?: SortOrder
+  }
+
   export type AuditLogCreateNestedManyWithoutUserInput = {
     create?: XOR<AuditLogCreateWithoutUserInput, AuditLogUncheckedCreateWithoutUserInput> | AuditLogCreateWithoutUserInput[] | AuditLogUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AuditLogCreateOrConnectWithoutUserInput | AuditLogCreateOrConnectWithoutUserInput[]
@@ -17083,6 +21670,118 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCreatedAuditsInput, UserUpdateWithoutCreatedAuditsInput>, UserUncheckedUpdateWithoutCreatedAuditsInput>
+  }
+
+  export type PurchaseCreateNestedManyWithoutVendorInput = {
+    create?: XOR<PurchaseCreateWithoutVendorInput, PurchaseUncheckedCreateWithoutVendorInput> | PurchaseCreateWithoutVendorInput[] | PurchaseUncheckedCreateWithoutVendorInput[]
+    connectOrCreate?: PurchaseCreateOrConnectWithoutVendorInput | PurchaseCreateOrConnectWithoutVendorInput[]
+    createMany?: PurchaseCreateManyVendorInputEnvelope
+    connect?: PurchaseWhereUniqueInput | PurchaseWhereUniqueInput[]
+  }
+
+  export type PurchaseUncheckedCreateNestedManyWithoutVendorInput = {
+    create?: XOR<PurchaseCreateWithoutVendorInput, PurchaseUncheckedCreateWithoutVendorInput> | PurchaseCreateWithoutVendorInput[] | PurchaseUncheckedCreateWithoutVendorInput[]
+    connectOrCreate?: PurchaseCreateOrConnectWithoutVendorInput | PurchaseCreateOrConnectWithoutVendorInput[]
+    createMany?: PurchaseCreateManyVendorInputEnvelope
+    connect?: PurchaseWhereUniqueInput | PurchaseWhereUniqueInput[]
+  }
+
+  export type PurchaseUpdateManyWithoutVendorNestedInput = {
+    create?: XOR<PurchaseCreateWithoutVendorInput, PurchaseUncheckedCreateWithoutVendorInput> | PurchaseCreateWithoutVendorInput[] | PurchaseUncheckedCreateWithoutVendorInput[]
+    connectOrCreate?: PurchaseCreateOrConnectWithoutVendorInput | PurchaseCreateOrConnectWithoutVendorInput[]
+    upsert?: PurchaseUpsertWithWhereUniqueWithoutVendorInput | PurchaseUpsertWithWhereUniqueWithoutVendorInput[]
+    createMany?: PurchaseCreateManyVendorInputEnvelope
+    set?: PurchaseWhereUniqueInput | PurchaseWhereUniqueInput[]
+    disconnect?: PurchaseWhereUniqueInput | PurchaseWhereUniqueInput[]
+    delete?: PurchaseWhereUniqueInput | PurchaseWhereUniqueInput[]
+    connect?: PurchaseWhereUniqueInput | PurchaseWhereUniqueInput[]
+    update?: PurchaseUpdateWithWhereUniqueWithoutVendorInput | PurchaseUpdateWithWhereUniqueWithoutVendorInput[]
+    updateMany?: PurchaseUpdateManyWithWhereWithoutVendorInput | PurchaseUpdateManyWithWhereWithoutVendorInput[]
+    deleteMany?: PurchaseScalarWhereInput | PurchaseScalarWhereInput[]
+  }
+
+  export type PurchaseUncheckedUpdateManyWithoutVendorNestedInput = {
+    create?: XOR<PurchaseCreateWithoutVendorInput, PurchaseUncheckedCreateWithoutVendorInput> | PurchaseCreateWithoutVendorInput[] | PurchaseUncheckedCreateWithoutVendorInput[]
+    connectOrCreate?: PurchaseCreateOrConnectWithoutVendorInput | PurchaseCreateOrConnectWithoutVendorInput[]
+    upsert?: PurchaseUpsertWithWhereUniqueWithoutVendorInput | PurchaseUpsertWithWhereUniqueWithoutVendorInput[]
+    createMany?: PurchaseCreateManyVendorInputEnvelope
+    set?: PurchaseWhereUniqueInput | PurchaseWhereUniqueInput[]
+    disconnect?: PurchaseWhereUniqueInput | PurchaseWhereUniqueInput[]
+    delete?: PurchaseWhereUniqueInput | PurchaseWhereUniqueInput[]
+    connect?: PurchaseWhereUniqueInput | PurchaseWhereUniqueInput[]
+    update?: PurchaseUpdateWithWhereUniqueWithoutVendorInput | PurchaseUpdateWithWhereUniqueWithoutVendorInput[]
+    updateMany?: PurchaseUpdateManyWithWhereWithoutVendorInput | PurchaseUpdateManyWithWhereWithoutVendorInput[]
+    deleteMany?: PurchaseScalarWhereInput | PurchaseScalarWhereInput[]
+  }
+
+  export type VendorCreateNestedOneWithoutPurchasesInput = {
+    create?: XOR<VendorCreateWithoutPurchasesInput, VendorUncheckedCreateWithoutPurchasesInput>
+    connectOrCreate?: VendorCreateOrConnectWithoutPurchasesInput
+    connect?: VendorWhereUniqueInput
+  }
+
+  export type PurchaseLineItemCreateNestedManyWithoutPurchaseInput = {
+    create?: XOR<PurchaseLineItemCreateWithoutPurchaseInput, PurchaseLineItemUncheckedCreateWithoutPurchaseInput> | PurchaseLineItemCreateWithoutPurchaseInput[] | PurchaseLineItemUncheckedCreateWithoutPurchaseInput[]
+    connectOrCreate?: PurchaseLineItemCreateOrConnectWithoutPurchaseInput | PurchaseLineItemCreateOrConnectWithoutPurchaseInput[]
+    createMany?: PurchaseLineItemCreateManyPurchaseInputEnvelope
+    connect?: PurchaseLineItemWhereUniqueInput | PurchaseLineItemWhereUniqueInput[]
+  }
+
+  export type PurchaseLineItemUncheckedCreateNestedManyWithoutPurchaseInput = {
+    create?: XOR<PurchaseLineItemCreateWithoutPurchaseInput, PurchaseLineItemUncheckedCreateWithoutPurchaseInput> | PurchaseLineItemCreateWithoutPurchaseInput[] | PurchaseLineItemUncheckedCreateWithoutPurchaseInput[]
+    connectOrCreate?: PurchaseLineItemCreateOrConnectWithoutPurchaseInput | PurchaseLineItemCreateOrConnectWithoutPurchaseInput[]
+    createMany?: PurchaseLineItemCreateManyPurchaseInputEnvelope
+    connect?: PurchaseLineItemWhereUniqueInput | PurchaseLineItemWhereUniqueInput[]
+  }
+
+  export type VendorUpdateOneRequiredWithoutPurchasesNestedInput = {
+    create?: XOR<VendorCreateWithoutPurchasesInput, VendorUncheckedCreateWithoutPurchasesInput>
+    connectOrCreate?: VendorCreateOrConnectWithoutPurchasesInput
+    upsert?: VendorUpsertWithoutPurchasesInput
+    connect?: VendorWhereUniqueInput
+    update?: XOR<XOR<VendorUpdateToOneWithWhereWithoutPurchasesInput, VendorUpdateWithoutPurchasesInput>, VendorUncheckedUpdateWithoutPurchasesInput>
+  }
+
+  export type PurchaseLineItemUpdateManyWithoutPurchaseNestedInput = {
+    create?: XOR<PurchaseLineItemCreateWithoutPurchaseInput, PurchaseLineItemUncheckedCreateWithoutPurchaseInput> | PurchaseLineItemCreateWithoutPurchaseInput[] | PurchaseLineItemUncheckedCreateWithoutPurchaseInput[]
+    connectOrCreate?: PurchaseLineItemCreateOrConnectWithoutPurchaseInput | PurchaseLineItemCreateOrConnectWithoutPurchaseInput[]
+    upsert?: PurchaseLineItemUpsertWithWhereUniqueWithoutPurchaseInput | PurchaseLineItemUpsertWithWhereUniqueWithoutPurchaseInput[]
+    createMany?: PurchaseLineItemCreateManyPurchaseInputEnvelope
+    set?: PurchaseLineItemWhereUniqueInput | PurchaseLineItemWhereUniqueInput[]
+    disconnect?: PurchaseLineItemWhereUniqueInput | PurchaseLineItemWhereUniqueInput[]
+    delete?: PurchaseLineItemWhereUniqueInput | PurchaseLineItemWhereUniqueInput[]
+    connect?: PurchaseLineItemWhereUniqueInput | PurchaseLineItemWhereUniqueInput[]
+    update?: PurchaseLineItemUpdateWithWhereUniqueWithoutPurchaseInput | PurchaseLineItemUpdateWithWhereUniqueWithoutPurchaseInput[]
+    updateMany?: PurchaseLineItemUpdateManyWithWhereWithoutPurchaseInput | PurchaseLineItemUpdateManyWithWhereWithoutPurchaseInput[]
+    deleteMany?: PurchaseLineItemScalarWhereInput | PurchaseLineItemScalarWhereInput[]
+  }
+
+  export type PurchaseLineItemUncheckedUpdateManyWithoutPurchaseNestedInput = {
+    create?: XOR<PurchaseLineItemCreateWithoutPurchaseInput, PurchaseLineItemUncheckedCreateWithoutPurchaseInput> | PurchaseLineItemCreateWithoutPurchaseInput[] | PurchaseLineItemUncheckedCreateWithoutPurchaseInput[]
+    connectOrCreate?: PurchaseLineItemCreateOrConnectWithoutPurchaseInput | PurchaseLineItemCreateOrConnectWithoutPurchaseInput[]
+    upsert?: PurchaseLineItemUpsertWithWhereUniqueWithoutPurchaseInput | PurchaseLineItemUpsertWithWhereUniqueWithoutPurchaseInput[]
+    createMany?: PurchaseLineItemCreateManyPurchaseInputEnvelope
+    set?: PurchaseLineItemWhereUniqueInput | PurchaseLineItemWhereUniqueInput[]
+    disconnect?: PurchaseLineItemWhereUniqueInput | PurchaseLineItemWhereUniqueInput[]
+    delete?: PurchaseLineItemWhereUniqueInput | PurchaseLineItemWhereUniqueInput[]
+    connect?: PurchaseLineItemWhereUniqueInput | PurchaseLineItemWhereUniqueInput[]
+    update?: PurchaseLineItemUpdateWithWhereUniqueWithoutPurchaseInput | PurchaseLineItemUpdateWithWhereUniqueWithoutPurchaseInput[]
+    updateMany?: PurchaseLineItemUpdateManyWithWhereWithoutPurchaseInput | PurchaseLineItemUpdateManyWithWhereWithoutPurchaseInput[]
+    deleteMany?: PurchaseLineItemScalarWhereInput | PurchaseLineItemScalarWhereInput[]
+  }
+
+  export type PurchaseCreateNestedOneWithoutLineItemsInput = {
+    create?: XOR<PurchaseCreateWithoutLineItemsInput, PurchaseUncheckedCreateWithoutLineItemsInput>
+    connectOrCreate?: PurchaseCreateOrConnectWithoutLineItemsInput
+    connect?: PurchaseWhereUniqueInput
+  }
+
+  export type PurchaseUpdateOneRequiredWithoutLineItemsNestedInput = {
+    create?: XOR<PurchaseCreateWithoutLineItemsInput, PurchaseUncheckedCreateWithoutLineItemsInput>
+    connectOrCreate?: PurchaseCreateOrConnectWithoutLineItemsInput
+    upsert?: PurchaseUpsertWithoutLineItemsInput
+    connect?: PurchaseWhereUniqueInput
+    update?: XOR<XOR<PurchaseUpdateToOneWithWhereWithoutLineItemsInput, PurchaseUpdateWithoutLineItemsInput>, PurchaseUncheckedUpdateWithoutLineItemsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -18551,6 +23250,350 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type PurchaseCreateWithoutVendorInput = {
+    id?: string
+    sequenceNumber: number
+    purchaseNo: string
+    date: Date | string
+    gstType?: string
+    subTotal: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    grandTotal: Decimal | DecimalJsLike | number | string
+    status?: string
+    ewayBill?: string | null
+    ewayBillUrl?: string | null
+    vehicleNo?: string | null
+    notes?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    lineItems?: PurchaseLineItemCreateNestedManyWithoutPurchaseInput
+  }
+
+  export type PurchaseUncheckedCreateWithoutVendorInput = {
+    id?: string
+    sequenceNumber: number
+    purchaseNo: string
+    date: Date | string
+    gstType?: string
+    subTotal: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    grandTotal: Decimal | DecimalJsLike | number | string
+    status?: string
+    ewayBill?: string | null
+    ewayBillUrl?: string | null
+    vehicleNo?: string | null
+    notes?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    lineItems?: PurchaseLineItemUncheckedCreateNestedManyWithoutPurchaseInput
+  }
+
+  export type PurchaseCreateOrConnectWithoutVendorInput = {
+    where: PurchaseWhereUniqueInput
+    create: XOR<PurchaseCreateWithoutVendorInput, PurchaseUncheckedCreateWithoutVendorInput>
+  }
+
+  export type PurchaseCreateManyVendorInputEnvelope = {
+    data: PurchaseCreateManyVendorInput | PurchaseCreateManyVendorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PurchaseUpsertWithWhereUniqueWithoutVendorInput = {
+    where: PurchaseWhereUniqueInput
+    update: XOR<PurchaseUpdateWithoutVendorInput, PurchaseUncheckedUpdateWithoutVendorInput>
+    create: XOR<PurchaseCreateWithoutVendorInput, PurchaseUncheckedCreateWithoutVendorInput>
+  }
+
+  export type PurchaseUpdateWithWhereUniqueWithoutVendorInput = {
+    where: PurchaseWhereUniqueInput
+    data: XOR<PurchaseUpdateWithoutVendorInput, PurchaseUncheckedUpdateWithoutVendorInput>
+  }
+
+  export type PurchaseUpdateManyWithWhereWithoutVendorInput = {
+    where: PurchaseScalarWhereInput
+    data: XOR<PurchaseUpdateManyMutationInput, PurchaseUncheckedUpdateManyWithoutVendorInput>
+  }
+
+  export type PurchaseScalarWhereInput = {
+    AND?: PurchaseScalarWhereInput | PurchaseScalarWhereInput[]
+    OR?: PurchaseScalarWhereInput[]
+    NOT?: PurchaseScalarWhereInput | PurchaseScalarWhereInput[]
+    id?: StringFilter<"Purchase"> | string
+    vendorId?: StringFilter<"Purchase"> | string
+    sequenceNumber?: IntFilter<"Purchase"> | number
+    purchaseNo?: StringFilter<"Purchase"> | string
+    date?: DateTimeFilter<"Purchase"> | Date | string
+    gstType?: StringFilter<"Purchase"> | string
+    subTotal?: DecimalFilter<"Purchase"> | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFilter<"Purchase"> | Decimal | DecimalJsLike | number | string
+    grandTotal?: DecimalFilter<"Purchase"> | Decimal | DecimalJsLike | number | string
+    status?: StringFilter<"Purchase"> | string
+    ewayBill?: StringNullableFilter<"Purchase"> | string | null
+    ewayBillUrl?: StringNullableFilter<"Purchase"> | string | null
+    vehicleNo?: StringNullableFilter<"Purchase"> | string | null
+    notes?: StringNullableFilter<"Purchase"> | string | null
+    createdById?: StringNullableFilter<"Purchase"> | string | null
+    createdAt?: DateTimeFilter<"Purchase"> | Date | string
+    updatedAt?: DateTimeFilter<"Purchase"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Purchase"> | Date | string | null
+  }
+
+  export type VendorCreateWithoutPurchasesInput = {
+    id?: string
+    name: string
+    gst?: string | null
+    email?: string | null
+    phone?: string | null
+    address1: string
+    address2?: string | null
+    state: string
+    pinCode?: string | null
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+  }
+
+  export type VendorUncheckedCreateWithoutPurchasesInput = {
+    id?: string
+    name: string
+    gst?: string | null
+    email?: string | null
+    phone?: string | null
+    address1: string
+    address2?: string | null
+    state: string
+    pinCode?: string | null
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+  }
+
+  export type VendorCreateOrConnectWithoutPurchasesInput = {
+    where: VendorWhereUniqueInput
+    create: XOR<VendorCreateWithoutPurchasesInput, VendorUncheckedCreateWithoutPurchasesInput>
+  }
+
+  export type PurchaseLineItemCreateWithoutPurchaseInput = {
+    id?: string
+    productId?: string | null
+    description: string
+    hsn?: string | null
+    qty: number
+    rate: Decimal | DecimalJsLike | number | string
+    taxPercent: Decimal | DecimalJsLike | number | string
+    taxAmount: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
+    pkgCount?: number
+    pkgType?: string
+  }
+
+  export type PurchaseLineItemUncheckedCreateWithoutPurchaseInput = {
+    id?: string
+    productId?: string | null
+    description: string
+    hsn?: string | null
+    qty: number
+    rate: Decimal | DecimalJsLike | number | string
+    taxPercent: Decimal | DecimalJsLike | number | string
+    taxAmount: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
+    pkgCount?: number
+    pkgType?: string
+  }
+
+  export type PurchaseLineItemCreateOrConnectWithoutPurchaseInput = {
+    where: PurchaseLineItemWhereUniqueInput
+    create: XOR<PurchaseLineItemCreateWithoutPurchaseInput, PurchaseLineItemUncheckedCreateWithoutPurchaseInput>
+  }
+
+  export type PurchaseLineItemCreateManyPurchaseInputEnvelope = {
+    data: PurchaseLineItemCreateManyPurchaseInput | PurchaseLineItemCreateManyPurchaseInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type VendorUpsertWithoutPurchasesInput = {
+    update: XOR<VendorUpdateWithoutPurchasesInput, VendorUncheckedUpdateWithoutPurchasesInput>
+    create: XOR<VendorCreateWithoutPurchasesInput, VendorUncheckedCreateWithoutPurchasesInput>
+    where?: VendorWhereInput
+  }
+
+  export type VendorUpdateToOneWithWhereWithoutPurchasesInput = {
+    where?: VendorWhereInput
+    data: XOR<VendorUpdateWithoutPurchasesInput, VendorUncheckedUpdateWithoutPurchasesInput>
+  }
+
+  export type VendorUpdateWithoutPurchasesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    gst?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address1?: StringFieldUpdateOperationsInput | string
+    address2?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: StringFieldUpdateOperationsInput | string
+    pinCode?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type VendorUncheckedUpdateWithoutPurchasesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    gst?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address1?: StringFieldUpdateOperationsInput | string
+    address2?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: StringFieldUpdateOperationsInput | string
+    pinCode?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type PurchaseLineItemUpsertWithWhereUniqueWithoutPurchaseInput = {
+    where: PurchaseLineItemWhereUniqueInput
+    update: XOR<PurchaseLineItemUpdateWithoutPurchaseInput, PurchaseLineItemUncheckedUpdateWithoutPurchaseInput>
+    create: XOR<PurchaseLineItemCreateWithoutPurchaseInput, PurchaseLineItemUncheckedCreateWithoutPurchaseInput>
+  }
+
+  export type PurchaseLineItemUpdateWithWhereUniqueWithoutPurchaseInput = {
+    where: PurchaseLineItemWhereUniqueInput
+    data: XOR<PurchaseLineItemUpdateWithoutPurchaseInput, PurchaseLineItemUncheckedUpdateWithoutPurchaseInput>
+  }
+
+  export type PurchaseLineItemUpdateManyWithWhereWithoutPurchaseInput = {
+    where: PurchaseLineItemScalarWhereInput
+    data: XOR<PurchaseLineItemUpdateManyMutationInput, PurchaseLineItemUncheckedUpdateManyWithoutPurchaseInput>
+  }
+
+  export type PurchaseLineItemScalarWhereInput = {
+    AND?: PurchaseLineItemScalarWhereInput | PurchaseLineItemScalarWhereInput[]
+    OR?: PurchaseLineItemScalarWhereInput[]
+    NOT?: PurchaseLineItemScalarWhereInput | PurchaseLineItemScalarWhereInput[]
+    id?: StringFilter<"PurchaseLineItem"> | string
+    purchaseId?: StringFilter<"PurchaseLineItem"> | string
+    productId?: StringNullableFilter<"PurchaseLineItem"> | string | null
+    description?: StringFilter<"PurchaseLineItem"> | string
+    hsn?: StringNullableFilter<"PurchaseLineItem"> | string | null
+    qty?: IntFilter<"PurchaseLineItem"> | number
+    rate?: DecimalFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
+    taxPercent?: DecimalFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
+    pkgCount?: IntFilter<"PurchaseLineItem"> | number
+    pkgType?: StringFilter<"PurchaseLineItem"> | string
+  }
+
+  export type PurchaseCreateWithoutLineItemsInput = {
+    id?: string
+    sequenceNumber: number
+    purchaseNo: string
+    date: Date | string
+    gstType?: string
+    subTotal: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    grandTotal: Decimal | DecimalJsLike | number | string
+    status?: string
+    ewayBill?: string | null
+    ewayBillUrl?: string | null
+    vehicleNo?: string | null
+    notes?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    vendor: VendorCreateNestedOneWithoutPurchasesInput
+  }
+
+  export type PurchaseUncheckedCreateWithoutLineItemsInput = {
+    id?: string
+    vendorId: string
+    sequenceNumber: number
+    purchaseNo: string
+    date: Date | string
+    gstType?: string
+    subTotal: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    grandTotal: Decimal | DecimalJsLike | number | string
+    status?: string
+    ewayBill?: string | null
+    ewayBillUrl?: string | null
+    vehicleNo?: string | null
+    notes?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+  }
+
+  export type PurchaseCreateOrConnectWithoutLineItemsInput = {
+    where: PurchaseWhereUniqueInput
+    create: XOR<PurchaseCreateWithoutLineItemsInput, PurchaseUncheckedCreateWithoutLineItemsInput>
+  }
+
+  export type PurchaseUpsertWithoutLineItemsInput = {
+    update: XOR<PurchaseUpdateWithoutLineItemsInput, PurchaseUncheckedUpdateWithoutLineItemsInput>
+    create: XOR<PurchaseCreateWithoutLineItemsInput, PurchaseUncheckedCreateWithoutLineItemsInput>
+    where?: PurchaseWhereInput
+  }
+
+  export type PurchaseUpdateToOneWithWhereWithoutLineItemsInput = {
+    where?: PurchaseWhereInput
+    data: XOR<PurchaseUpdateWithoutLineItemsInput, PurchaseUncheckedUpdateWithoutLineItemsInput>
+  }
+
+  export type PurchaseUpdateWithoutLineItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sequenceNumber?: IntFieldUpdateOperationsInput | number
+    purchaseNo?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    gstType?: StringFieldUpdateOperationsInput | string
+    subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    grandTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    ewayBill?: NullableStringFieldUpdateOperationsInput | string | null
+    ewayBillUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    vendor?: VendorUpdateOneRequiredWithoutPurchasesNestedInput
+  }
+
+  export type PurchaseUncheckedUpdateWithoutLineItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vendorId?: StringFieldUpdateOperationsInput | string
+    sequenceNumber?: IntFieldUpdateOperationsInput | number
+    purchaseNo?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    gstType?: StringFieldUpdateOperationsInput | string
+    subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    grandTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    ewayBill?: NullableStringFieldUpdateOperationsInput | string | null
+    ewayBillUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type AuditLogCreateManyUserInput = {
     id?: string
     action: string
@@ -19007,6 +24050,144 @@ export namespace Prisma {
     taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type PurchaseCreateManyVendorInput = {
+    id?: string
+    sequenceNumber: number
+    purchaseNo: string
+    date: Date | string
+    gstType?: string
+    subTotal: Decimal | DecimalJsLike | number | string
+    taxTotal: Decimal | DecimalJsLike | number | string
+    grandTotal: Decimal | DecimalJsLike | number | string
+    status?: string
+    ewayBill?: string | null
+    ewayBillUrl?: string | null
+    vehicleNo?: string | null
+    notes?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+  }
+
+  export type PurchaseUpdateWithoutVendorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sequenceNumber?: IntFieldUpdateOperationsInput | number
+    purchaseNo?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    gstType?: StringFieldUpdateOperationsInput | string
+    subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    grandTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    ewayBill?: NullableStringFieldUpdateOperationsInput | string | null
+    ewayBillUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lineItems?: PurchaseLineItemUpdateManyWithoutPurchaseNestedInput
+  }
+
+  export type PurchaseUncheckedUpdateWithoutVendorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sequenceNumber?: IntFieldUpdateOperationsInput | number
+    purchaseNo?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    gstType?: StringFieldUpdateOperationsInput | string
+    subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    grandTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    ewayBill?: NullableStringFieldUpdateOperationsInput | string | null
+    ewayBillUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lineItems?: PurchaseLineItemUncheckedUpdateManyWithoutPurchaseNestedInput
+  }
+
+  export type PurchaseUncheckedUpdateManyWithoutVendorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sequenceNumber?: IntFieldUpdateOperationsInput | number
+    purchaseNo?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    gstType?: StringFieldUpdateOperationsInput | string
+    subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    grandTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    ewayBill?: NullableStringFieldUpdateOperationsInput | string | null
+    ewayBillUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type PurchaseLineItemCreateManyPurchaseInput = {
+    id?: string
+    productId?: string | null
+    description: string
+    hsn?: string | null
+    qty: number
+    rate: Decimal | DecimalJsLike | number | string
+    taxPercent: Decimal | DecimalJsLike | number | string
+    taxAmount: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
+    pkgCount?: number
+    pkgType?: string
+  }
+
+  export type PurchaseLineItemUpdateWithoutPurchaseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    hsn?: NullableStringFieldUpdateOperationsInput | string | null
+    qty?: IntFieldUpdateOperationsInput | number
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    pkgCount?: IntFieldUpdateOperationsInput | number
+    pkgType?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PurchaseLineItemUncheckedUpdateWithoutPurchaseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    hsn?: NullableStringFieldUpdateOperationsInput | string | null
+    qty?: IntFieldUpdateOperationsInput | number
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    pkgCount?: IntFieldUpdateOperationsInput | number
+    pkgType?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PurchaseLineItemUncheckedUpdateManyWithoutPurchaseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    hsn?: NullableStringFieldUpdateOperationsInput | string | null
+    qty?: IntFieldUpdateOperationsInput | number
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    pkgCount?: IntFieldUpdateOperationsInput | number
+    pkgType?: StringFieldUpdateOperationsInput | string
   }
 
 

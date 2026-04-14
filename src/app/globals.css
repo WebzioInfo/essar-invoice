@@ -62,6 +62,30 @@
 /* ==========================================
    BASE STYLES
    ========================================== */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background-color: #F8FAFC;
   color: var(--color-slate-900);
@@ -75,45 +99,36 @@ h1, h2, h3, h4, h5, h6, .font-display {
 }
 
 /* Custom scrollbar */
-::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--color-slate-300); border-radius: 99px; }
-::-webkit-scrollbar-thumb:hover { background: var(--color-slate-400); }
+::-webkit-scrollbar-thumb { background: var(--color-slate-200); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-slate-300); }
 
 /* ==========================================
-   CLAYMORPHISM UTILITIES
+   CLAYMORPHISM UTILITIES (REFINED)
    ========================================== */
 
 .clay-card {
   background: white;
-  border-radius: 2.5rem;
+  border-radius: 2rem;
   box-shadow: var(--shadow-clay);
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
   border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
-.clay-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-clay-hover);
-}
+/* Remove hover scale from base class to handle it via Framer Motion or specific classes */
 
 .clay-inner {
   background: #F8FAFC;
   box-shadow: var(--shadow-clay-inner);
-  border-radius: 1.5rem;
+  border-radius: 1.25rem;
 }
 
 .clay-btn {
-  border-radius: 1.25rem;
-  box-shadow: 4px 4px 8px 0 rgba(0, 0, 0, 0.1), 
-              inset 2px 2px 4px 0 rgba(255, 255, 255, 0.3), 
-              inset -2px -2px 4px 0 rgba(0, 0, 0, 0.05);
+  border-radius: 1rem;
+  box-shadow: 4px 4px 8px 0 rgba(0, 0, 0, 0.05), 
+              inset 2px 2px 4px 0 rgba(255, 255, 255, 0.3);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.clay-btn:active {
-  transform: scale(0.96);
-  box-shadow: inset 2px 2px 4px 0 rgba(0, 0, 0, 0.1);
 }
 
 /* ==========================================
@@ -126,15 +141,6 @@ h1, h2, h3, h4, h5, h6, .font-display {
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.animate-reveal {
-  animation: reveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-@keyframes reveal {
-  from { opacity: 0; transform: translateY(20px) scale(0.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
 .input-minimal {
   @apply bg-slate-50 border-transparent rounded-2xl text-base transition-all duration-300;
   box-shadow: var(--shadow-clay-inner);
@@ -145,24 +151,12 @@ h1, h2, h3, h4, h5, h6, .font-display {
   box-shadow: none;
 }
 
-/* Staggered Animations */
-.stagger-1 { animation-delay: 100ms; }
-.stagger-2 { animation-delay: 200ms; }
-.stagger-3 { animation-delay: 300ms; }
-.stagger-4 { animation-delay: 400ms; }
-.stagger-5 { animation-delay: 500ms; }
-
-.animate-in {
-  animation: fade-in-up 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+/* Base Transition Utilities */
+.transition-fluid {
+  transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-slate-200) transparent;
 }

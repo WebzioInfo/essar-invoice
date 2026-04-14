@@ -10,7 +10,7 @@ export default async function PurchasesPage() {
     if (!session) redirect("/login");
 
     const purchaseService = new PurchaseService();
-    const purchases = await purchaseService.getAllPurchases();
+    const { data: purchases } = await purchaseService.getAllPurchases();
 
     const totalInputGst = purchases.reduce((sum: number, p: any) => sum + Number(p.taxTotal), 0);
     const totalPurchaseValue = purchases.reduce((sum: number, p: any) => sum + Number(p.grandTotal), 0);

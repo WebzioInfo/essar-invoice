@@ -47,6 +47,7 @@ model Client {
 
   @@index([deletedAt])
   @@index([active])
+  @@index([active, deletedAt])
   @@map("clients")
 }
 
@@ -68,6 +69,7 @@ model Product {
 
   @@index([deletedAt])
   @@index([active])
+  @@index([active, deletedAt])
   @@map("products")
 }
 
@@ -113,6 +115,8 @@ model Invoice {
   @@index([status])
   @@index([clientId, deletedAt])
   @@index([invoiceNo, deletedAt])
+  @@index([date, deletedAt])
+  @@index([status, deletedAt])
   @@map("invoices")
 }
 
@@ -130,6 +134,7 @@ model Payment {
   invoice    Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
 
   @@index([invoiceId])
+  @@index([paidAt])
   @@map("payments")
 }
 
@@ -170,6 +175,8 @@ model Quotation {
   @@index([date])
   @@index([status])
   @@index([clientId], map: "quotations_clientId_fkey")
+  @@index([date, deletedAt])
+  @@index([status, deletedAt])
   @@map("quotations")
 }
 
@@ -248,5 +255,76 @@ model AuditLog {
 
   @@index([createdAt])
   @@index([userId], map: "audit_logs_userId_fkey")
+  @@index([entityType, entityId])
+  @@index([action])
   @@map("audit_logs")
+}
+
+model Vendor {
+  id        String     @id @default(cuid())
+  name      String
+  gst       String?
+  email     String?
+  phone     String?
+  address1  String
+  address2  String?
+  state     String
+  pinCode   String?
+  active    Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  deletedAt DateTime?
+  purchases Purchase[]
+
+  @@index([deletedAt])
+  @@index([active])
+  @@map("vendors")
+}
+
+model Purchase {
+  id             String             @id @default(cuid())
+  vendorId       String
+  sequenceNumber Int                @unique
+  purchaseNo     String             @unique
+  date           DateTime
+  gstType        String             @default("CGST_SGST")
+  subTotal       Decimal            @db.Decimal(12, 2)
+  taxTotal       Decimal            @db.Decimal(12, 2)
+  grandTotal     Decimal            @db.Decimal(12, 2)
+  status         String             @default("RECEIVED")
+  ewayBill       String?
+  ewayBillUrl    String?
+  vehicleNo      String?
+  notes          String?            @db.Text
+  createdById    String?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  deletedAt      DateTime?
+  vendor         Vendor             @relation(fields: [vendorId], references: [id])
+  lineItems      PurchaseLineItem[]
+
+  @@index([date])
+  @@index([status])
+  @@index([vendorId, deletedAt])
+  @@index([purchaseNo, deletedAt])
+  @@map("purchases")
+}
+
+model PurchaseLineItem {
+  id          String   @id @default(cuid())
+  purchaseId  String
+  productId   String?
+  description String   @db.Text
+  hsn         String?
+  qty         Int
+  rate        Decimal  @db.Decimal(12, 2)
+  taxPercent  Decimal  @db.Decimal(5, 2)
+  taxAmount   Decimal  @db.Decimal(12, 2)
+  totalAmount Decimal  @db.Decimal(12, 2)
+  pkgCount    Int      @default(0)
+  pkgType     String   @default("BOX")
+  purchase    Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+
+  @@index([purchaseId])
+  @@map("purchase_line_items")
 }

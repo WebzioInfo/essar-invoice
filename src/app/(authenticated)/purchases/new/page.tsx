@@ -11,12 +11,13 @@ export default async function NewPurchasePage() {
     if (!session) redirect("/login");
 
     const vendorService = new VendorService();
-    const [vendors, products] = await Promise.all([
+    const [{ data: vendors }, { data: products }] = await Promise.all([
         vendorService.getAllVendors(),
         ProductService.getAllActive()
     ]);
 
     if (vendors.length === 0) {
+
         return (
             <div className="max-w-2xl mx-auto py-12">
                 <Card className="text-center p-8 bg-white border border-slate-200 rounded-4xl shadow-xl">

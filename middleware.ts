@@ -13,7 +13,10 @@ const apiLimiter = rateLimit({ interval: 15 * 60 * 1000, uniqueTokenPerInterval:
 
 export async function middleware(req: NextRequest) {
     const path = req.nextUrl.pathname;
-    const ip = req.ip || '127.0.0.1';
+    // Get IP address from headers or request object with a fallback
+    const forwarded = req.headers.get('x-forwarded-for');
+    const ip = (forwarded ? forwarded.split(',')[0] : (req as any).ip) || '127.0.0.1';
+
 
     const isPublicRoute = PUBLIC_ROUTES.includes(path);
     const isApiRoute = path.startsWith(API_ROUTES_PREFIX);

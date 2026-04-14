@@ -316,6 +316,58 @@ exports.Prisma.AuditLogScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.VendorScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  gst: 'gst',
+  email: 'email',
+  phone: 'phone',
+  address1: 'address1',
+  address2: 'address2',
+  state: 'state',
+  pinCode: 'pinCode',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.PurchaseScalarFieldEnum = {
+  id: 'id',
+  vendorId: 'vendorId',
+  sequenceNumber: 'sequenceNumber',
+  purchaseNo: 'purchaseNo',
+  date: 'date',
+  gstType: 'gstType',
+  subTotal: 'subTotal',
+  taxTotal: 'taxTotal',
+  grandTotal: 'grandTotal',
+  status: 'status',
+  ewayBill: 'ewayBill',
+  ewayBillUrl: 'ewayBillUrl',
+  vehicleNo: 'vehicleNo',
+  notes: 'notes',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.PurchaseLineItemScalarFieldEnum = {
+  id: 'id',
+  purchaseId: 'purchaseId',
+  productId: 'productId',
+  description: 'description',
+  hsn: 'hsn',
+  qty: 'qty',
+  rate: 'rate',
+  taxPercent: 'taxPercent',
+  taxAmount: 'taxAmount',
+  totalAmount: 'totalAmount',
+  pkgCount: 'pkgCount',
+  pkgType: 'pkgType'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -466,6 +518,40 @@ exports.Prisma.AuditLogOrderByRelevanceFieldEnum = {
   ipAddress: 'ipAddress'
 };
 
+exports.Prisma.VendorOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  gst: 'gst',
+  email: 'email',
+  phone: 'phone',
+  address1: 'address1',
+  address2: 'address2',
+  state: 'state',
+  pinCode: 'pinCode'
+};
+
+exports.Prisma.PurchaseOrderByRelevanceFieldEnum = {
+  id: 'id',
+  vendorId: 'vendorId',
+  purchaseNo: 'purchaseNo',
+  gstType: 'gstType',
+  status: 'status',
+  ewayBill: 'ewayBill',
+  ewayBillUrl: 'ewayBillUrl',
+  vehicleNo: 'vehicleNo',
+  notes: 'notes',
+  createdById: 'createdById'
+};
+
+exports.Prisma.PurchaseLineItemOrderByRelevanceFieldEnum = {
+  id: 'id',
+  purchaseId: 'purchaseId',
+  productId: 'productId',
+  description: 'description',
+  hsn: 'hsn',
+  pkgType: 'pkgType'
+};
+
 
 exports.Prisma.ModelName = {
   User: 'User',
@@ -477,7 +563,10 @@ exports.Prisma.ModelName = {
   QuotationLineItem: 'QuotationLineItem',
   CompanySetting: 'CompanySetting',
   InvoiceLineItem: 'InvoiceLineItem',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  Vendor: 'Vendor',
+  Purchase: 'Purchase',
+  PurchaseLineItem: 'PurchaseLineItem'
 };
 
 /**

@@ -206,7 +206,7 @@ const ProductMobileCard = ({ product, onEdit }: { product: Product, onEdit: (pro
             </div>
 
             {showConfirm && (
-                <div className="flex items-center justify-between gap-4 p-4 bg-red-50 rounded-2xl border border-red-100 animate-reveal shadow-inner">
+                <div className="flex items-center justify-between gap-4 p-4 bg-red-50 rounded-2xl border border-red-100 shadow-inner">
                     <div className="flex items-center gap-2">
                         <AlertTriangle className="h-4 w-4 text-red-500" />
                         <span className="text-[10px] font-black text-red-600 uppercase tracking-[0.2em] italic">Purge record?</span>
@@ -237,7 +237,7 @@ export function ProductTable({ products }: ProductTableProps) {
             {/* Unified Modal Overlay */}
             {(editingProduct || isAdding) && (
                 <div className="fixed inset-0 z-100 flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-xl animate-in fade-in duration-500">
-                    <div className="w-full max-w-4xl max-h-[95vh] overflow-y-auto custom-scrollbar animate-reveal">
+                    <div className="w-full max-w-4xl max-h-[95vh] overflow-y-auto custom-scrollbar">
                         <ProductForm
                             product={editingProduct || undefined}
                             onSuccess={() => {

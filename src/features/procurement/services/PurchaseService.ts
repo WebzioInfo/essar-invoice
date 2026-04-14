@@ -1,6 +1,6 @@
 import { PurchaseRepository } from "../repositories/PurchaseRepository";
 import { db } from "@/db/prisma/client";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@/db/generated/client";
 
 const purchaseRepo = new PurchaseRepository();
 

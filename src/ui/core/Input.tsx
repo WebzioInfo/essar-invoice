@@ -13,7 +13,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         return (
             <div className="w-full space-y-2 relative">
                 {label && (
-                    <label className="block text-[10px] font-extrabold uppercase tracking-[0.2em] text-slate-500 ml-1">
+                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 ml-1 opacity-70">
                         {label}
                     </label>
                 )}
@@ -26,8 +26,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                     <input
                         type={type}
                         className={cn(
-                            "input-minimal flex w-full h-14 text-base font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none transition-all duration-300",
-                            icon ? "pl-14" : "pl-6",
+                            "input-minimal flex w-full h-12 text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none transition-all duration-300",
+                            icon ? "pl-12" : "pl-5",
                             error && "ring-2 ring-red-500/20 bg-red-50/10",
                             className
                         )}
@@ -35,7 +35,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                         {...props}
                     />
                 </div>
-                {error && <p className="mt-1 text-[10px] font-bold text-red-500 tracking-tight ml-1 animate-reveal">{error}</p>}
+                {error && <p className="mt-1 text-[10px] font-semibold text-red-500 tracking-tight ml-1">{error}</p>}
             </div>
         )
     }

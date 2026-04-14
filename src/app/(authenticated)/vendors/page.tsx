@@ -13,7 +13,7 @@ export default async function VendorsPage({ searchParams }: PageProps) {
     if (!session) redirect("/login");
 
     const vendorService = new VendorService();
-    const vendors = await vendorService.getAllVendors();
+    const { data: vendors } = await vendorService.getAllVendors();
 
     return (
         <div className="space-y-12 animate-in fade-in duration-700 pb-20">

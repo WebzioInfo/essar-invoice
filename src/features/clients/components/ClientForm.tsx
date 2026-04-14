@@ -16,7 +16,7 @@ export function ClientForm({ client, onSuccess, onCancel }: ClientFormProps) {
     const { formAction, pending, isEdit } = useClientForm(client, onSuccess);
 
     return (
-        <Card className="overflow-hidden group shadow-2xl animate-reveal custom-scrollbar">
+        <Card className="overflow-hidden group shadow-2xl custom-scrollbar">
             <CardHeader className="bg-slate-900 px-10 py-10 group-hover:bg-slate-800 transition-colors">
                 <div className="flex items-center justify-between gap-6">
                     <div className="flex items-center gap-6">

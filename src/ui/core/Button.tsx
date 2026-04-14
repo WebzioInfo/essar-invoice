@@ -21,9 +21,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
         const sizes = {
             sm: "h-9 px-4 text-xs gap-1.5 rounded-xl font-bold",
-            md: "h-12 px-6 text-sm gap-2 rounded-2xl font-extrabold uppercase tracking-widest",
-            lg: "h-14 px-8 text-base gap-3 rounded-3xl font-black uppercase tracking-wider",
-            icon: "h-11 w-11 p-0 rounded-2xl",
+            md: "h-11 px-6 text-sm gap-2 rounded-xl font-semibold",
+            lg: "h-13 px-8 text-base gap-3 rounded-2xl font-bold",
+            icon: "h-10 w-10 p-0 rounded-xl",
         }
 
         return (
@@ -31,7 +31,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                 ref={ref}
                 disabled={disabled || loading}
                 className={cn(
-                    "inline-flex items-center justify-center whitespace-nowrap transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 font-display",
+                    "inline-flex items-center justify-center whitespace-nowrap transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/50 focus-visible:ring-offset-2",
                     variants[variant],
                     sizes[size],
                     className
@@ -39,9 +39,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                 {...props}
               >
                 {loading ? (
-                    <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+                    <div className="h-4 w-4 border-2 border-current/30 border-t-current rounded-full animate-spin mr-2" />
                 ) : null}
-                <span className="relative z-10">{children}</span>
+                <span className="relative z-10 flex items-center gap-2">{children}</span>
             </button>
         )
     }

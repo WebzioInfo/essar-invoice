@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Outfit, Inter } from "next/font/google";
 import { ToastProvider } from "@/context/ToastContext";
+import { LenisProvider } from "@/components/providers/LenisProvider";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -27,11 +28,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${outfit.variable} ${inter.variable} font-sans antialiased selection:bg-primary-100 selection:text-primary-900`}
+        className={`${outfit.variable} ${inter.variable} font-sans antialiased selection:bg-primary-100 selection:text-primary-900 overflow-x-hidden`}
       >
-        <ToastProvider>
-          {children}
-        </ToastProvider>
+        <LenisProvider>
+          <ToastProvider>
+            {children}
+          </ToastProvider>
+        </LenisProvider>
       </body>
     </html>
   );

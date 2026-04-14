@@ -1,5 +1,5 @@
 import { BaseRepository } from "@/lib/repositories/BaseRepository";
-import { Purchase } from "@prisma/client";
+import { Purchase } from "@/db/generated/client";
 
 export class PurchaseRepository extends BaseRepository<Purchase> {
   public model = this.db.purchase;
