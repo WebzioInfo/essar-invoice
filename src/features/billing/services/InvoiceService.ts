@@ -106,6 +106,20 @@ export class InvoiceService {
   async updateInvoice(invoiceId: string, userId: string, rawData: any) {
     const validatedData = await validateData(invoiceSchema, rawData);
     
+    // Check for duplicate invoice numbers (excluding current record)
+    if (validatedData.invoiceNo) {
+      const existingCollision = await db.invoice.findFirst({
+        where: {
+          invoiceNo: validatedData.invoiceNo,
+          id: { not: invoiceId }
+        }
+      });
+
+      if (existingCollision) {
+        throw new Error(`Collision: Invoice number '${validatedData.invoiceNo}' is already taken${existingCollision.deletedAt ? ' (in Trash)' : ''}.`);
+      }
+    }
+
     const invoice = await invoiceRepo.updateWithItems(invoiceId, {
       clientId: validatedData.clientId,
       date: new Date(validatedData.date),

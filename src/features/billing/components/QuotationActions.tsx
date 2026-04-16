@@ -1,12 +1,13 @@
 "use client";
 
-import { useTransition } from "react";
+import { useTransition, useState } from "react";
 import { convertQuotationToInvoiceAction, updateQuotationStatusAction } from "@/features/billing/actions/quotations";
 import { useToast } from "@/context/ToastContext";
 import { Button } from "@/ui/core/Button";
 import { Send, CheckCircle2, TrendingUp, XCircle, ArrowRight, FileText, FileDown, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import apiClient from "@/lib/apiClient";
 
 interface QuotationActionsProps {
     quotationId: string;
@@ -49,6 +50,42 @@ export function QuotationActions({ quotationId, status, convertedInvoiceId }: Qu
                 error("Failed to convert quotation.");
             }
         });
+    };
+
+    const [isDownloading, setIsDownloading] = useState(false);
+
+    const handleDownload = async () => {
+        setIsDownloading(true);
+        try {
+            const res = await apiClient.post("/api/quotations/download", { quotationId }, {
+                responseType: 'blob'
+            });
+
+            const url = URL.createObjectURL(res.data);
+            const a = document.createElement("a");
+            a.href = url;
+            
+            // Extract filename from Content-Disposition header
+            const contentDisposition = res.headers['content-disposition'];
+            let fileName = `quotation-${quotationId}.pdf`;
+            if (contentDisposition) {
+                const fileNameMatch = contentDisposition.match(/filename="(.+)"/);
+                if (fileNameMatch && fileNameMatch.length === 2) {
+                    fileName = fileNameMatch[1];
+                }
+            }
+
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+            success("Proposal downloaded successfully.");
+        } catch (err: any) {
+            error("Failed to generate PDF.");
+        } finally {
+            setIsDownloading(false);
+        }
     };
 
     return (
@@ -106,8 +143,14 @@ export function QuotationActions({ quotationId, status, convertedInvoiceId }: Qu
                 </Link>
             )}
 
-            <Button variant="secondary" className="h-10 px-4 gap-2 border-slate-200">
-                <FileDown className="w-4 h-4" /> PDF
+            <Button 
+                onClick={handleDownload}
+                disabled={isDownloading}
+                variant="secondary" 
+                className="h-10 px-4 gap-2 border-slate-200"
+            >
+                {isDownloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileDown className="w-4 h-4" />}
+                {isDownloading ? "Generating..." : "PDF"}
             </Button>
         </div>
     );

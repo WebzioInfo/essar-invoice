@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/ui/
 import { Button } from "@/ui/core/Button";
 import { Input } from "@/ui/core/Input";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
+import { DownloadInvoiceButton } from "@/features/billing/components/DownloadInvoiceButton";
 
 interface PageProps {
   searchParams: Promise<{ status?: string; q?: string }>;
@@ -202,11 +203,14 @@ export default async function InvoicesPage({ searchParams }: PageProps) {
                       </div>
                     </td>
                     <td className="px-8 py-6 text-right">
-                      <Link href={`/invoices/${inv.id}`}>
-                        <Button variant="ghost" size="sm" className="rounded-xl group-hover:bg-primary-50 group-hover:text-primary-600">
-                          View Details <ArrowUpRight className="ml-2 w-4 h-4 opacity-50" />
-                        </Button>
-                      </Link>
+                      <div className="flex items-center justify-end gap-2">
+                        <DownloadInvoiceButton invoiceId={inv.id} />
+                        <Link href={`/invoices/${inv.id}`}>
+                          <Button variant="ghost" size="sm" className="rounded-xl group-hover:bg-primary-50 group-hover:text-primary-600">
+                            View Details <ArrowUpRight className="ml-2 w-4 h-4 opacity-50" />
+                          </Button>
+                        </Link>
+                      </div>
                     </td>
                   </tr>
                 ))}

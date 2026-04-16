@@ -80,7 +80,18 @@ export function InvoiceActions({ invoiceId, status, isDeleted = false }: Invoice
             const url = URL.createObjectURL(res.data);
             const a = document.createElement("a");
             a.href = url;
-            a.download = `invoice-${invoiceId}.pdf`;
+            
+            // Extract filename from Content-Disposition header
+            const contentDisposition = res.headers['content-disposition'];
+            let fileName = `invoice-${invoiceId}.pdf`;
+            if (contentDisposition) {
+                const fileNameMatch = contentDisposition.match(/filename="(.+)"/);
+                if (fileNameMatch && fileNameMatch.length === 2) {
+                    fileName = fileNameMatch[1];
+                }
+            }
+            
+            a.download = fileName;
             document.body.appendChild(a);
             a.click();
             a.remove();
