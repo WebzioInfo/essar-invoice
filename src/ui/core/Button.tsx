@@ -1,8 +1,10 @@
 import * as React from "react"
 import { cn } from "@/utils"
+import { motion, HTMLMotionProps } from "framer-motion"
 
 export interface ButtonProps
-    extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+    extends Omit<HTMLMotionProps<"button">, "variant" | "children"> {
+    children?: React.ReactNode
     variant?: "primary" | "secondary" | "outline" | "ghost" | "danger" | "success"
     size?: "sm" | "md" | "lg" | "icon"
     loading?: boolean
@@ -27,11 +29,14 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         }
 
         return (
-            <button
+            <motion.button
                 ref={ref}
                 disabled={disabled || loading}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 className={cn(
-                    "inline-flex items-center justify-center whitespace-nowrap transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/50 focus-visible:ring-offset-2",
+                    "inline-flex items-center justify-center whitespace-nowrap transition-colors duration-200 disabled:opacity-50 disabled:pointer-events-none ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/50 focus-visible:ring-offset-2",
                     variants[variant],
                     sizes[size],
                     className
@@ -42,7 +47,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                     <div className="h-4 w-4 border-2 border-current/30 border-t-current rounded-full animate-spin mr-2" />
                 ) : null}
                 <span className="relative z-10 flex items-center gap-2">{children}</span>
-            </button>
+            </motion.button>
         )
     }
 )

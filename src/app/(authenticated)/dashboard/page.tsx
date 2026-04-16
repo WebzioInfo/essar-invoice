@@ -2,7 +2,7 @@ import { db } from "@/db/prisma/client";
 import { verifySessionCookie } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { DashboardClient } from "@/features/dashboard/components/DashboardClient";
-import { ErrorBoundary } from "@/components/common/ErrorBoundary";
+import { ErrorBoundary } from "@/ui/core/ErrorBoundary";
 
 export default async function DashboardPage() {
   const session = await verifySessionCookie();

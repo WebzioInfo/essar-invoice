@@ -2,8 +2,8 @@ import { verifySessionCookie } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { ReportService } from "@/features/reports/services/ReportService";
 import { formatCurrency } from "@/utils/financials";
-import { RevenueChart } from "@/components/reports/RevenueChart";
-import { ClientRevenuePie } from "@/components/reports/ClientRevenuePie";
+import { RevenueChart } from "@/features/reports/components/RevenueChart";
+import { ClientRevenuePie } from "@/features/reports/components/ClientRevenuePie";
 import {
    BarChart3, PieChart, Landmark, ShieldCheck,
    Download, Calendar, TrendingUp, Users,

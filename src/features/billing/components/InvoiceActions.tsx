@@ -9,6 +9,8 @@ import Link from "next/link";
 import apiClient from "@/lib/apiClient";
 import { useRouter } from "next/navigation";
 
+import { useConfirmStore } from "@/hooks/useConfirmStore";
+
 interface InvoiceActionsProps {
     invoiceId: string;
     status: string;
@@ -19,6 +21,7 @@ export function InvoiceActions({ invoiceId, status, isDeleted = false }: Invoice
     const [isPending, startTransition] = useTransition();
     const [isDownloading, setIsDownloading] = useState(false);
     const { success, error, info } = useToast();
+    const { confirm } = useConfirmStore();
     const router = useRouter();
 
     const handleMarkSent = () => {
@@ -32,8 +35,16 @@ export function InvoiceActions({ invoiceId, status, isDeleted = false }: Invoice
         });
     };
 
-    const handleTrash = () => {
-        if (!confirm("Are you sure you want to move this invoice to trash?")) return;
+    const handleTrash = async () => {
+        const confirmed = await confirm({
+            title: "Move to Trash",
+            message: "Are you sure you want to move this invoice to trash? You can restore it later if needed.",
+            type: "warning",
+            confirmText: "Trash It"
+        });
+        
+        if (!confirmed) return;
+
         startTransition(async () => {
             const res = await deleteInvoiceAction(invoiceId);
             if (res && 'success' in res) {
@@ -57,8 +68,16 @@ export function InvoiceActions({ invoiceId, status, isDeleted = false }: Invoice
         });
     };
 
-    const handlePermanentDelete = () => {
-        if (!confirm("CRITICAL: This will permanently delete the invoice record. This action cannot be undone. Proceed?")) return;
+    const handlePermanentDelete = async () => {
+        const confirmed = await confirm({
+            title: "CRITICAL DELETION",
+            message: "This will permanently delete the invoice record from the database. This action is IRREVERSIBLE. Proceed?",
+            type: "danger",
+            confirmText: "DELETE PERMANENTLY"
+        });
+
+        if (!confirmed) return;
+
         startTransition(async () => {
             const res = await permanentlyDeleteInvoiceAction(invoiceId);
             if (res && 'success' in res) {

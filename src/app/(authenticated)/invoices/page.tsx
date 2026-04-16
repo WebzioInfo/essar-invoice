@@ -11,7 +11,7 @@ import { StatusBadge } from "@/features/billing/components/StatusBadge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/ui/core/Card";
 import { Button } from "@/ui/core/Button";
 import { Input } from "@/ui/core/Input";
-import { ErrorBoundary } from "@/components/common/ErrorBoundary";
+import { ErrorBoundary } from "@/ui/core/ErrorBoundary";
 import { DownloadInvoiceButton } from "@/features/billing/components/DownloadInvoiceButton";
 
 interface PageProps {

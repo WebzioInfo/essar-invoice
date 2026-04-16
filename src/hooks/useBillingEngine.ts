@@ -7,6 +7,7 @@ import { calculateBillingTotals, calculateItemTotals } from "@/utils/financials"
 import { Address } from "@/types/invoice";
 
 export type InvoiceItem = {
+    uid: string; // Internal stable key
     productId?: string;
     description: string;
     hsn: string;
@@ -81,7 +82,7 @@ function billingReducer(state: BillingState, action: BillingAction): BillingStat
         case "ADD_ITEM":
             return {
                 ...state,
-                items: [...state.items, { description: "", hsn: "", qty: 1, rate: 0, unit: "NOS", pkgCount: 1, pkgType: "BOX", taxPercent: 18 }]
+                items: [...state.items, { uid: Math.random().toString(36).slice(2, 11), description: "", hsn: "", qty: 1, rate: 0, unit: "NOS", pkgCount: 1, pkgType: "BOX", taxPercent: 18 }]
             };
         case "REMOVE_ITEM":
             return {
@@ -137,6 +138,18 @@ export function useBillingEngine(products: Product[], mode: "INVOICE" | "QUOTATI
             if (initialData.notes) dispatch({ type: "SET_FIELD", field: "notes", value: initialData.notes });
             if (initialData.invoiceNo) dispatch({ type: "SET_FIELD", field: "invoiceNo", value: initialData.invoiceNo });
             
+            // Line Items
+            if (initialData.lineItems && initialData.lineItems.length > 0) {
+                const itemsWithUids = initialData.lineItems.map((it: any) => ({
+                    ...it,
+                    uid: it.uid || Math.random().toString(36).slice(2, 11),
+                    unit: it.unit || "NOS",
+                    pkgCount: it.pkgCount || 1,
+                    pkgType: it.pkgType || "BOX"
+                }));
+                dispatch({ type: "SET_ITEMS", items: itemsWithUids });
+            }
+
             // Address Sync
             dispatch({ type: "SET_BILLING", address: {
                 name: initialData.billingName || "",
@@ -159,34 +172,7 @@ export function useBillingEngine(products: Product[], mode: "INVOICE" | "QUOTATI
             
             dispatch({ type: "SET_FIELD", field: "shippingSameAsBilling", value: initialData.shippingSameAsBilling });
 
-            // Line Items
-            if (initialData.lineItems && initialData.lineItems.length > 0) {
-                initialData.lineItems.forEach((item: any, index: number) => {
-                    if (index === 0) {
-                        // Replace the first empty item if it exists
-                        dispatch({ type: "UPDATE_ITEM", index: 0, field: "description", value: item.description });
-                        dispatch({ type: "UPDATE_ITEM", index: 0, field: "hsn", value: item.hsn });
-                        dispatch({ type: "UPDATE_ITEM", index: 0, field: "qty", value: item.qty });
-                        dispatch({ type: "UPDATE_ITEM", index: 0, field: "rate", value: item.rate });
-                        dispatch({ type: "UPDATE_ITEM", index: 0, field: "unit", value: item.unit || "NOS" });
-                        dispatch({ type: "UPDATE_ITEM", index: 0, field: "taxPercent", value: item.taxPercent });
-                        dispatch({ type: "UPDATE_ITEM", index: 0, field: "pkgCount", value: item.pkgCount || 1 });
-                        dispatch({ type: "UPDATE_ITEM", index: 0, field: "pkgType", value: item.pkgType || "BOX" });
-                        if (item.productId) dispatch({ type: "UPDATE_ITEM", index: 0, field: "productId", value: item.productId });
-                    } else {
-                        dispatch({ type: "ADD_ITEM" });
-                        dispatch({ type: "UPDATE_ITEM", index, field: "description", value: item.description });
-                        dispatch({ type: "UPDATE_ITEM", index, field: "hsn", value: item.hsn });
-                        dispatch({ type: "UPDATE_ITEM", index, field: "qty", value: item.qty });
-                        dispatch({ type: "UPDATE_ITEM", index, field: "rate", value: item.rate });
-                        dispatch({ type: "UPDATE_ITEM", index, field: "unit", value: item.unit || "NOS" });
-                        dispatch({ type: "UPDATE_ITEM", index, field: "taxPercent", value: item.taxPercent });
-                        dispatch({ type: "UPDATE_ITEM", index, field: "pkgCount", value: item.pkgCount || 1 });
-                        dispatch({ type: "UPDATE_ITEM", index, field: "pkgType", value: item.pkgType || "BOX" });
-                        if (item.productId) dispatch({ type: "UPDATE_ITEM", index, field: "productId", value: item.productId });
-                    }
-                });
-            }
+
         }
     }, [initialData]);
 

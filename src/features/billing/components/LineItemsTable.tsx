@@ -213,7 +213,7 @@ export function LineItemsTable({ items, products, handleAddItem, updateItem, rem
             <div className="space-y-4">
                 {items.map((item, index) => (
                     <LineItemRow
-                        key={index}
+                        key={item.uid}
                         item={item}
                         index={index}
                         products={products}

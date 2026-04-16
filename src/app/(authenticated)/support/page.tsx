@@ -12,7 +12,7 @@ import {
   UserCheck
 } from "lucide-react";
 import Link from "next/link";
-import { ErrorBoundary } from "@/components/common/ErrorBoundary";
+import { ErrorBoundary } from "@/ui/core/ErrorBoundary";
 
 export default function SupportPage() {
   const categories = [

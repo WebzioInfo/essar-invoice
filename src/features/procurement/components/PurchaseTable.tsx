@@ -16,22 +16,31 @@ import Link from "next/link";
 import { cn } from "@/utils";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { motion, AnimatePresence } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import apiClient from "@/lib/apiClient";
 
 interface PurchaseTableProps {
     purchases: any[];
 }
 
-export function PurchaseTable({ purchases }: PurchaseTableProps) {
+export function PurchaseTable({ purchases: initialPurchases }: PurchaseTableProps) {
     const [searchTerm, setSearchTerm] = useState("");
     const parentRef = useRef<HTMLDivElement>(null);
 
-    // ── Optimized Filtering ──
-    const filtered = useMemo(() => {
-        return purchases.filter(p => 
-            p.purchaseNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            p.vendor?.name.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-    }, [purchases, searchTerm]);
+    // React Query for live updates and searching
+    const { data: purchases = initialPurchases, isLoading } = useQuery({
+        queryKey: ["purchases", searchTerm],
+        queryFn: async () => {
+            const { data } = await apiClient.get<any[]>(`/api/purchases?q=${searchTerm}`);
+            return data;
+        },
+        placeholderData: (previousData) => previousData,
+        staleTime: 30000,
+    });
+
+    // ── Optimized Filtering ── 
+    // Now handled on server, but useMemo keeps things stable for virtualization
+    const filtered = purchases;
 
     // ── Row Virtualization ──
     const rowVirtualizer = useVirtualizer({

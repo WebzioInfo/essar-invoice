@@ -4,7 +4,7 @@ import { useClientForm } from "../hooks/useClientForm";
 import { Input } from "@/ui/core/Input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/ui/core/Card";
 import { Building2, UserPlus, ShieldCheck, Mail, Phone, MapPin, Hash, Save, X } from "lucide-react";
-import { StateSelect } from "@/components/forms/StateSelect";
+import { StateSelect } from "@/ui/core/StateSelect";
 
 interface ClientFormProps {
     client?: any;

@@ -12,7 +12,7 @@ import {
     CloudUpload
 } from "lucide-react";
 import { useState } from "react";
-import { StateSelect } from "@/components/forms/StateSelect";
+import { StateSelect } from "@/ui/core/StateSelect";
 
 interface PurchaseDetailsCardProps {
     vendors: any[];
@@ -27,6 +27,8 @@ interface PurchaseDetailsCardProps {
     setNotes: (notes: string) => void;
 }
 
+import { useToast } from "@/context/ToastContext";
+
 export function PurchaseDetailsCard({
     vendors,
     state,
@@ -39,6 +41,8 @@ export function PurchaseDetailsCard({
     setVehicleNo,
     setNotes
 }: PurchaseDetailsCardProps) {
+    const { error } = useToast();
+    
     return (
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
             {/* Primary Details */}
@@ -164,7 +168,7 @@ export function PurchaseDetailsCard({
                                         setEwayBillUrl(data.url);
                                     } catch (err) {
                                         console.error('Upload Error:', err);
-                                        alert('Failed to upload EWAYbill to Cloudinary. Please check configuration.');
+                                        error('Failed to upload EWAYbill to Cloudinary.');
                                     }
                                 }} />
                             </label>

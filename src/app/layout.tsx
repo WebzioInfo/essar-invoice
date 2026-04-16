@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Outfit, Inter } from "next/font/google";
 import { ToastProvider } from "@/context/ToastContext";
 import { LenisProvider } from "@/components/providers/LenisProvider";
+import { QueryProvider } from "@/providers/QueryProvider";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -14,6 +15,8 @@ const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
 });
+
+import { ConfirmDialog } from "@/ui/core/ConfirmDialog";
 
 export const metadata: Metadata = {
   title: "ESSAR Enterprises | ERP Command Center",
@@ -31,9 +34,12 @@ export default function RootLayout({
         className={`${outfit.variable} ${inter.variable} font-sans antialiased selection:bg-primary-100 selection:text-primary-900 overflow-x-hidden`}
       >
         <LenisProvider>
-          <ToastProvider>
-            {children}
-          </ToastProvider>
+          <QueryProvider>
+            <ToastProvider>
+              {children}
+              <ConfirmDialog />
+            </ToastProvider>
+          </QueryProvider>
         </LenisProvider>
       </body>
     </html>

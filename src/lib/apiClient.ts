@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useToastStore } from "@/hooks/useToastStore";
 
 /**
  * Standard API Client with Axios
@@ -16,8 +17,24 @@ const apiClient = axios.create({
 apiClient.interceptors.response.use(
     (response) => response,
     (error) => {
-        const message = error.response?.data?.error || error.message || "An unexpected error occurred.";
+        // Extract a human-readable message
+        const message = 
+            error.response?.data?.error || 
+            error.response?.data?.message || 
+            error.message || 
+            "An unexpected network error occurred.";
+        
         console.error("[API_ERROR]", message);
+
+        // Trigger global toast (Zustand store allows non-hook usage via getState)
+        useToastStore.getState().error(message);
+
+        // Handle specific status codes
+        if (error.response?.status === 401) {
+            // Optional: Redirect to login or handle session expiry
+            // window.location.href = "/login";
+        }
+
         return Promise.reject(error);
     }
 );

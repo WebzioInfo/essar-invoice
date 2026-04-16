@@ -18,7 +18,10 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/context/ToastContext";
 import { formatCurrency } from "@/utils/financials";
 import { ProductForm } from "./ProductForm";
-import { ErrorBoundary } from "@/components/common/ErrorBoundary";
+import { ErrorBoundary } from "@/ui/core/ErrorBoundary";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import apiClient from "@/lib/apiClient";
+import { useConfirmStore } from "@/hooks/useConfirmStore";
 
 interface Product {
     id: string;
@@ -37,20 +40,32 @@ interface ProductTableProps {
 }
 
 const ProductTableRow = ({ product, onEdit }: { product: Product, onEdit: (product: Product) => void }) => {
-    const [isPending, startTransition] = useTransition();
-    const [showConfirm, setShowConfirm] = useState(false);
+    const queryClient = useQueryClient();
     const { success, error } = useToast();
+    const { confirm } = useConfirmStore();
 
-    const handleDelete = () => {
-        startTransition(async () => {
-            const res = await deleteProductAction(product.id);
-            if (res && 'success' in res) {
-                success("Catalog item removed successfully.");
-                setShowConfirm(false);
-            } else if (res && 'error' in res) {
-                error(res.error || "Failed to delete item.");
-            }
+    const deleteMutation = useMutation({
+        mutationFn: (id: string) => apiClient.delete(`/api/products/${id}`),
+        onSuccess: () => {
+            success("Catalog item removed successfully.");
+            queryClient.invalidateQueries({ queryKey: ["products"] });
+        },
+        onError: (err: any) => {
+            error(err.response?.data?.error || "Failed to delete item.");
+        }
+    });
+
+    const handleDelete = async () => {
+        const confirmed = await confirm({
+            title: "Delete Item",
+            message: `Are you sure you want to remove ${product.description} from the catalog? This is irreversible.`,
+            type: "danger",
+            confirmText: "Remove Item"
         });
+
+        if (confirmed) {
+            deleteMutation.mutate(product.id);
+        }
     };
 
     return (
@@ -99,47 +114,25 @@ const ProductTableRow = ({ product, onEdit }: { product: Product, onEdit: (produ
             </TableCell>
             <TableCell className="text-right pr-8">
                 <div className="flex items-center justify-end gap-2">
-                    {!showConfirm ? (
-                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all scale-95 group-hover:scale-100">
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => onEdit(product)}
-                                className="h-9 w-9 p-0 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-xl"
-                            >
-                                <Edit3 className="h-4 w-4" />
-                            </Button>
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => setShowConfirm(true)}
-                                className="h-9 w-9 p-0 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl"
-                            >
-                                <Trash2 className="h-4 w-4" />
-                            </Button>
-                        </div>
-                    ) : (
-                        <div className="flex items-center gap-2 animate-in fade-in slide-in-from-right-2">
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-8 px-3 rounded-lg text-[10px] font-black uppercase"
-                                onClick={() => setShowConfirm(false)}
-                                disabled={isPending}
-                            >
-                                No
-                            </Button>
-                            <Button
-                                variant="danger"
-                                size="sm"
-                                className="h-8 px-4 rounded-lg text-[10px] font-black uppercase shadow-lg shadow-red-500/20"
-                                onClick={handleDelete}
-                                disabled={isPending}
-                            >
-                                {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "YES"}
-                            </Button>
-                        </div>
-                    )}
+                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all scale-95 group-hover:scale-100">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => onEdit(product)}
+                            className="h-9 w-9 p-0 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-xl"
+                        >
+                            <Edit3 className="h-4 w-4" />
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleDelete}
+                            disabled={deleteMutation.isPending}
+                            className="h-9 w-9 p-0 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl"
+                        >
+                            {deleteMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin text-red-500" /> : <Trash2 className="h-4 w-4" />}
+                        </Button>
+                    </div>
                 </div>
             </TableCell>
         </TableRow>
@@ -147,20 +140,32 @@ const ProductTableRow = ({ product, onEdit }: { product: Product, onEdit: (produ
 };
 
 const ProductMobileCard = ({ product, onEdit }: { product: Product, onEdit: (product: Product) => void }) => {
-    const [isPending, startTransition] = useTransition();
-    const [showConfirm, setShowConfirm] = useState(false);
+    const queryClient = useQueryClient();
     const { success, error } = useToast();
+    const { confirm } = useConfirmStore();
 
-    const handleDelete = () => {
-        startTransition(async () => {
-            const res = await deleteProductAction(product.id);
-            if (res && 'success' in res) {
-                success("Item removed successfully.");
-                setShowConfirm(false);
-            } else {
-                error("Removal failed.");
-            }
+    const deleteMutation = useMutation({
+        mutationFn: (id: string) => apiClient.delete(`/api/products/${id}`),
+        onSuccess: () => {
+            success("Item removed successfully.");
+            queryClient.invalidateQueries({ queryKey: ["products"] });
+        },
+        onError: () => {
+            error("Removal failed.");
+        }
+    });
+
+    const handleDelete = async () => {
+        const confirmed = await confirm({
+            title: "Remov Catalog Item",
+            message: `Delete ${product.description}? You cannot undo this action.`,
+            type: "danger",
+            confirmText: "Purge Record"
         });
+
+        if (confirmed) {
+            deleteMutation.mutate(product.id);
+        }
     };
 
     return (
@@ -186,8 +191,14 @@ const ProductMobileCard = ({ product, onEdit }: { product: Product, onEdit: (pro
                     <Button variant="ghost" size="icon" onClick={() => onEdit(product)} className="h-10 w-10 rounded-2xl text-slate-400 bg-slate-50">
                         <Edit3 size={18} />
                     </Button>
-                    <Button variant="ghost" size="icon" onClick={() => setShowConfirm(true)} className="h-10 w-10 rounded-2xl text-slate-400 hover:text-red-500 hover:bg-red-50">
-                        <Trash2 size={18} />
+                    <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        onClick={handleDelete} 
+                        disabled={deleteMutation.isPending}
+                        className="h-10 w-10 rounded-2xl text-slate-400 hover:text-red-500 hover:bg-red-50"
+                    >
+                        {deleteMutation.isPending ? <Loader2 size={18} className="animate-spin text-red-500" /> : <Trash2 size={18} />}
                     </Button>
                 </div>
             </div>
@@ -205,32 +216,28 @@ const ProductMobileCard = ({ product, onEdit }: { product: Product, onEdit: (pro
                 )}
             </div>
 
-            {showConfirm && (
-                <div className="flex items-center justify-between gap-4 p-4 bg-red-50 rounded-2xl border border-red-100 shadow-inner">
-                    <div className="flex items-center gap-2">
-                        <AlertTriangle className="h-4 w-4 text-red-500" />
-                        <span className="text-[10px] font-black text-red-600 uppercase tracking-[0.2em] italic">Purge record?</span>
-                    </div>
-                    <div className="flex gap-2">
-                        <Button variant="ghost" size="sm" onClick={() => setShowConfirm(false)} className="text-[10px] font-black text-slate-500">NO</Button>
-                        <Button variant="danger" size="sm" onClick={handleDelete} loading={isPending} className="text-[10px] font-black px-6 rounded-xl shadow-lg shadow-red-500/20">YES</Button>
-                    </div>
-                </div>
-            )}
+
         </div>
     );
 };
 
-export function ProductTable({ products }: ProductTableProps) {
+export function ProductTable({ products: initialProducts }: ProductTableProps) {
     const [searchTerm, setSearchTerm] = useState("");
     const [editingProduct, setEditingProduct] = useState<Product | null>(null);
     const [isAdding, setIsAdding] = useState(false);
 
-    const filtered = products.filter(p =>
-        p.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.sku?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.hsn?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    // React Query for live updates and searching
+    const { data: products = initialProducts, isLoading } = useQuery({
+        queryKey: ["products", searchTerm],
+        queryFn: async () => {
+            const { data } = await apiClient.get<Product[]>(`/api/products?q=${searchTerm}`);
+            return data;
+        },
+        placeholderData: (previousData) => previousData,
+        staleTime: 30000,
+    });
+
+    const filtered = products; // Searching now handled via API query parameter for scalability
 
     return (
         <div className="space-y-10">

@@ -4,6 +4,7 @@ import { PurchaseTable } from "@/features/procurement/components/PurchaseTable";
 import { PurchaseService } from "@/features/procurement/services/PurchaseService";
 import { ShoppingCart, TrendingUp, ShieldCheck, Zap, ArrowRight } from "lucide-react";
 import { formatCurrency } from "@/utils/financials";
+import Link from "next/link";
 
 export default async function PurchasesPage() {
     const session = await verifySessionCookie();
@@ -28,14 +29,14 @@ export default async function PurchasesPage() {
                     </p>
                     
                     <div className="mt-8 flex flex-wrap gap-4">
-                        <a 
+                        <Link 
                           href="/purchases/import" 
                           className="inline-flex items-center gap-3 bg-indigo-600 hover:bg-black text-white px-8 py-4 rounded-2xl font-black italic tracking-widest uppercase shadow-2xl shadow-indigo-500/30 transition-all group scale-105"
                         >
                             <Zap className="w-5 h-5 group-hover:scale-125 transition-transform" />
                             AI Resell: Import Bill
                             <ArrowRight size={20} className="opacity-50" />
-                        </a>
+                        </Link>
                     </div>
                 </div>
 

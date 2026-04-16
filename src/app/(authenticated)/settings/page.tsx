@@ -9,7 +9,7 @@ import { updateCompanySettingsAction } from "@/features/settings/actions/setting
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/ui/core/Card";
 import { Input } from "@/ui/core/Input";
 import { Button } from "@/ui/core/Button";
-import { StateSelect } from "@/components/forms/StateSelect";
+import { StateSelect } from "@/ui/core/StateSelect";
 
 export default async function SettingsPage() {
   const session = await verifySessionCookie();
