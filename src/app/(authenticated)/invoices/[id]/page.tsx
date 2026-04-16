@@ -7,7 +7,7 @@ import {
   ArrowLeft, CheckCircle2,
   Clock, Building2, Phone, MapPin,
   Hash, Calendar, Truck, CreditCard,
-  ShieldCheck, ArrowUpRight, Landmark, Info
+  ShieldCheck, ArrowUpRight, Landmark, Info, AlertCircle
 } from "lucide-react";
 import { InvoiceActions, StatusBadge, PDFPreview } from "@/features/billing/components";
 import { cn } from "@/utils";
@@ -40,10 +40,11 @@ export default async function InvoiceDetailPage({ params }: PageProps) {
   // Use findFirst because deletingAt: null is not a unique constraint field,
   // which causes findUnique to lose type inference for relations in some Prisma versions.
   const invoice = await db.invoice.findFirst({
-    where: { id, deletedAt: null },
+    where: { id },
     select: {
       id: true,
       invoiceNo: true,
+      deletedAt: true,
       date: true,
       gstType: true,
       subTotal: true,
@@ -91,8 +92,22 @@ export default async function InvoiceDetailPage({ params }: PageProps) {
           Exit to Terminal
         </Link>
         
-        <InvoiceActions invoiceId={invoice.id} status={invoice.status} />
+        <InvoiceActions invoiceId={invoice.id} status={invoice.status} isDeleted={!!invoice.deletedAt} />
       </div>
+
+      {invoice.deletedAt && (
+        <div className="bg-red-50 border border-red-200 p-6 rounded-[2rem] flex items-center gap-4 text-red-900 shadow-xl shadow-red-500/5 animate-pulse">
+          <div className="w-12 h-12 rounded-2xl bg-red-100 flex items-center justify-center shrink-0">
+            <AlertCircle className="w-6 h-6 text-red-600" />
+          </div>
+          <div>
+            <p className="font-black uppercase tracking-tight italic">Document archived in Trash</p>
+            <p className="text-xs font-bold opacity-70 mt-1 uppercase tracking-widest">
+              This invoice was moved to trash on {new Intl.DateTimeFormat("en-IN", { dateStyle: 'full', timeStyle: 'short' }).format(new Date(invoice.deletedAt))}. Restore it to enable further operations.
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
          {/* ── PDF Document Preview ── */}

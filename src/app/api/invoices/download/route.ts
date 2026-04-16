@@ -106,43 +106,46 @@ export async function POST(req: NextRequest) {
         const W = doc.internal.pageSize.getWidth();
         let y = 15;
 
-        // --- LOGO (TOP LEFT) ---
+        // --- LOGO & HEADER (SIDE-BY-SIDE) ---
         try {
             const logoPath = path.join(process.cwd(), "public", "logo.png");
             if (fs.existsSync(logoPath)) {
                 const logoBase64 = fs.readFileSync(logoPath).toString("base64");
-                doc.addImage(`data:image/png;base64,${logoBase64}`, "PNG", LEFT_MARGIN, 15, 30, 15);
-                y = 35; // Start text below logo
+                // Logo on the far left
+                doc.addImage(`data:image/png;base64,${logoBase64}`, "PNG", LEFT_MARGIN, 12, 40, 20);
             }
         } catch (err) {
             console.error("Logo failed to load in PDF:", err);
-            y = 15;
         }
 
-        // --- COMPANY HEADER ---
+        // Header Text to the right of the logo
+        const headerX = 58;
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(16);
+        doc.setTextColor(...TEXT_BLACK);
+        doc.text(settings.companyName.toUpperCase(), headerX, 16);
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(...TEXT_GRAY);
+        doc.text([
+            `${settings.address1}, ${settings.address2 || ""}`,
+            `${settings.city} - ${settings.pincode}, ${settings.state.toUpperCase()}`,
+            `GSTIN: ${settings.gstin}`,
+            `Email: ${settings.email} | Mobile: ${settings.phone}`
+        ], headerX, 20);
+
+        // --- TITLE (TOP RIGHT) ---
         doc.setFont("helvetica", "bold");
         doc.setFontSize(22);
         doc.setTextColor(...TEXT_BLACK);
-        doc.text(settings.companyName.toUpperCase(), LEFT_MARGIN, y + 5);
+        doc.text("TAX INVOICE", W - RIGHT_MARGIN, 20, { align: "right" });
 
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(8.5);
-        doc.setTextColor(...TEXT_GRAY);
-        doc.text(`${settings.address1}, ${settings.address2 || ""}`, LEFT_MARGIN, y + 11);
-        doc.text(`${settings.city} - ${settings.pincode}, ${settings.state.toUpperCase()}`, LEFT_MARGIN, y + 16);
-        doc.text(`GSTIN: ${settings.gstin} | Email: ${settings.email}`, LEFT_MARGIN, y + 21);
-        doc.text(`Mobile: ${settings.phone}`, LEFT_MARGIN, y + 26);
-
-        // --- TITLE (RIGHT) ---
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(26);
-        doc.setTextColor(...TEXT_BLACK);
-        doc.text("TAX INVOICE", W - RIGHT_MARGIN, y + 10, { align: "right" });
-
-        y += 40;
+        // Horizontal Line
         doc.setDrawColor(220, 220, 220);
-        doc.line(LEFT_MARGIN, y, W - RIGHT_MARGIN, y);
-        y += 10;
+        doc.line(LEFT_MARGIN, 42, W - RIGHT_MARGIN, 42);
+        y = 50;
+
 
         const infoX = W - RIGHT_MARGIN;
         const colWidth = 50;
@@ -249,7 +252,7 @@ export async function POST(req: NextRequest) {
 
         // --- LINE ITEMS TABLE ---
         const showPkg = !!(settings as any).showPkgDetails;
-        const tableHead = showPkg 
+        const tableHead = showPkg
             ? [["Sl No", "No. & Kind of Pkgs", "Description of Goods", "HSN/SAC", "Quantity", "Rate", "per", "Amount"]]
             : [["Sl No", "Description of Goods", "HSN/SAC", "Quantity", "Rate", "per", "Amount"]];
 
@@ -264,7 +267,7 @@ export async function POST(req: NextRequest) {
 
             const pkgCountStr = Number(item.pkgCount || 0);
             const pkgValue = (pkgCountStr > 0) ? `${pkgCountStr} ${item.pkgType || "BOX"}` : "-";
-            
+
             // If showing pkg in separate column, don't put it in description
             const pkgInDesc = (!showPkg && pkgCountStr > 0)
                 ? `\nNo. & Kind of Pkgs: ${pkgCountStr} ${item.pkgType || "BOX"}`
@@ -389,7 +392,7 @@ export async function POST(req: NextRequest) {
         if (cgst > 0) drawTotalRow("Output CGST @ " + (lineItems[0]?.taxPercent.toNumber() / 2) + "%:", fmt(cgst));
         if (sgst > 0) drawTotalRow("Output SGST @ " + (lineItems[0]?.taxPercent.toNumber() / 2) + "%:", fmt(sgst));
         if (igst > 0) drawTotalRow("Output IGST @ " + (lineItems[0]?.taxPercent.toNumber()) + "%:", fmt(igst));
-        
+
         if (Math.abs(roundOff) > 0) {
             drawTotalRow("Rounding Off:", (roundOff > 0 ? "+" : "") + fmt(roundOff));
         }
@@ -467,8 +470,11 @@ export async function POST(req: NextRequest) {
         // --- Output ---
         const pdfBuffer = Buffer.from(doc.output("arraybuffer"));
 
-        const clientName = (invoice.client?.name || "ESSAR").split(" ")[0].toUpperCase();
-        const safeFileName = `${clientName}_${invoice.invoiceNo}.pdf`.replace(/[/\\?%*:|"<>]/g, '-');
+        const billingName = invoice.billingName || invoice.client?.name || "CLIENT";
+        const firstName = billingName.split(" ")[0].toUpperCase().replace(/[^A-Z0-9]/g, "");
+        const invoiceParts = invoice.invoiceNo.split("-");
+        const lastNo = invoiceParts[invoiceParts.length - 1] || "00";
+        const safeFileName = `${firstName}_${lastNo}_ESSAR.pdf`;
 
         return new NextResponse(pdfBuffer, {
             status: 200,

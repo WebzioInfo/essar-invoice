@@ -5,6 +5,7 @@ import { invoiceSchema } from "../validators/invoiceSchema";
 import { serializePrisma } from "@/utils/serialization";
 import { db } from "@/db/prisma/client";
 import { recordAuditLog } from "@/lib/audit";
+import { nextInvoiceNumber } from "@/lib/utils/documentNumber";
 
 const invoiceRepo = new InvoiceRepository();
 
@@ -19,28 +20,15 @@ export class InvoiceService {
         orderBy: { sequenceNumber: 'desc' },
         select: { sequenceNumber: true },
       });
-      
       const nextSequence = (lastSequence?.sequenceNumber || 0) + 1;
-      
+
       let invoiceNo = validatedData.invoiceNo;
       if (!invoiceNo) {
         const settings = await tx.companySetting.findFirst();
-        const prefix = settings?.invoicePrefix || "B2B";
-        
-        // JE/B2B/01/24-25 Format
+        // Format: SRB2B-26-27-001 (prefix from settings, Indian FY, 3-digit seq per FY)
+        const prefix = settings?.invoicePrefix || "SRB2B";
         const docDate = new Date(validatedData.date);
-        const year = docDate.getFullYear();
-        const month = docDate.getMonth(); // 0-11
-        
-        let fy = "";
-        if (month >= 3) { // April is index 3
-            fy = `${String(year).slice(-2)}-${String(year+1).slice(-2)}`;
-        } else {
-            fy = `${String(year-1).slice(-2)}-${String(year).slice(-2)}`;
-        }
-        
-        const seq = String(nextSequence).padStart(2, '0');
-        invoiceNo = `JE/${prefix}/${seq}/${fy}`;
+        invoiceNo = await nextInvoiceNumber(tx, prefix, docDate);
       }
 
       // 3. Persistence
@@ -170,5 +158,65 @@ export class InvoiceService {
     });
 
     return serializePrisma(invoice);
+  }
+
+  async softDeleteInvoice(invoiceId: string, userId: string) {
+    const invoice = await invoiceRepo.softDelete(invoiceId, userId);
+    
+    await recordAuditLog(db, {
+      userId,
+      action: "INVOICE_TRASHED",
+      entityType: "Invoice",
+      entityId: invoiceId,
+      details: { invoiceNo: invoice.invoiceNo }
+    });
+
+    return serializePrisma(invoice);
+  }
+
+  async restoreInvoice(invoiceId: string, userId: string) {
+    const invoice = await invoiceRepo.model.update({
+      where: { id: invoiceId },
+      data: { deletedAt: null, updatedById: userId }
+    });
+
+    await recordAuditLog(db, {
+      userId,
+      action: "INVOICE_RESTORED",
+      entityType: "Invoice",
+      entityId: invoiceId,
+      details: { invoiceNo: invoice.invoiceNo }
+    });
+
+    return serializePrisma(invoice);
+  }
+
+  async permanentlyDeleteInvoice(invoiceId: string, userId: string) {
+    // Audit before deletion
+    const invoice = await invoiceRepo.model.findUnique({ where: { id: invoiceId } });
+    if (invoice) {
+        await recordAuditLog(db, {
+            userId,
+            action: "INVOICE_PERMANENTLY_DELETED",
+            entityType: "Invoice",
+            entityId: invoiceId,
+            details: { invoiceNo: invoice.invoiceNo }
+        });
+    }
+
+    return await invoiceRepo.model.delete({
+      where: { id: invoiceId }
+    });
+  }
+
+  async getDeletedInvoices(page?: number, limit?: number) {
+    const result = await invoiceRepo.findPaginated({
+      page,
+      limit,
+      where: { deletedAt: { not: null } },
+      include: { client: { select: { name: true } } },
+      orderBy: { deletedAt: 'desc' }
+    });
+    return serializePrisma(result);
   }
 }

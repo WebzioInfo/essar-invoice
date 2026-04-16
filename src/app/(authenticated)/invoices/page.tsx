@@ -5,7 +5,7 @@ import Link from "next/link";
 import { formatCurrency, cn } from "@/utils";
 import {
   FileText, Plus, Search, Filter,
-  ChevronRight, Calendar, ArrowUpRight,
+  ChevronRight, Calendar, ArrowUpRight, Trash2
 } from "lucide-react";
 import { StatusBadge } from "@/features/billing/components/StatusBadge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/ui/core/Card";
@@ -23,6 +23,7 @@ const STATUS_TABS = [
   { label: "Sent", value: "SENT" },
   { label: "Paid", value: "PAID" },
   { label: "Overdue", value: "OVERDUE" },
+  { label: "Trash", value: "TRASH", icon: <Trash2 size={12} /> },
 ];
 
 export default async function InvoicesPage({ searchParams }: PageProps) {
@@ -32,11 +33,12 @@ export default async function InvoicesPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const statusFilter = params.status || "";
   const searchQuery = params.q || "";
+  const isTrash = statusFilter === "TRASH";
 
   const invoices = await db.invoice.findMany({
     where: {
-      deletedAt: null,
-      ...(statusFilter && { status: statusFilter }),
+      deletedAt: isTrash ? { not: null } : null,
+      ...(!isTrash && statusFilter && { status: statusFilter }),
       ...(searchQuery && {
         OR: [
           { invoiceNo: { contains: searchQuery } },
@@ -44,7 +46,7 @@ export default async function InvoicesPage({ searchParams }: PageProps) {
         ],
       }),
     },
-    orderBy: { date: "desc" },
+    orderBy: isTrash ? { deletedAt: "desc" } : { date: "desc" },
     select: {
       id: true,
       invoiceNo: true,
@@ -56,16 +58,21 @@ export default async function InvoicesPage({ searchParams }: PageProps) {
   });
 
   // Count by status for tabs
-  const counts = await db.invoice.groupBy({
-    by: ["status"],
-    where: { deletedAt: null },
-    _count: { status: true },
-  });
+  const [activeCounts, trashCount] = await Promise.all([
+    db.invoice.groupBy({
+      by: ["status"],
+      where: { deletedAt: null },
+      _count: { status: true },
+    }),
+    db.invoice.count({ where: { deletedAt: { not: null } } })
+  ]);
   
   const countMap: Record<string, number> = {};
-  counts.forEach((c) => { countMap[c.status] = c._count.status; });
-  const total = counts.reduce((a, c) => a + c._count.status, 0);
-  countMap[""] = total;
+  activeCounts.forEach((c: any) => { countMap[c.status] = c._count.status; });
+  const totalActive = activeCounts.reduce((a: number, c: any) => a + c._count.status, 0);
+  
+  countMap[""] = totalActive;
+  countMap["TRASH"] = trashCount;
 
   return (
     <div className="space-y-8 animate-fade-up">
@@ -113,6 +120,7 @@ export default async function InvoicesPage({ searchParams }: PageProps) {
                           : "text-slate-500 hover:bg-slate-100 border border-transparent hover:border-slate-200"
                       )}
                     >
+                      {"icon" in tab && tab.icon}
                       {tab.label}
                       <span className={cn(
                         "min-w-5 h-5 px-1 rounded-full flex items-center justify-center text-[9px] font-bold",

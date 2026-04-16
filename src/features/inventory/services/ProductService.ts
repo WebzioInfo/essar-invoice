@@ -47,14 +47,21 @@ export class ProductService {
     return await productRepo.softDelete(productId, userId);
   }
 
-  static async getAllActive(page?: number, limit?: number) {
-    const result = await productRepo.findPaginated({
-      page,
-      limit,
-      where: { deletedAt: null },
+  static async getAllActive(search?: string) {
+    const products = await productRepo.findAll({
+      where: {
+        deletedAt: null,
+        ...(search ? {
+            OR: [
+                { description: { contains: search } },
+                { sku: { contains: search } },
+                { hsn: { contains: search } }
+            ]
+        } : {})
+      },
       orderBy: { description: 'asc' }
     });
 
-    return serializePrisma(result);
+    return serializePrisma(products);
   }
 }

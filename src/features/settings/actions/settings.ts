@@ -29,6 +29,8 @@ export async function updateCompanySettingsAction(formData: FormData) {
         bankIfsc: formData.get("bankIfsc") as string,
         bankAccountName: formData.get("bankAccountName") as string,
         showPkgDetails: formData.get("showPkgDetails") === "true",
+        invoicePrefix: ((formData.get("invoicePrefix") as string) || "SRB2B").trim().toUpperCase(),
+        quotationPrefix: ((formData.get("quotationPrefix") as string) || "SRQUO").trim().toUpperCase(),
     };
 
     try {

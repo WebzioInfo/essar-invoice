@@ -4224,15 +4224,15 @@ export namespace Prisma {
   }
 
   export type ProductAvgAggregateOutputType = {
+    gstRate: Decimal | null
     purchaseRate: Decimal | null
     sellingRate: Decimal | null
-    gstRate: Decimal | null
   }
 
   export type ProductSumAggregateOutputType = {
+    gstRate: Decimal | null
     purchaseRate: Decimal | null
     sellingRate: Decimal | null
-    gstRate: Decimal | null
   }
 
   export type ProductMinAggregateOutputType = {
@@ -4240,16 +4240,18 @@ export namespace Prisma {
     sku: string | null
     description: string | null
     hsn: string | null
-    purchaseRate: Decimal | null
-    sellingRate: Decimal | null
     gstRate: Decimal | null
-    unit: string | null
-    pkgType: string | null
-    notes: string | null
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
     active: boolean | null
+    notes: string | null
+    pkgType: string | null
+    purchaseRate: Decimal | null
+    sellingRate: Decimal | null
+    unit: string | null
+    createdById: string | null
+    updatedById: string | null
   }
 
   export type ProductMaxAggregateOutputType = {
@@ -4257,16 +4259,18 @@ export namespace Prisma {
     sku: string | null
     description: string | null
     hsn: string | null
-    purchaseRate: Decimal | null
-    sellingRate: Decimal | null
     gstRate: Decimal | null
-    unit: string | null
-    pkgType: string | null
-    notes: string | null
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
     active: boolean | null
+    notes: string | null
+    pkgType: string | null
+    purchaseRate: Decimal | null
+    sellingRate: Decimal | null
+    unit: string | null
+    createdById: string | null
+    updatedById: string | null
   }
 
   export type ProductCountAggregateOutputType = {
@@ -4274,30 +4278,32 @@ export namespace Prisma {
     sku: number
     description: number
     hsn: number
-    purchaseRate: number
-    sellingRate: number
     gstRate: number
-    unit: number
-    pkgType: number
-    notes: number
     createdAt: number
     updatedAt: number
     deletedAt: number
     active: number
+    notes: number
+    pkgType: number
+    purchaseRate: number
+    sellingRate: number
+    unit: number
+    createdById: number
+    updatedById: number
     _all: number
   }
 
 
   export type ProductAvgAggregateInputType = {
+    gstRate?: true
     purchaseRate?: true
     sellingRate?: true
-    gstRate?: true
   }
 
   export type ProductSumAggregateInputType = {
+    gstRate?: true
     purchaseRate?: true
     sellingRate?: true
-    gstRate?: true
   }
 
   export type ProductMinAggregateInputType = {
@@ -4305,16 +4311,18 @@ export namespace Prisma {
     sku?: true
     description?: true
     hsn?: true
-    purchaseRate?: true
-    sellingRate?: true
     gstRate?: true
-    unit?: true
-    pkgType?: true
-    notes?: true
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
     active?: true
+    notes?: true
+    pkgType?: true
+    purchaseRate?: true
+    sellingRate?: true
+    unit?: true
+    createdById?: true
+    updatedById?: true
   }
 
   export type ProductMaxAggregateInputType = {
@@ -4322,16 +4330,18 @@ export namespace Prisma {
     sku?: true
     description?: true
     hsn?: true
-    purchaseRate?: true
-    sellingRate?: true
     gstRate?: true
-    unit?: true
-    pkgType?: true
-    notes?: true
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
     active?: true
+    notes?: true
+    pkgType?: true
+    purchaseRate?: true
+    sellingRate?: true
+    unit?: true
+    createdById?: true
+    updatedById?: true
   }
 
   export type ProductCountAggregateInputType = {
@@ -4339,16 +4349,18 @@ export namespace Prisma {
     sku?: true
     description?: true
     hsn?: true
-    purchaseRate?: true
-    sellingRate?: true
     gstRate?: true
-    unit?: true
-    pkgType?: true
-    notes?: true
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
     active?: true
+    notes?: true
+    pkgType?: true
+    purchaseRate?: true
+    sellingRate?: true
+    unit?: true
+    createdById?: true
+    updatedById?: true
     _all?: true
   }
 
@@ -4443,16 +4455,18 @@ export namespace Prisma {
     sku: string | null
     description: string
     hsn: string | null
-    purchaseRate: Decimal
-    sellingRate: Decimal
     gstRate: Decimal
-    unit: string
-    pkgType: string | null
-    notes: string | null
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
     active: boolean
+    notes: string | null
+    pkgType: string | null
+    purchaseRate: Decimal
+    sellingRate: Decimal
+    unit: string
+    createdById: string | null
+    updatedById: string | null
     _count: ProductCountAggregateOutputType | null
     _avg: ProductAvgAggregateOutputType | null
     _sum: ProductSumAggregateOutputType | null
@@ -4479,16 +4493,18 @@ export namespace Prisma {
     sku?: boolean
     description?: boolean
     hsn?: boolean
-    purchaseRate?: boolean
-    sellingRate?: boolean
     gstRate?: boolean
-    unit?: boolean
-    pkgType?: boolean
-    notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
     active?: boolean
+    notes?: boolean
+    pkgType?: boolean
+    purchaseRate?: boolean
+    sellingRate?: boolean
+    unit?: boolean
+    createdById?: boolean
+    updatedById?: boolean
   }, ExtArgs["result"]["product"]>
 
 
@@ -4498,19 +4514,21 @@ export namespace Prisma {
     sku?: boolean
     description?: boolean
     hsn?: boolean
-    purchaseRate?: boolean
-    sellingRate?: boolean
     gstRate?: boolean
-    unit?: boolean
-    pkgType?: boolean
-    notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
     active?: boolean
+    notes?: boolean
+    pkgType?: boolean
+    purchaseRate?: boolean
+    sellingRate?: boolean
+    unit?: boolean
+    createdById?: boolean
+    updatedById?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sku" | "description" | "hsn" | "purchaseRate" | "sellingRate" | "gstRate" | "unit" | "pkgType" | "notes" | "createdAt" | "updatedAt" | "deletedAt" | "active", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sku" | "description" | "hsn" | "gstRate" | "createdAt" | "updatedAt" | "deletedAt" | "active" | "notes" | "pkgType" | "purchaseRate" | "sellingRate" | "unit" | "createdById" | "updatedById", ExtArgs["result"]["product"]>
 
   export type $ProductPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Product"
@@ -4520,16 +4538,18 @@ export namespace Prisma {
       sku: string | null
       description: string
       hsn: string | null
-      purchaseRate: Prisma.Decimal
-      sellingRate: Prisma.Decimal
       gstRate: Prisma.Decimal
-      unit: string
-      pkgType: string | null
-      notes: string | null
       createdAt: Date
       updatedAt: Date
       deletedAt: Date | null
       active: boolean
+      notes: string | null
+      pkgType: string | null
+      purchaseRate: Prisma.Decimal
+      sellingRate: Prisma.Decimal
+      unit: string
+      createdById: string | null
+      updatedById: string | null
     }, ExtArgs["result"]["product"]>
     composites: {}
   }
@@ -4903,16 +4923,18 @@ export namespace Prisma {
     readonly sku: FieldRef<"Product", 'String'>
     readonly description: FieldRef<"Product", 'String'>
     readonly hsn: FieldRef<"Product", 'String'>
-    readonly purchaseRate: FieldRef<"Product", 'Decimal'>
-    readonly sellingRate: FieldRef<"Product", 'Decimal'>
     readonly gstRate: FieldRef<"Product", 'Decimal'>
-    readonly unit: FieldRef<"Product", 'String'>
-    readonly pkgType: FieldRef<"Product", 'String'>
-    readonly notes: FieldRef<"Product", 'String'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
     readonly updatedAt: FieldRef<"Product", 'DateTime'>
     readonly deletedAt: FieldRef<"Product", 'DateTime'>
     readonly active: FieldRef<"Product", 'Boolean'>
+    readonly notes: FieldRef<"Product", 'String'>
+    readonly pkgType: FieldRef<"Product", 'String'>
+    readonly purchaseRate: FieldRef<"Product", 'Decimal'>
+    readonly sellingRate: FieldRef<"Product", 'Decimal'>
+    readonly unit: FieldRef<"Product", 'String'>
+    readonly createdById: FieldRef<"Product", 'String'>
+    readonly updatedById: FieldRef<"Product", 'String'>
   }
     
 
@@ -5282,6 +5304,7 @@ export namespace Prisma {
     updatedAt: Date | null
     deletedAt: Date | null
     createdById: string | null
+    updatedById: string | null
     notes: string | null
     billingAddress1: string | null
     billingAddress2: string | null
@@ -5318,6 +5341,7 @@ export namespace Prisma {
     updatedAt: Date | null
     deletedAt: Date | null
     createdById: string | null
+    updatedById: string | null
     notes: string | null
     billingAddress1: string | null
     billingAddress2: string | null
@@ -5354,6 +5378,7 @@ export namespace Prisma {
     updatedAt: number
     deletedAt: number
     createdById: number
+    updatedById: number
     notes: number
     billingAddress1: number
     billingAddress2: number
@@ -5408,6 +5433,7 @@ export namespace Prisma {
     updatedAt?: true
     deletedAt?: true
     createdById?: true
+    updatedById?: true
     notes?: true
     billingAddress1?: true
     billingAddress2?: true
@@ -5444,6 +5470,7 @@ export namespace Prisma {
     updatedAt?: true
     deletedAt?: true
     createdById?: true
+    updatedById?: true
     notes?: true
     billingAddress1?: true
     billingAddress2?: true
@@ -5480,6 +5507,7 @@ export namespace Prisma {
     updatedAt?: true
     deletedAt?: true
     createdById?: true
+    updatedById?: true
     notes?: true
     billingAddress1?: true
     billingAddress2?: true
@@ -5603,6 +5631,7 @@ export namespace Prisma {
     updatedAt: Date
     deletedAt: Date | null
     createdById: string | null
+    updatedById: string | null
     notes: string | null
     billingAddress1: string | null
     billingAddress2: string | null
@@ -5658,6 +5687,7 @@ export namespace Prisma {
     updatedAt?: boolean
     deletedAt?: boolean
     createdById?: boolean
+    updatedById?: boolean
     notes?: boolean
     billingAddress1?: boolean
     billingAddress2?: boolean
@@ -5700,6 +5730,7 @@ export namespace Prisma {
     updatedAt?: boolean
     deletedAt?: boolean
     createdById?: boolean
+    updatedById?: boolean
     notes?: boolean
     billingAddress1?: boolean
     billingAddress2?: boolean
@@ -5716,7 +5747,7 @@ export namespace Prisma {
     shippingState?: boolean
   }
 
-  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clientId" | "sequenceNumber" | "invoiceNo" | "date" | "dueDate" | "gstType" | "subTotal" | "taxTotal" | "grandTotal" | "amountPaid" | "status" | "ewayBill" | "vehicleNo" | "dispatchedThrough" | "createdAt" | "updatedAt" | "deletedAt" | "createdById" | "notes" | "billingAddress1" | "billingAddress2" | "billingGst" | "billingName" | "billingPhone" | "billingPinCode" | "billingState" | "shippingAddress1" | "shippingAddress2" | "shippingName" | "shippingPinCode" | "shippingSameAsBilling" | "shippingState", ExtArgs["result"]["invoice"]>
+  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clientId" | "sequenceNumber" | "invoiceNo" | "date" | "dueDate" | "gstType" | "subTotal" | "taxTotal" | "grandTotal" | "amountPaid" | "status" | "ewayBill" | "vehicleNo" | "dispatchedThrough" | "createdAt" | "updatedAt" | "deletedAt" | "createdById" | "updatedById" | "notes" | "billingAddress1" | "billingAddress2" | "billingGst" | "billingName" | "billingPhone" | "billingPinCode" | "billingState" | "shippingAddress1" | "shippingAddress2" | "shippingName" | "shippingPinCode" | "shippingSameAsBilling" | "shippingState", ExtArgs["result"]["invoice"]>
   export type InvoiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lineItems?: boolean | Invoice$lineItemsArgs<ExtArgs>
     client?: boolean | ClientDefaultArgs<ExtArgs>
@@ -5751,6 +5782,7 @@ export namespace Prisma {
       updatedAt: Date
       deletedAt: Date | null
       createdById: string | null
+      updatedById: string | null
       notes: string | null
       billingAddress1: string | null
       billingAddress2: string | null
@@ -6156,6 +6188,7 @@ export namespace Prisma {
     readonly updatedAt: FieldRef<"Invoice", 'DateTime'>
     readonly deletedAt: FieldRef<"Invoice", 'DateTime'>
     readonly createdById: FieldRef<"Invoice", 'String'>
+    readonly updatedById: FieldRef<"Invoice", 'String'>
     readonly notes: FieldRef<"Invoice", 'String'>
     readonly billingAddress1: FieldRef<"Invoice", 'String'>
     readonly billingAddress2: FieldRef<"Invoice", 'String'>
@@ -7641,6 +7674,7 @@ export namespace Prisma {
     updatedAt: Date | null
     deletedAt: Date | null
     createdById: string | null
+    updatedById: string | null
     billingAddress1: string | null
     billingAddress2: string | null
     billingGst: string | null
@@ -7674,6 +7708,7 @@ export namespace Prisma {
     updatedAt: Date | null
     deletedAt: Date | null
     createdById: string | null
+    updatedById: string | null
     billingAddress1: string | null
     billingAddress2: string | null
     billingGst: string | null
@@ -7707,6 +7742,7 @@ export namespace Prisma {
     updatedAt: number
     deletedAt: number
     createdById: number
+    updatedById: number
     billingAddress1: number
     billingAddress2: number
     billingGst: number
@@ -7756,6 +7792,7 @@ export namespace Prisma {
     updatedAt?: true
     deletedAt?: true
     createdById?: true
+    updatedById?: true
     billingAddress1?: true
     billingAddress2?: true
     billingGst?: true
@@ -7789,6 +7826,7 @@ export namespace Prisma {
     updatedAt?: true
     deletedAt?: true
     createdById?: true
+    updatedById?: true
     billingAddress1?: true
     billingAddress2?: true
     billingGst?: true
@@ -7822,6 +7860,7 @@ export namespace Prisma {
     updatedAt?: true
     deletedAt?: true
     createdById?: true
+    updatedById?: true
     billingAddress1?: true
     billingAddress2?: true
     billingGst?: true
@@ -7942,6 +7981,7 @@ export namespace Prisma {
     updatedAt: Date
     deletedAt: Date | null
     createdById: string | null
+    updatedById: string | null
     billingAddress1: string | null
     billingAddress2: string | null
     billingGst: string | null
@@ -7994,6 +8034,7 @@ export namespace Prisma {
     updatedAt?: boolean
     deletedAt?: boolean
     createdById?: boolean
+    updatedById?: boolean
     billingAddress1?: boolean
     billingAddress2?: boolean
     billingGst?: boolean
@@ -8032,6 +8073,7 @@ export namespace Prisma {
     updatedAt?: boolean
     deletedAt?: boolean
     createdById?: boolean
+    updatedById?: boolean
     billingAddress1?: boolean
     billingAddress2?: boolean
     billingGst?: boolean
@@ -8047,7 +8089,7 @@ export namespace Prisma {
     shippingState?: boolean
   }
 
-  export type QuotationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clientId" | "sequenceNumber" | "quotationNo" | "date" | "validUntil" | "gstType" | "subTotal" | "taxTotal" | "grandTotal" | "status" | "convertedInvoiceId" | "notes" | "createdAt" | "updatedAt" | "deletedAt" | "createdById" | "billingAddress1" | "billingAddress2" | "billingGst" | "billingName" | "billingPhone" | "billingPinCode" | "billingState" | "shippingAddress1" | "shippingAddress2" | "shippingName" | "shippingPinCode" | "shippingSameAsBilling" | "shippingState", ExtArgs["result"]["quotation"]>
+  export type QuotationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clientId" | "sequenceNumber" | "quotationNo" | "date" | "validUntil" | "gstType" | "subTotal" | "taxTotal" | "grandTotal" | "status" | "convertedInvoiceId" | "notes" | "createdAt" | "updatedAt" | "deletedAt" | "createdById" | "updatedById" | "billingAddress1" | "billingAddress2" | "billingGst" | "billingName" | "billingPhone" | "billingPinCode" | "billingState" | "shippingAddress1" | "shippingAddress2" | "shippingName" | "shippingPinCode" | "shippingSameAsBilling" | "shippingState", ExtArgs["result"]["quotation"]>
   export type QuotationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lineItems?: boolean | Quotation$lineItemsArgs<ExtArgs>
     client?: boolean | ClientDefaultArgs<ExtArgs>
@@ -8078,6 +8120,7 @@ export namespace Prisma {
       updatedAt: Date
       deletedAt: Date | null
       createdById: string | null
+      updatedById: string | null
       billingAddress1: string | null
       billingAddress2: string | null
       billingGst: string | null
@@ -8479,6 +8522,7 @@ export namespace Prisma {
     readonly updatedAt: FieldRef<"Quotation", 'DateTime'>
     readonly deletedAt: FieldRef<"Quotation", 'DateTime'>
     readonly createdById: FieldRef<"Quotation", 'String'>
+    readonly updatedById: FieldRef<"Quotation", 'String'>
     readonly billingAddress1: FieldRef<"Quotation", 'String'>
     readonly billingAddress2: FieldRef<"Quotation", 'String'>
     readonly billingGst: FieldRef<"Quotation", 'String'>
@@ -8895,6 +8939,7 @@ export namespace Prisma {
     taxPercent: Decimal | null
     taxAmount: Decimal | null
     totalAmount: Decimal | null
+    pkgCount: number | null
   }
 
   export type QuotationLineItemSumAggregateOutputType = {
@@ -8903,6 +8948,7 @@ export namespace Prisma {
     taxPercent: Decimal | null
     taxAmount: Decimal | null
     totalAmount: Decimal | null
+    pkgCount: number | null
   }
 
   export type QuotationLineItemMinAggregateOutputType = {
@@ -8916,6 +8962,9 @@ export namespace Prisma {
     taxPercent: Decimal | null
     taxAmount: Decimal | null
     totalAmount: Decimal | null
+    unit: string | null
+    pkgCount: number | null
+    pkgType: string | null
   }
 
   export type QuotationLineItemMaxAggregateOutputType = {
@@ -8929,6 +8978,9 @@ export namespace Prisma {
     taxPercent: Decimal | null
     taxAmount: Decimal | null
     totalAmount: Decimal | null
+    unit: string | null
+    pkgCount: number | null
+    pkgType: string | null
   }
 
   export type QuotationLineItemCountAggregateOutputType = {
@@ -8942,6 +8994,9 @@ export namespace Prisma {
     taxPercent: number
     taxAmount: number
     totalAmount: number
+    unit: number
+    pkgCount: number
+    pkgType: number
     _all: number
   }
 
@@ -8952,6 +9007,7 @@ export namespace Prisma {
     taxPercent?: true
     taxAmount?: true
     totalAmount?: true
+    pkgCount?: true
   }
 
   export type QuotationLineItemSumAggregateInputType = {
@@ -8960,6 +9016,7 @@ export namespace Prisma {
     taxPercent?: true
     taxAmount?: true
     totalAmount?: true
+    pkgCount?: true
   }
 
   export type QuotationLineItemMinAggregateInputType = {
@@ -8973,6 +9030,9 @@ export namespace Prisma {
     taxPercent?: true
     taxAmount?: true
     totalAmount?: true
+    unit?: true
+    pkgCount?: true
+    pkgType?: true
   }
 
   export type QuotationLineItemMaxAggregateInputType = {
@@ -8986,6 +9046,9 @@ export namespace Prisma {
     taxPercent?: true
     taxAmount?: true
     totalAmount?: true
+    unit?: true
+    pkgCount?: true
+    pkgType?: true
   }
 
   export type QuotationLineItemCountAggregateInputType = {
@@ -8999,6 +9062,9 @@ export namespace Prisma {
     taxPercent?: true
     taxAmount?: true
     totalAmount?: true
+    unit?: true
+    pkgCount?: true
+    pkgType?: true
     _all?: true
   }
 
@@ -9099,6 +9165,9 @@ export namespace Prisma {
     taxPercent: Decimal
     taxAmount: Decimal
     totalAmount: Decimal
+    unit: string
+    pkgCount: number
+    pkgType: string | null
     _count: QuotationLineItemCountAggregateOutputType | null
     _avg: QuotationLineItemAvgAggregateOutputType | null
     _sum: QuotationLineItemSumAggregateOutputType | null
@@ -9131,6 +9200,9 @@ export namespace Prisma {
     taxPercent?: boolean
     taxAmount?: boolean
     totalAmount?: boolean
+    unit?: boolean
+    pkgCount?: boolean
+    pkgType?: boolean
     quotation?: boolean | QuotationDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["quotationLineItem"]>
 
@@ -9147,9 +9219,12 @@ export namespace Prisma {
     taxPercent?: boolean
     taxAmount?: boolean
     totalAmount?: boolean
+    unit?: boolean
+    pkgCount?: boolean
+    pkgType?: boolean
   }
 
-  export type QuotationLineItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "quotationId" | "productId" | "description" | "hsn" | "qty" | "rate" | "taxPercent" | "taxAmount" | "totalAmount", ExtArgs["result"]["quotationLineItem"]>
+  export type QuotationLineItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "quotationId" | "productId" | "description" | "hsn" | "qty" | "rate" | "taxPercent" | "taxAmount" | "totalAmount" | "unit" | "pkgCount" | "pkgType", ExtArgs["result"]["quotationLineItem"]>
   export type QuotationLineItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     quotation?: boolean | QuotationDefaultArgs<ExtArgs>
   }
@@ -9170,6 +9245,9 @@ export namespace Prisma {
       taxPercent: Prisma.Decimal
       taxAmount: Prisma.Decimal
       totalAmount: Prisma.Decimal
+      unit: string
+      pkgCount: number
+      pkgType: string | null
     }, ExtArgs["result"]["quotationLineItem"]>
     composites: {}
   }
@@ -9550,6 +9628,9 @@ export namespace Prisma {
     readonly taxPercent: FieldRef<"QuotationLineItem", 'Decimal'>
     readonly taxAmount: FieldRef<"QuotationLineItem", 'Decimal'>
     readonly totalAmount: FieldRef<"QuotationLineItem", 'Decimal'>
+    readonly unit: FieldRef<"QuotationLineItem", 'String'>
+    readonly pkgCount: FieldRef<"QuotationLineItem", 'Int'>
+    readonly pkgType: FieldRef<"QuotationLineItem", 'String'>
   }
     
 
@@ -9943,8 +10024,8 @@ export namespace Prisma {
     quotationPrefix: string | null
     defaultGstType: string | null
     currency: string | null
-    showPkgDetails: boolean | null
     updatedAt: Date | null
+    showPkgDetails: boolean | null
   }
 
   export type CompanySettingMaxAggregateOutputType = {
@@ -9969,8 +10050,8 @@ export namespace Prisma {
     quotationPrefix: string | null
     defaultGstType: string | null
     currency: string | null
-    showPkgDetails: boolean | null
     updatedAt: Date | null
+    showPkgDetails: boolean | null
   }
 
   export type CompanySettingCountAggregateOutputType = {
@@ -9995,8 +10076,8 @@ export namespace Prisma {
     quotationPrefix: number
     defaultGstType: number
     currency: number
-    showPkgDetails: number
     updatedAt: number
+    showPkgDetails: number
     _all: number
   }
 
@@ -10023,8 +10104,8 @@ export namespace Prisma {
     quotationPrefix?: true
     defaultGstType?: true
     currency?: true
-    showPkgDetails?: true
     updatedAt?: true
+    showPkgDetails?: true
   }
 
   export type CompanySettingMaxAggregateInputType = {
@@ -10049,8 +10130,8 @@ export namespace Prisma {
     quotationPrefix?: true
     defaultGstType?: true
     currency?: true
-    showPkgDetails?: true
     updatedAt?: true
+    showPkgDetails?: true
   }
 
   export type CompanySettingCountAggregateInputType = {
@@ -10075,8 +10156,8 @@ export namespace Prisma {
     quotationPrefix?: true
     defaultGstType?: true
     currency?: true
-    showPkgDetails?: true
     updatedAt?: true
+    showPkgDetails?: true
     _all?: true
   }
 
@@ -10174,8 +10255,8 @@ export namespace Prisma {
     quotationPrefix: string
     defaultGstType: string
     currency: string
-    showPkgDetails: boolean
     updatedAt: Date
+    showPkgDetails: boolean
     _count: CompanySettingCountAggregateOutputType | null
     _min: CompanySettingMinAggregateOutputType | null
     _max: CompanySettingMaxAggregateOutputType | null
@@ -10217,8 +10298,8 @@ export namespace Prisma {
     quotationPrefix?: boolean
     defaultGstType?: boolean
     currency?: boolean
-    showPkgDetails?: boolean
     updatedAt?: boolean
+    showPkgDetails?: boolean
   }, ExtArgs["result"]["companySetting"]>
 
 
@@ -10245,11 +10326,11 @@ export namespace Prisma {
     quotationPrefix?: boolean
     defaultGstType?: boolean
     currency?: boolean
-    showPkgDetails?: boolean
     updatedAt?: boolean
+    showPkgDetails?: boolean
   }
 
-  export type CompanySettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyName" | "gstin" | "pan" | "address1" | "address2" | "city" | "state" | "pincode" | "phone" | "email" | "website" | "bankName" | "bankBranch" | "bankAccountNo" | "bankIfsc" | "bankAccountName" | "invoicePrefix" | "quotationPrefix" | "defaultGstType" | "currency" | "showPkgDetails" | "updatedAt", ExtArgs["result"]["companySetting"]>
+  export type CompanySettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyName" | "gstin" | "pan" | "address1" | "address2" | "city" | "state" | "pincode" | "phone" | "email" | "website" | "bankName" | "bankBranch" | "bankAccountNo" | "bankIfsc" | "bankAccountName" | "invoicePrefix" | "quotationPrefix" | "defaultGstType" | "currency" | "updatedAt" | "showPkgDetails", ExtArgs["result"]["companySetting"]>
 
   export type $CompanySettingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "CompanySetting"
@@ -10276,8 +10357,8 @@ export namespace Prisma {
       quotationPrefix: string
       defaultGstType: string
       currency: string
-      showPkgDetails: boolean
       updatedAt: Date
+      showPkgDetails: boolean
     }, ExtArgs["result"]["companySetting"]>
     composites: {}
   }
@@ -10668,8 +10749,8 @@ export namespace Prisma {
     readonly quotationPrefix: FieldRef<"CompanySetting", 'String'>
     readonly defaultGstType: FieldRef<"CompanySetting", 'String'>
     readonly currency: FieldRef<"CompanySetting", 'String'>
-    readonly showPkgDetails: FieldRef<"CompanySetting", 'Boolean'>
     readonly updatedAt: FieldRef<"CompanySetting", 'DateTime'>
+    readonly showPkgDetails: FieldRef<"CompanySetting", 'Boolean'>
   }
     
 
@@ -11009,6 +11090,7 @@ export namespace Prisma {
     taxPercent: Decimal | null
     taxAmount: Decimal | null
     totalAmount: Decimal | null
+    pkgCount: number | null
   }
 
   export type InvoiceLineItemSumAggregateOutputType = {
@@ -11017,6 +11099,7 @@ export namespace Prisma {
     taxPercent: Decimal | null
     taxAmount: Decimal | null
     totalAmount: Decimal | null
+    pkgCount: number | null
   }
 
   export type InvoiceLineItemMinAggregateOutputType = {
@@ -11030,6 +11113,9 @@ export namespace Prisma {
     taxPercent: Decimal | null
     taxAmount: Decimal | null
     totalAmount: Decimal | null
+    unit: string | null
+    pkgCount: number | null
+    pkgType: string | null
   }
 
   export type InvoiceLineItemMaxAggregateOutputType = {
@@ -11043,6 +11129,9 @@ export namespace Prisma {
     taxPercent: Decimal | null
     taxAmount: Decimal | null
     totalAmount: Decimal | null
+    unit: string | null
+    pkgCount: number | null
+    pkgType: string | null
   }
 
   export type InvoiceLineItemCountAggregateOutputType = {
@@ -11056,6 +11145,9 @@ export namespace Prisma {
     taxPercent: number
     taxAmount: number
     totalAmount: number
+    unit: number
+    pkgCount: number
+    pkgType: number
     _all: number
   }
 
@@ -11066,6 +11158,7 @@ export namespace Prisma {
     taxPercent?: true
     taxAmount?: true
     totalAmount?: true
+    pkgCount?: true
   }
 
   export type InvoiceLineItemSumAggregateInputType = {
@@ -11074,6 +11167,7 @@ export namespace Prisma {
     taxPercent?: true
     taxAmount?: true
     totalAmount?: true
+    pkgCount?: true
   }
 
   export type InvoiceLineItemMinAggregateInputType = {
@@ -11087,6 +11181,9 @@ export namespace Prisma {
     taxPercent?: true
     taxAmount?: true
     totalAmount?: true
+    unit?: true
+    pkgCount?: true
+    pkgType?: true
   }
 
   export type InvoiceLineItemMaxAggregateInputType = {
@@ -11100,6 +11197,9 @@ export namespace Prisma {
     taxPercent?: true
     taxAmount?: true
     totalAmount?: true
+    unit?: true
+    pkgCount?: true
+    pkgType?: true
   }
 
   export type InvoiceLineItemCountAggregateInputType = {
@@ -11113,6 +11213,9 @@ export namespace Prisma {
     taxPercent?: true
     taxAmount?: true
     totalAmount?: true
+    unit?: true
+    pkgCount?: true
+    pkgType?: true
     _all?: true
   }
 
@@ -11213,6 +11316,9 @@ export namespace Prisma {
     taxPercent: Decimal
     taxAmount: Decimal
     totalAmount: Decimal
+    unit: string
+    pkgCount: number
+    pkgType: string | null
     _count: InvoiceLineItemCountAggregateOutputType | null
     _avg: InvoiceLineItemAvgAggregateOutputType | null
     _sum: InvoiceLineItemSumAggregateOutputType | null
@@ -11245,6 +11351,9 @@ export namespace Prisma {
     taxPercent?: boolean
     taxAmount?: boolean
     totalAmount?: boolean
+    unit?: boolean
+    pkgCount?: boolean
+    pkgType?: boolean
     invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["invoiceLineItem"]>
 
@@ -11261,9 +11370,12 @@ export namespace Prisma {
     taxPercent?: boolean
     taxAmount?: boolean
     totalAmount?: boolean
+    unit?: boolean
+    pkgCount?: boolean
+    pkgType?: boolean
   }
 
-  export type InvoiceLineItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invoiceId" | "productId" | "description" | "hsn" | "qty" | "rate" | "taxPercent" | "taxAmount" | "totalAmount", ExtArgs["result"]["invoiceLineItem"]>
+  export type InvoiceLineItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invoiceId" | "productId" | "description" | "hsn" | "qty" | "rate" | "taxPercent" | "taxAmount" | "totalAmount" | "unit" | "pkgCount" | "pkgType", ExtArgs["result"]["invoiceLineItem"]>
   export type InvoiceLineItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
   }
@@ -11284,6 +11396,9 @@ export namespace Prisma {
       taxPercent: Prisma.Decimal
       taxAmount: Prisma.Decimal
       totalAmount: Prisma.Decimal
+      unit: string
+      pkgCount: number
+      pkgType: string | null
     }, ExtArgs["result"]["invoiceLineItem"]>
     composites: {}
   }
@@ -11664,6 +11779,9 @@ export namespace Prisma {
     readonly taxPercent: FieldRef<"InvoiceLineItem", 'Decimal'>
     readonly taxAmount: FieldRef<"InvoiceLineItem", 'Decimal'>
     readonly totalAmount: FieldRef<"InvoiceLineItem", 'Decimal'>
+    readonly unit: FieldRef<"InvoiceLineItem", 'String'>
+    readonly pkgCount: FieldRef<"InvoiceLineItem", 'Int'>
+    readonly pkgType: FieldRef<"InvoiceLineItem", 'String'>
   }
     
 
@@ -13030,6 +13148,8 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
+    createdById: string | null
+    updatedById: string | null
   }
 
   export type VendorMaxAggregateOutputType = {
@@ -13046,6 +13166,8 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
+    createdById: string | null
+    updatedById: string | null
   }
 
   export type VendorCountAggregateOutputType = {
@@ -13062,6 +13184,8 @@ export namespace Prisma {
     createdAt: number
     updatedAt: number
     deletedAt: number
+    createdById: number
+    updatedById: number
     _all: number
   }
 
@@ -13080,6 +13204,8 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
+    createdById?: true
+    updatedById?: true
   }
 
   export type VendorMaxAggregateInputType = {
@@ -13096,6 +13222,8 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
+    createdById?: true
+    updatedById?: true
   }
 
   export type VendorCountAggregateInputType = {
@@ -13112,6 +13240,8 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
+    createdById?: true
+    updatedById?: true
     _all?: true
   }
 
@@ -13201,6 +13331,8 @@ export namespace Prisma {
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
+    createdById: string | null
+    updatedById: string | null
     _count: VendorCountAggregateOutputType | null
     _min: VendorMinAggregateOutputType | null
     _max: VendorMaxAggregateOutputType | null
@@ -13234,6 +13366,8 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
+    createdById?: boolean
+    updatedById?: boolean
     purchases?: boolean | Vendor$purchasesArgs<ExtArgs>
     _count?: boolean | VendorCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["vendor"]>
@@ -13254,9 +13388,11 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
+    createdById?: boolean
+    updatedById?: boolean
   }
 
-  export type VendorOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "gst" | "email" | "phone" | "address1" | "address2" | "state" | "pinCode" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["vendor"]>
+  export type VendorOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "gst" | "email" | "phone" | "address1" | "address2" | "state" | "pinCode" | "active" | "createdAt" | "updatedAt" | "deletedAt" | "createdById" | "updatedById", ExtArgs["result"]["vendor"]>
   export type VendorInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     purchases?: boolean | Vendor$purchasesArgs<ExtArgs>
     _count?: boolean | VendorCountOutputTypeDefaultArgs<ExtArgs>
@@ -13281,6 +13417,8 @@ export namespace Prisma {
       createdAt: Date
       updatedAt: Date
       deletedAt: Date | null
+      createdById: string | null
+      updatedById: string | null
     }, ExtArgs["result"]["vendor"]>
     composites: {}
   }
@@ -13664,6 +13802,8 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"Vendor", 'DateTime'>
     readonly updatedAt: FieldRef<"Vendor", 'DateTime'>
     readonly deletedAt: FieldRef<"Vendor", 'DateTime'>
+    readonly createdById: FieldRef<"Vendor", 'String'>
+    readonly updatedById: FieldRef<"Vendor", 'String'>
   }
     
 
@@ -14091,6 +14231,7 @@ export namespace Prisma {
     vehicleNo: string | null
     notes: string | null
     createdById: string | null
+    updatedById: string | null
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
@@ -14112,6 +14253,7 @@ export namespace Prisma {
     vehicleNo: string | null
     notes: string | null
     createdById: string | null
+    updatedById: string | null
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
@@ -14133,6 +14275,7 @@ export namespace Prisma {
     vehicleNo: number
     notes: number
     createdById: number
+    updatedById: number
     createdAt: number
     updatedAt: number
     deletedAt: number
@@ -14170,6 +14313,7 @@ export namespace Prisma {
     vehicleNo?: true
     notes?: true
     createdById?: true
+    updatedById?: true
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
@@ -14191,6 +14335,7 @@ export namespace Prisma {
     vehicleNo?: true
     notes?: true
     createdById?: true
+    updatedById?: true
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
@@ -14212,6 +14357,7 @@ export namespace Prisma {
     vehicleNo?: true
     notes?: true
     createdById?: true
+    updatedById?: true
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
@@ -14320,6 +14466,7 @@ export namespace Prisma {
     vehicleNo: string | null
     notes: string | null
     createdById: string | null
+    updatedById: string | null
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -14360,11 +14507,12 @@ export namespace Prisma {
     vehicleNo?: boolean
     notes?: boolean
     createdById?: boolean
+    updatedById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
-    vendor?: boolean | VendorDefaultArgs<ExtArgs>
     lineItems?: boolean | Purchase$lineItemsArgs<ExtArgs>
+    vendor?: boolean | VendorDefaultArgs<ExtArgs>
     _count?: boolean | PurchaseCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["purchase"]>
 
@@ -14386,23 +14534,24 @@ export namespace Prisma {
     vehicleNo?: boolean
     notes?: boolean
     createdById?: boolean
+    updatedById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
   }
 
-  export type PurchaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "vendorId" | "sequenceNumber" | "purchaseNo" | "date" | "gstType" | "subTotal" | "taxTotal" | "grandTotal" | "status" | "ewayBill" | "ewayBillUrl" | "vehicleNo" | "notes" | "createdById" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["purchase"]>
+  export type PurchaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "vendorId" | "sequenceNumber" | "purchaseNo" | "date" | "gstType" | "subTotal" | "taxTotal" | "grandTotal" | "status" | "ewayBill" | "ewayBillUrl" | "vehicleNo" | "notes" | "createdById" | "updatedById" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["purchase"]>
   export type PurchaseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    vendor?: boolean | VendorDefaultArgs<ExtArgs>
     lineItems?: boolean | Purchase$lineItemsArgs<ExtArgs>
+    vendor?: boolean | VendorDefaultArgs<ExtArgs>
     _count?: boolean | PurchaseCountOutputTypeDefaultArgs<ExtArgs>
   }
 
   export type $PurchasePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Purchase"
     objects: {
-      vendor: Prisma.$VendorPayload<ExtArgs>
       lineItems: Prisma.$PurchaseLineItemPayload<ExtArgs>[]
+      vendor: Prisma.$VendorPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -14420,6 +14569,7 @@ export namespace Prisma {
       vehicleNo: string | null
       notes: string | null
       createdById: string | null
+      updatedById: string | null
       createdAt: Date
       updatedAt: Date
       deletedAt: Date | null
@@ -14763,8 +14913,8 @@ export namespace Prisma {
    */
   export interface Prisma__PurchaseClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    vendor<T extends VendorDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VendorDefaultArgs<ExtArgs>>): Prisma__VendorClient<$Result.GetResult<Prisma.$VendorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     lineItems<T extends Purchase$lineItemsArgs<ExtArgs> = {}>(args?: Subset<T, Purchase$lineItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PurchaseLineItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    vendor<T extends VendorDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VendorDefaultArgs<ExtArgs>>): Prisma__VendorClient<$Result.GetResult<Prisma.$VendorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -14809,6 +14959,7 @@ export namespace Prisma {
     readonly vehicleNo: FieldRef<"Purchase", 'String'>
     readonly notes: FieldRef<"Purchase", 'String'>
     readonly createdById: FieldRef<"Purchase", 'String'>
+    readonly updatedById: FieldRef<"Purchase", 'String'>
     readonly createdAt: FieldRef<"Purchase", 'DateTime'>
     readonly updatedAt: FieldRef<"Purchase", 'DateTime'>
     readonly deletedAt: FieldRef<"Purchase", 'DateTime'>
@@ -15238,6 +15389,7 @@ export namespace Prisma {
     taxPercent: Decimal | null
     taxAmount: Decimal | null
     totalAmount: Decimal | null
+    unit: string | null
     pkgCount: number | null
     pkgType: string | null
   }
@@ -15253,6 +15405,7 @@ export namespace Prisma {
     taxPercent: Decimal | null
     taxAmount: Decimal | null
     totalAmount: Decimal | null
+    unit: string | null
     pkgCount: number | null
     pkgType: string | null
   }
@@ -15268,6 +15421,7 @@ export namespace Prisma {
     taxPercent: number
     taxAmount: number
     totalAmount: number
+    unit: number
     pkgCount: number
     pkgType: number
     _all: number
@@ -15303,6 +15457,7 @@ export namespace Prisma {
     taxPercent?: true
     taxAmount?: true
     totalAmount?: true
+    unit?: true
     pkgCount?: true
     pkgType?: true
   }
@@ -15318,6 +15473,7 @@ export namespace Prisma {
     taxPercent?: true
     taxAmount?: true
     totalAmount?: true
+    unit?: true
     pkgCount?: true
     pkgType?: true
   }
@@ -15333,6 +15489,7 @@ export namespace Prisma {
     taxPercent?: true
     taxAmount?: true
     totalAmount?: true
+    unit?: true
     pkgCount?: true
     pkgType?: true
     _all?: true
@@ -15435,6 +15592,7 @@ export namespace Prisma {
     taxPercent: Decimal
     taxAmount: Decimal
     totalAmount: Decimal
+    unit: string
     pkgCount: number
     pkgType: string
     _count: PurchaseLineItemCountAggregateOutputType | null
@@ -15469,6 +15627,7 @@ export namespace Prisma {
     taxPercent?: boolean
     taxAmount?: boolean
     totalAmount?: boolean
+    unit?: boolean
     pkgCount?: boolean
     pkgType?: boolean
     purchase?: boolean | PurchaseDefaultArgs<ExtArgs>
@@ -15487,11 +15646,12 @@ export namespace Prisma {
     taxPercent?: boolean
     taxAmount?: boolean
     totalAmount?: boolean
+    unit?: boolean
     pkgCount?: boolean
     pkgType?: boolean
   }
 
-  export type PurchaseLineItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "purchaseId" | "productId" | "description" | "hsn" | "qty" | "rate" | "taxPercent" | "taxAmount" | "totalAmount" | "pkgCount" | "pkgType", ExtArgs["result"]["purchaseLineItem"]>
+  export type PurchaseLineItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "purchaseId" | "productId" | "description" | "hsn" | "qty" | "rate" | "taxPercent" | "taxAmount" | "totalAmount" | "unit" | "pkgCount" | "pkgType", ExtArgs["result"]["purchaseLineItem"]>
   export type PurchaseLineItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     purchase?: boolean | PurchaseDefaultArgs<ExtArgs>
   }
@@ -15512,6 +15672,7 @@ export namespace Prisma {
       taxPercent: Prisma.Decimal
       taxAmount: Prisma.Decimal
       totalAmount: Prisma.Decimal
+      unit: string
       pkgCount: number
       pkgType: string
     }, ExtArgs["result"]["purchaseLineItem"]>
@@ -15894,6 +16055,7 @@ export namespace Prisma {
     readonly taxPercent: FieldRef<"PurchaseLineItem", 'Decimal'>
     readonly taxAmount: FieldRef<"PurchaseLineItem", 'Decimal'>
     readonly totalAmount: FieldRef<"PurchaseLineItem", 'Decimal'>
+    readonly unit: FieldRef<"PurchaseLineItem", 'String'>
     readonly pkgCount: FieldRef<"PurchaseLineItem", 'Int'>
     readonly pkgType: FieldRef<"PurchaseLineItem", 'String'>
   }
@@ -16315,16 +16477,18 @@ export namespace Prisma {
     sku: 'sku',
     description: 'description',
     hsn: 'hsn',
-    purchaseRate: 'purchaseRate',
-    sellingRate: 'sellingRate',
     gstRate: 'gstRate',
-    unit: 'unit',
-    pkgType: 'pkgType',
-    notes: 'notes',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     deletedAt: 'deletedAt',
-    active: 'active'
+    active: 'active',
+    notes: 'notes',
+    pkgType: 'pkgType',
+    purchaseRate: 'purchaseRate',
+    sellingRate: 'sellingRate',
+    unit: 'unit',
+    createdById: 'createdById',
+    updatedById: 'updatedById'
   };
 
   export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
@@ -16350,6 +16514,7 @@ export namespace Prisma {
     updatedAt: 'updatedAt',
     deletedAt: 'deletedAt',
     createdById: 'createdById',
+    updatedById: 'updatedById',
     notes: 'notes',
     billingAddress1: 'billingAddress1',
     billingAddress2: 'billingAddress2',
@@ -16403,6 +16568,7 @@ export namespace Prisma {
     updatedAt: 'updatedAt',
     deletedAt: 'deletedAt',
     createdById: 'createdById',
+    updatedById: 'updatedById',
     billingAddress1: 'billingAddress1',
     billingAddress2: 'billingAddress2',
     billingGst: 'billingGst',
@@ -16431,7 +16597,10 @@ export namespace Prisma {
     rate: 'rate',
     taxPercent: 'taxPercent',
     taxAmount: 'taxAmount',
-    totalAmount: 'totalAmount'
+    totalAmount: 'totalAmount',
+    unit: 'unit',
+    pkgCount: 'pkgCount',
+    pkgType: 'pkgType'
   };
 
   export type QuotationLineItemScalarFieldEnum = (typeof QuotationLineItemScalarFieldEnum)[keyof typeof QuotationLineItemScalarFieldEnum]
@@ -16459,8 +16628,8 @@ export namespace Prisma {
     quotationPrefix: 'quotationPrefix',
     defaultGstType: 'defaultGstType',
     currency: 'currency',
-    showPkgDetails: 'showPkgDetails',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    showPkgDetails: 'showPkgDetails'
   };
 
   export type CompanySettingScalarFieldEnum = (typeof CompanySettingScalarFieldEnum)[keyof typeof CompanySettingScalarFieldEnum]
@@ -16476,7 +16645,10 @@ export namespace Prisma {
     rate: 'rate',
     taxPercent: 'taxPercent',
     taxAmount: 'taxAmount',
-    totalAmount: 'totalAmount'
+    totalAmount: 'totalAmount',
+    unit: 'unit',
+    pkgCount: 'pkgCount',
+    pkgType: 'pkgType'
   };
 
   export type InvoiceLineItemScalarFieldEnum = (typeof InvoiceLineItemScalarFieldEnum)[keyof typeof InvoiceLineItemScalarFieldEnum]
@@ -16509,7 +16681,9 @@ export namespace Prisma {
     active: 'active',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    deletedAt: 'deletedAt'
+    deletedAt: 'deletedAt',
+    createdById: 'createdById',
+    updatedById: 'updatedById'
   };
 
   export type VendorScalarFieldEnum = (typeof VendorScalarFieldEnum)[keyof typeof VendorScalarFieldEnum]
@@ -16531,6 +16705,7 @@ export namespace Prisma {
     vehicleNo: 'vehicleNo',
     notes: 'notes',
     createdById: 'createdById',
+    updatedById: 'updatedById',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     deletedAt: 'deletedAt'
@@ -16550,6 +16725,7 @@ export namespace Prisma {
     taxPercent: 'taxPercent',
     taxAmount: 'taxAmount',
     totalAmount: 'totalAmount',
+    unit: 'unit',
     pkgCount: 'pkgCount',
     pkgType: 'pkgType'
   };
@@ -16607,9 +16783,11 @@ export namespace Prisma {
     sku: 'sku',
     description: 'description',
     hsn: 'hsn',
-    unit: 'unit',
+    notes: 'notes',
     pkgType: 'pkgType',
-    notes: 'notes'
+    unit: 'unit',
+    createdById: 'createdById',
+    updatedById: 'updatedById'
   };
 
   export type ProductOrderByRelevanceFieldEnum = (typeof ProductOrderByRelevanceFieldEnum)[keyof typeof ProductOrderByRelevanceFieldEnum]
@@ -16625,6 +16803,7 @@ export namespace Prisma {
     vehicleNo: 'vehicleNo',
     dispatchedThrough: 'dispatchedThrough',
     createdById: 'createdById',
+    updatedById: 'updatedById',
     notes: 'notes',
     billingAddress1: 'billingAddress1',
     billingAddress2: 'billingAddress2',
@@ -16664,6 +16843,7 @@ export namespace Prisma {
     convertedInvoiceId: 'convertedInvoiceId',
     notes: 'notes',
     createdById: 'createdById',
+    updatedById: 'updatedById',
     billingAddress1: 'billingAddress1',
     billingAddress2: 'billingAddress2',
     billingGst: 'billingGst',
@@ -16686,7 +16866,9 @@ export namespace Prisma {
     quotationId: 'quotationId',
     productId: 'productId',
     description: 'description',
-    hsn: 'hsn'
+    hsn: 'hsn',
+    unit: 'unit',
+    pkgType: 'pkgType'
   };
 
   export type QuotationLineItemOrderByRelevanceFieldEnum = (typeof QuotationLineItemOrderByRelevanceFieldEnum)[keyof typeof QuotationLineItemOrderByRelevanceFieldEnum]
@@ -16724,7 +16906,9 @@ export namespace Prisma {
     invoiceId: 'invoiceId',
     productId: 'productId',
     description: 'description',
-    hsn: 'hsn'
+    hsn: 'hsn',
+    unit: 'unit',
+    pkgType: 'pkgType'
   };
 
   export type InvoiceLineItemOrderByRelevanceFieldEnum = (typeof InvoiceLineItemOrderByRelevanceFieldEnum)[keyof typeof InvoiceLineItemOrderByRelevanceFieldEnum]
@@ -16752,7 +16936,9 @@ export namespace Prisma {
     address1: 'address1',
     address2: 'address2',
     state: 'state',
-    pinCode: 'pinCode'
+    pinCode: 'pinCode',
+    createdById: 'createdById',
+    updatedById: 'updatedById'
   };
 
   export type VendorOrderByRelevanceFieldEnum = (typeof VendorOrderByRelevanceFieldEnum)[keyof typeof VendorOrderByRelevanceFieldEnum]
@@ -16768,7 +16954,8 @@ export namespace Prisma {
     ewayBillUrl: 'ewayBillUrl',
     vehicleNo: 'vehicleNo',
     notes: 'notes',
-    createdById: 'createdById'
+    createdById: 'createdById',
+    updatedById: 'updatedById'
   };
 
   export type PurchaseOrderByRelevanceFieldEnum = (typeof PurchaseOrderByRelevanceFieldEnum)[keyof typeof PurchaseOrderByRelevanceFieldEnum]
@@ -16780,6 +16967,7 @@ export namespace Prisma {
     productId: 'productId',
     description: 'description',
     hsn: 'hsn',
+    unit: 'unit',
     pkgType: 'pkgType'
   };
 
@@ -17046,16 +17234,18 @@ export namespace Prisma {
     sku?: StringNullableFilter<"Product"> | string | null
     description?: StringFilter<"Product"> | string
     hsn?: StringNullableFilter<"Product"> | string | null
-    purchaseRate?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
-    sellingRate?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     gstRate?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
-    unit?: StringFilter<"Product"> | string
-    pkgType?: StringNullableFilter<"Product"> | string | null
-    notes?: StringNullableFilter<"Product"> | string | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
     active?: BoolFilter<"Product"> | boolean
+    notes?: StringNullableFilter<"Product"> | string | null
+    pkgType?: StringNullableFilter<"Product"> | string | null
+    purchaseRate?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
+    sellingRate?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
+    unit?: StringFilter<"Product"> | string
+    createdById?: StringNullableFilter<"Product"> | string | null
+    updatedById?: StringNullableFilter<"Product"> | string | null
   }
 
   export type ProductOrderByWithRelationInput = {
@@ -17063,16 +17253,18 @@ export namespace Prisma {
     sku?: SortOrderInput | SortOrder
     description?: SortOrder
     hsn?: SortOrderInput | SortOrder
-    purchaseRate?: SortOrder
-    sellingRate?: SortOrder
     gstRate?: SortOrder
-    unit?: SortOrder
-    pkgType?: SortOrderInput | SortOrder
-    notes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     active?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    pkgType?: SortOrderInput | SortOrder
+    purchaseRate?: SortOrder
+    sellingRate?: SortOrder
+    unit?: SortOrder
+    createdById?: SortOrderInput | SortOrder
+    updatedById?: SortOrderInput | SortOrder
     _relevance?: ProductOrderByRelevanceInput
   }
 
@@ -17084,16 +17276,18 @@ export namespace Prisma {
     NOT?: ProductWhereInput | ProductWhereInput[]
     description?: StringFilter<"Product"> | string
     hsn?: StringNullableFilter<"Product"> | string | null
-    purchaseRate?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
-    sellingRate?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     gstRate?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
-    unit?: StringFilter<"Product"> | string
-    pkgType?: StringNullableFilter<"Product"> | string | null
-    notes?: StringNullableFilter<"Product"> | string | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
     active?: BoolFilter<"Product"> | boolean
+    notes?: StringNullableFilter<"Product"> | string | null
+    pkgType?: StringNullableFilter<"Product"> | string | null
+    purchaseRate?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
+    sellingRate?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
+    unit?: StringFilter<"Product"> | string
+    createdById?: StringNullableFilter<"Product"> | string | null
+    updatedById?: StringNullableFilter<"Product"> | string | null
   }, "id" | "sku">
 
   export type ProductOrderByWithAggregationInput = {
@@ -17101,16 +17295,18 @@ export namespace Prisma {
     sku?: SortOrderInput | SortOrder
     description?: SortOrder
     hsn?: SortOrderInput | SortOrder
-    purchaseRate?: SortOrder
-    sellingRate?: SortOrder
     gstRate?: SortOrder
-    unit?: SortOrder
-    pkgType?: SortOrderInput | SortOrder
-    notes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     active?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    pkgType?: SortOrderInput | SortOrder
+    purchaseRate?: SortOrder
+    sellingRate?: SortOrder
+    unit?: SortOrder
+    createdById?: SortOrderInput | SortOrder
+    updatedById?: SortOrderInput | SortOrder
     _count?: ProductCountOrderByAggregateInput
     _avg?: ProductAvgOrderByAggregateInput
     _max?: ProductMaxOrderByAggregateInput
@@ -17126,16 +17322,18 @@ export namespace Prisma {
     sku?: StringNullableWithAggregatesFilter<"Product"> | string | null
     description?: StringWithAggregatesFilter<"Product"> | string
     hsn?: StringNullableWithAggregatesFilter<"Product"> | string | null
-    purchaseRate?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
-    sellingRate?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
     gstRate?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
-    unit?: StringWithAggregatesFilter<"Product"> | string
-    pkgType?: StringNullableWithAggregatesFilter<"Product"> | string | null
-    notes?: StringNullableWithAggregatesFilter<"Product"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Product"> | Date | string | null
     active?: BoolWithAggregatesFilter<"Product"> | boolean
+    notes?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    pkgType?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    purchaseRate?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
+    sellingRate?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
+    unit?: StringWithAggregatesFilter<"Product"> | string
+    createdById?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    updatedById?: StringNullableWithAggregatesFilter<"Product"> | string | null
   }
 
   export type InvoiceWhereInput = {
@@ -17161,6 +17359,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Invoice"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     createdById?: StringNullableFilter<"Invoice"> | string | null
+    updatedById?: StringNullableFilter<"Invoice"> | string | null
     notes?: StringNullableFilter<"Invoice"> | string | null
     billingAddress1?: StringNullableFilter<"Invoice"> | string | null
     billingAddress2?: StringNullableFilter<"Invoice"> | string | null
@@ -17200,6 +17399,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdById?: SortOrderInput | SortOrder
+    updatedById?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     billingAddress1?: SortOrderInput | SortOrder
     billingAddress2?: SortOrderInput | SortOrder
@@ -17243,6 +17443,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Invoice"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     createdById?: StringNullableFilter<"Invoice"> | string | null
+    updatedById?: StringNullableFilter<"Invoice"> | string | null
     notes?: StringNullableFilter<"Invoice"> | string | null
     billingAddress1?: StringNullableFilter<"Invoice"> | string | null
     billingAddress2?: StringNullableFilter<"Invoice"> | string | null
@@ -17282,6 +17483,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdById?: SortOrderInput | SortOrder
+    updatedById?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     billingAddress1?: SortOrderInput | SortOrder
     billingAddress2?: SortOrderInput | SortOrder
@@ -17326,6 +17528,7 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Invoice"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Invoice"> | Date | string | null
     createdById?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
+    updatedById?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
     notes?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
     billingAddress1?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
     billingAddress2?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
@@ -17446,6 +17649,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Quotation"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Quotation"> | Date | string | null
     createdById?: StringNullableFilter<"Quotation"> | string | null
+    updatedById?: StringNullableFilter<"Quotation"> | string | null
     billingAddress1?: StringNullableFilter<"Quotation"> | string | null
     billingAddress2?: StringNullableFilter<"Quotation"> | string | null
     billingGst?: StringNullableFilter<"Quotation"> | string | null
@@ -17481,6 +17685,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdById?: SortOrderInput | SortOrder
+    updatedById?: SortOrderInput | SortOrder
     billingAddress1?: SortOrderInput | SortOrder
     billingAddress2?: SortOrderInput | SortOrder
     billingGst?: SortOrderInput | SortOrder
@@ -17520,6 +17725,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Quotation"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Quotation"> | Date | string | null
     createdById?: StringNullableFilter<"Quotation"> | string | null
+    updatedById?: StringNullableFilter<"Quotation"> | string | null
     billingAddress1?: StringNullableFilter<"Quotation"> | string | null
     billingAddress2?: StringNullableFilter<"Quotation"> | string | null
     billingGst?: StringNullableFilter<"Quotation"> | string | null
@@ -17555,6 +17761,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdById?: SortOrderInput | SortOrder
+    updatedById?: SortOrderInput | SortOrder
     billingAddress1?: SortOrderInput | SortOrder
     billingAddress2?: SortOrderInput | SortOrder
     billingGst?: SortOrderInput | SortOrder
@@ -17596,6 +17803,7 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Quotation"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Quotation"> | Date | string | null
     createdById?: StringNullableWithAggregatesFilter<"Quotation"> | string | null
+    updatedById?: StringNullableWithAggregatesFilter<"Quotation"> | string | null
     billingAddress1?: StringNullableWithAggregatesFilter<"Quotation"> | string | null
     billingAddress2?: StringNullableWithAggregatesFilter<"Quotation"> | string | null
     billingGst?: StringNullableWithAggregatesFilter<"Quotation"> | string | null
@@ -17625,6 +17833,9 @@ export namespace Prisma {
     taxPercent?: DecimalFilter<"QuotationLineItem"> | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFilter<"QuotationLineItem"> | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFilter<"QuotationLineItem"> | Decimal | DecimalJsLike | number | string
+    unit?: StringFilter<"QuotationLineItem"> | string
+    pkgCount?: IntFilter<"QuotationLineItem"> | number
+    pkgType?: StringNullableFilter<"QuotationLineItem"> | string | null
     quotation?: XOR<QuotationScalarRelationFilter, QuotationWhereInput>
   }
 
@@ -17639,6 +17850,9 @@ export namespace Prisma {
     taxPercent?: SortOrder
     taxAmount?: SortOrder
     totalAmount?: SortOrder
+    unit?: SortOrder
+    pkgCount?: SortOrder
+    pkgType?: SortOrderInput | SortOrder
     quotation?: QuotationOrderByWithRelationInput
     _relevance?: QuotationLineItemOrderByRelevanceInput
   }
@@ -17657,6 +17871,9 @@ export namespace Prisma {
     taxPercent?: DecimalFilter<"QuotationLineItem"> | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFilter<"QuotationLineItem"> | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFilter<"QuotationLineItem"> | Decimal | DecimalJsLike | number | string
+    unit?: StringFilter<"QuotationLineItem"> | string
+    pkgCount?: IntFilter<"QuotationLineItem"> | number
+    pkgType?: StringNullableFilter<"QuotationLineItem"> | string | null
     quotation?: XOR<QuotationScalarRelationFilter, QuotationWhereInput>
   }, "id">
 
@@ -17671,6 +17888,9 @@ export namespace Prisma {
     taxPercent?: SortOrder
     taxAmount?: SortOrder
     totalAmount?: SortOrder
+    unit?: SortOrder
+    pkgCount?: SortOrder
+    pkgType?: SortOrderInput | SortOrder
     _count?: QuotationLineItemCountOrderByAggregateInput
     _avg?: QuotationLineItemAvgOrderByAggregateInput
     _max?: QuotationLineItemMaxOrderByAggregateInput
@@ -17692,6 +17912,9 @@ export namespace Prisma {
     taxPercent?: DecimalWithAggregatesFilter<"QuotationLineItem"> | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalWithAggregatesFilter<"QuotationLineItem"> | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalWithAggregatesFilter<"QuotationLineItem"> | Decimal | DecimalJsLike | number | string
+    unit?: StringWithAggregatesFilter<"QuotationLineItem"> | string
+    pkgCount?: IntWithAggregatesFilter<"QuotationLineItem"> | number
+    pkgType?: StringNullableWithAggregatesFilter<"QuotationLineItem"> | string | null
   }
 
   export type CompanySettingWhereInput = {
@@ -17719,8 +17942,8 @@ export namespace Prisma {
     quotationPrefix?: StringFilter<"CompanySetting"> | string
     defaultGstType?: StringFilter<"CompanySetting"> | string
     currency?: StringFilter<"CompanySetting"> | string
-    showPkgDetails?: BoolFilter<"CompanySetting"> | boolean
     updatedAt?: DateTimeFilter<"CompanySetting"> | Date | string
+    showPkgDetails?: BoolFilter<"CompanySetting"> | boolean
   }
 
   export type CompanySettingOrderByWithRelationInput = {
@@ -17745,8 +17968,8 @@ export namespace Prisma {
     quotationPrefix?: SortOrder
     defaultGstType?: SortOrder
     currency?: SortOrder
-    showPkgDetails?: SortOrder
     updatedAt?: SortOrder
+    showPkgDetails?: SortOrder
     _relevance?: CompanySettingOrderByRelevanceInput
   }
 
@@ -17775,8 +17998,8 @@ export namespace Prisma {
     quotationPrefix?: StringFilter<"CompanySetting"> | string
     defaultGstType?: StringFilter<"CompanySetting"> | string
     currency?: StringFilter<"CompanySetting"> | string
-    showPkgDetails?: BoolFilter<"CompanySetting"> | boolean
     updatedAt?: DateTimeFilter<"CompanySetting"> | Date | string
+    showPkgDetails?: BoolFilter<"CompanySetting"> | boolean
   }, "id">
 
   export type CompanySettingOrderByWithAggregationInput = {
@@ -17801,8 +18024,8 @@ export namespace Prisma {
     quotationPrefix?: SortOrder
     defaultGstType?: SortOrder
     currency?: SortOrder
-    showPkgDetails?: SortOrder
     updatedAt?: SortOrder
+    showPkgDetails?: SortOrder
     _count?: CompanySettingCountOrderByAggregateInput
     _max?: CompanySettingMaxOrderByAggregateInput
     _min?: CompanySettingMinOrderByAggregateInput
@@ -17833,8 +18056,8 @@ export namespace Prisma {
     quotationPrefix?: StringWithAggregatesFilter<"CompanySetting"> | string
     defaultGstType?: StringWithAggregatesFilter<"CompanySetting"> | string
     currency?: StringWithAggregatesFilter<"CompanySetting"> | string
-    showPkgDetails?: BoolWithAggregatesFilter<"CompanySetting"> | boolean
     updatedAt?: DateTimeWithAggregatesFilter<"CompanySetting"> | Date | string
+    showPkgDetails?: BoolWithAggregatesFilter<"CompanySetting"> | boolean
   }
 
   export type InvoiceLineItemWhereInput = {
@@ -17851,6 +18074,9 @@ export namespace Prisma {
     taxPercent?: DecimalFilter<"InvoiceLineItem"> | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFilter<"InvoiceLineItem"> | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFilter<"InvoiceLineItem"> | Decimal | DecimalJsLike | number | string
+    unit?: StringFilter<"InvoiceLineItem"> | string
+    pkgCount?: IntFilter<"InvoiceLineItem"> | number
+    pkgType?: StringNullableFilter<"InvoiceLineItem"> | string | null
     invoice?: XOR<InvoiceScalarRelationFilter, InvoiceWhereInput>
   }
 
@@ -17865,6 +18091,9 @@ export namespace Prisma {
     taxPercent?: SortOrder
     taxAmount?: SortOrder
     totalAmount?: SortOrder
+    unit?: SortOrder
+    pkgCount?: SortOrder
+    pkgType?: SortOrderInput | SortOrder
     invoice?: InvoiceOrderByWithRelationInput
     _relevance?: InvoiceLineItemOrderByRelevanceInput
   }
@@ -17883,6 +18112,9 @@ export namespace Prisma {
     taxPercent?: DecimalFilter<"InvoiceLineItem"> | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFilter<"InvoiceLineItem"> | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFilter<"InvoiceLineItem"> | Decimal | DecimalJsLike | number | string
+    unit?: StringFilter<"InvoiceLineItem"> | string
+    pkgCount?: IntFilter<"InvoiceLineItem"> | number
+    pkgType?: StringNullableFilter<"InvoiceLineItem"> | string | null
     invoice?: XOR<InvoiceScalarRelationFilter, InvoiceWhereInput>
   }, "id">
 
@@ -17897,6 +18129,9 @@ export namespace Prisma {
     taxPercent?: SortOrder
     taxAmount?: SortOrder
     totalAmount?: SortOrder
+    unit?: SortOrder
+    pkgCount?: SortOrder
+    pkgType?: SortOrderInput | SortOrder
     _count?: InvoiceLineItemCountOrderByAggregateInput
     _avg?: InvoiceLineItemAvgOrderByAggregateInput
     _max?: InvoiceLineItemMaxOrderByAggregateInput
@@ -17918,6 +18153,9 @@ export namespace Prisma {
     taxPercent?: DecimalWithAggregatesFilter<"InvoiceLineItem"> | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalWithAggregatesFilter<"InvoiceLineItem"> | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalWithAggregatesFilter<"InvoiceLineItem"> | Decimal | DecimalJsLike | number | string
+    unit?: StringWithAggregatesFilter<"InvoiceLineItem"> | string
+    pkgCount?: IntWithAggregatesFilter<"InvoiceLineItem"> | number
+    pkgType?: StringNullableWithAggregatesFilter<"InvoiceLineItem"> | string | null
   }
 
   export type AuditLogWhereInput = {
@@ -18008,6 +18246,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Vendor"> | Date | string
     updatedAt?: DateTimeFilter<"Vendor"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Vendor"> | Date | string | null
+    createdById?: StringNullableFilter<"Vendor"> | string | null
+    updatedById?: StringNullableFilter<"Vendor"> | string | null
     purchases?: PurchaseListRelationFilter
   }
 
@@ -18025,6 +18265,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    createdById?: SortOrderInput | SortOrder
+    updatedById?: SortOrderInput | SortOrder
     purchases?: PurchaseOrderByRelationAggregateInput
     _relevance?: VendorOrderByRelevanceInput
   }
@@ -18046,6 +18288,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Vendor"> | Date | string
     updatedAt?: DateTimeFilter<"Vendor"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Vendor"> | Date | string | null
+    createdById?: StringNullableFilter<"Vendor"> | string | null
+    updatedById?: StringNullableFilter<"Vendor"> | string | null
     purchases?: PurchaseListRelationFilter
   }, "id">
 
@@ -18063,6 +18307,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    createdById?: SortOrderInput | SortOrder
+    updatedById?: SortOrderInput | SortOrder
     _count?: VendorCountOrderByAggregateInput
     _max?: VendorMaxOrderByAggregateInput
     _min?: VendorMinOrderByAggregateInput
@@ -18085,6 +18331,8 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Vendor"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Vendor"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Vendor"> | Date | string | null
+    createdById?: StringNullableWithAggregatesFilter<"Vendor"> | string | null
+    updatedById?: StringNullableWithAggregatesFilter<"Vendor"> | string | null
   }
 
   export type PurchaseWhereInput = {
@@ -18106,11 +18354,12 @@ export namespace Prisma {
     vehicleNo?: StringNullableFilter<"Purchase"> | string | null
     notes?: StringNullableFilter<"Purchase"> | string | null
     createdById?: StringNullableFilter<"Purchase"> | string | null
+    updatedById?: StringNullableFilter<"Purchase"> | string | null
     createdAt?: DateTimeFilter<"Purchase"> | Date | string
     updatedAt?: DateTimeFilter<"Purchase"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Purchase"> | Date | string | null
-    vendor?: XOR<VendorScalarRelationFilter, VendorWhereInput>
     lineItems?: PurchaseLineItemListRelationFilter
+    vendor?: XOR<VendorScalarRelationFilter, VendorWhereInput>
   }
 
   export type PurchaseOrderByWithRelationInput = {
@@ -18129,11 +18378,12 @@ export namespace Prisma {
     vehicleNo?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     createdById?: SortOrderInput | SortOrder
+    updatedById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
-    vendor?: VendorOrderByWithRelationInput
     lineItems?: PurchaseLineItemOrderByRelationAggregateInput
+    vendor?: VendorOrderByWithRelationInput
     _relevance?: PurchaseOrderByRelevanceInput
   }
 
@@ -18156,11 +18406,12 @@ export namespace Prisma {
     vehicleNo?: StringNullableFilter<"Purchase"> | string | null
     notes?: StringNullableFilter<"Purchase"> | string | null
     createdById?: StringNullableFilter<"Purchase"> | string | null
+    updatedById?: StringNullableFilter<"Purchase"> | string | null
     createdAt?: DateTimeFilter<"Purchase"> | Date | string
     updatedAt?: DateTimeFilter<"Purchase"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Purchase"> | Date | string | null
-    vendor?: XOR<VendorScalarRelationFilter, VendorWhereInput>
     lineItems?: PurchaseLineItemListRelationFilter
+    vendor?: XOR<VendorScalarRelationFilter, VendorWhereInput>
   }, "id" | "sequenceNumber" | "purchaseNo">
 
   export type PurchaseOrderByWithAggregationInput = {
@@ -18179,6 +18430,7 @@ export namespace Prisma {
     vehicleNo?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     createdById?: SortOrderInput | SortOrder
+    updatedById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
@@ -18208,6 +18460,7 @@ export namespace Prisma {
     vehicleNo?: StringNullableWithAggregatesFilter<"Purchase"> | string | null
     notes?: StringNullableWithAggregatesFilter<"Purchase"> | string | null
     createdById?: StringNullableWithAggregatesFilter<"Purchase"> | string | null
+    updatedById?: StringNullableWithAggregatesFilter<"Purchase"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Purchase"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Purchase"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Purchase"> | Date | string | null
@@ -18227,6 +18480,7 @@ export namespace Prisma {
     taxPercent?: DecimalFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
+    unit?: StringFilter<"PurchaseLineItem"> | string
     pkgCount?: IntFilter<"PurchaseLineItem"> | number
     pkgType?: StringFilter<"PurchaseLineItem"> | string
     purchase?: XOR<PurchaseScalarRelationFilter, PurchaseWhereInput>
@@ -18243,6 +18497,7 @@ export namespace Prisma {
     taxPercent?: SortOrder
     taxAmount?: SortOrder
     totalAmount?: SortOrder
+    unit?: SortOrder
     pkgCount?: SortOrder
     pkgType?: SortOrder
     purchase?: PurchaseOrderByWithRelationInput
@@ -18263,6 +18518,7 @@ export namespace Prisma {
     taxPercent?: DecimalFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
+    unit?: StringFilter<"PurchaseLineItem"> | string
     pkgCount?: IntFilter<"PurchaseLineItem"> | number
     pkgType?: StringFilter<"PurchaseLineItem"> | string
     purchase?: XOR<PurchaseScalarRelationFilter, PurchaseWhereInput>
@@ -18279,6 +18535,7 @@ export namespace Prisma {
     taxPercent?: SortOrder
     taxAmount?: SortOrder
     totalAmount?: SortOrder
+    unit?: SortOrder
     pkgCount?: SortOrder
     pkgType?: SortOrder
     _count?: PurchaseLineItemCountOrderByAggregateInput
@@ -18302,6 +18559,7 @@ export namespace Prisma {
     taxPercent?: DecimalWithAggregatesFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalWithAggregatesFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalWithAggregatesFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
+    unit?: StringWithAggregatesFilter<"PurchaseLineItem"> | string
     pkgCount?: IntWithAggregatesFilter<"PurchaseLineItem"> | number
     pkgType?: StringWithAggregatesFilter<"PurchaseLineItem"> | string
   }
@@ -18554,16 +18812,18 @@ export namespace Prisma {
     sku?: string | null
     description: string
     hsn?: string | null
-    purchaseRate?: Decimal | DecimalJsLike | number | string
-    sellingRate?: Decimal | DecimalJsLike | number | string
     gstRate: Decimal | DecimalJsLike | number | string
-    unit?: string
-    pkgType?: string | null
-    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     active?: boolean
+    notes?: string | null
+    pkgType?: string | null
+    purchaseRate?: Decimal | DecimalJsLike | number | string
+    sellingRate?: Decimal | DecimalJsLike | number | string
+    unit?: string
+    createdById?: string | null
+    updatedById?: string | null
   }
 
   export type ProductUncheckedCreateInput = {
@@ -18571,16 +18831,18 @@ export namespace Prisma {
     sku?: string | null
     description: string
     hsn?: string | null
-    purchaseRate?: Decimal | DecimalJsLike | number | string
-    sellingRate?: Decimal | DecimalJsLike | number | string
     gstRate: Decimal | DecimalJsLike | number | string
-    unit?: string
-    pkgType?: string | null
-    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     active?: boolean
+    notes?: string | null
+    pkgType?: string | null
+    purchaseRate?: Decimal | DecimalJsLike | number | string
+    sellingRate?: Decimal | DecimalJsLike | number | string
+    unit?: string
+    createdById?: string | null
+    updatedById?: string | null
   }
 
   export type ProductUpdateInput = {
@@ -18588,16 +18850,18 @@ export namespace Prisma {
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
     hsn?: NullableStringFieldUpdateOperationsInput | string | null
-    purchaseRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    sellingRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     gstRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    unit?: StringFieldUpdateOperationsInput | string
-    pkgType?: NullableStringFieldUpdateOperationsInput | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    pkgType?: NullableStringFieldUpdateOperationsInput | string | null
+    purchaseRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sellingRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProductUncheckedUpdateInput = {
@@ -18605,16 +18869,18 @@ export namespace Prisma {
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
     hsn?: NullableStringFieldUpdateOperationsInput | string | null
-    purchaseRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    sellingRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     gstRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    unit?: StringFieldUpdateOperationsInput | string
-    pkgType?: NullableStringFieldUpdateOperationsInput | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    pkgType?: NullableStringFieldUpdateOperationsInput | string | null
+    purchaseRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sellingRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProductCreateManyInput = {
@@ -18622,16 +18888,18 @@ export namespace Prisma {
     sku?: string | null
     description: string
     hsn?: string | null
-    purchaseRate?: Decimal | DecimalJsLike | number | string
-    sellingRate?: Decimal | DecimalJsLike | number | string
     gstRate: Decimal | DecimalJsLike | number | string
-    unit?: string
-    pkgType?: string | null
-    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     active?: boolean
+    notes?: string | null
+    pkgType?: string | null
+    purchaseRate?: Decimal | DecimalJsLike | number | string
+    sellingRate?: Decimal | DecimalJsLike | number | string
+    unit?: string
+    createdById?: string | null
+    updatedById?: string | null
   }
 
   export type ProductUpdateManyMutationInput = {
@@ -18639,16 +18907,18 @@ export namespace Prisma {
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
     hsn?: NullableStringFieldUpdateOperationsInput | string | null
-    purchaseRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    sellingRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     gstRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    unit?: StringFieldUpdateOperationsInput | string
-    pkgType?: NullableStringFieldUpdateOperationsInput | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    pkgType?: NullableStringFieldUpdateOperationsInput | string | null
+    purchaseRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sellingRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProductUncheckedUpdateManyInput = {
@@ -18656,16 +18926,18 @@ export namespace Prisma {
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
     hsn?: NullableStringFieldUpdateOperationsInput | string | null
-    purchaseRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    sellingRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     gstRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    unit?: StringFieldUpdateOperationsInput | string
-    pkgType?: NullableStringFieldUpdateOperationsInput | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    pkgType?: NullableStringFieldUpdateOperationsInput | string | null
+    purchaseRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sellingRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type InvoiceCreateInput = {
@@ -18687,6 +18959,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     createdById?: string | null
+    updatedById?: string | null
     notes?: string | null
     billingAddress1?: string | null
     billingAddress2?: string | null
@@ -18726,6 +18999,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     createdById?: string | null
+    updatedById?: string | null
     notes?: string | null
     billingAddress1?: string | null
     billingAddress2?: string | null
@@ -18763,6 +19037,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress1?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress2?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18802,6 +19077,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress1?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress2?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18840,6 +19116,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     createdById?: string | null
+    updatedById?: string | null
     notes?: string | null
     billingAddress1?: string | null
     billingAddress2?: string | null
@@ -18875,6 +19152,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress1?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress2?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18911,6 +19189,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress1?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress2?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19034,6 +19313,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     createdById?: string | null
+    updatedById?: string | null
     billingAddress1?: string | null
     billingAddress2?: string | null
     billingGst?: string | null
@@ -19069,6 +19349,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     createdById?: string | null
+    updatedById?: string | null
     billingAddress1?: string | null
     billingAddress2?: string | null
     billingGst?: string | null
@@ -19102,6 +19383,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress1?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress2?: NullableStringFieldUpdateOperationsInput | string | null
     billingGst?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19137,6 +19419,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress1?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress2?: NullableStringFieldUpdateOperationsInput | string | null
     billingGst?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19171,6 +19454,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     createdById?: string | null
+    updatedById?: string | null
     billingAddress1?: string | null
     billingAddress2?: string | null
     billingGst?: string | null
@@ -19203,6 +19487,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress1?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress2?: NullableStringFieldUpdateOperationsInput | string | null
     billingGst?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19236,6 +19521,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress1?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress2?: NullableStringFieldUpdateOperationsInput | string | null
     billingGst?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19261,6 +19547,9 @@ export namespace Prisma {
     taxPercent: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    unit?: string
+    pkgCount?: number
+    pkgType?: string | null
     quotation: QuotationCreateNestedOneWithoutLineItemsInput
   }
 
@@ -19275,6 +19564,9 @@ export namespace Prisma {
     taxPercent: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    unit?: string
+    pkgCount?: number
+    pkgType?: string | null
   }
 
   export type QuotationLineItemUpdateInput = {
@@ -19287,6 +19579,9 @@ export namespace Prisma {
     taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    pkgCount?: IntFieldUpdateOperationsInput | number
+    pkgType?: NullableStringFieldUpdateOperationsInput | string | null
     quotation?: QuotationUpdateOneRequiredWithoutLineItemsNestedInput
   }
 
@@ -19301,6 +19596,9 @@ export namespace Prisma {
     taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    pkgCount?: IntFieldUpdateOperationsInput | number
+    pkgType?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type QuotationLineItemCreateManyInput = {
@@ -19314,6 +19612,9 @@ export namespace Prisma {
     taxPercent: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    unit?: string
+    pkgCount?: number
+    pkgType?: string | null
   }
 
   export type QuotationLineItemUpdateManyMutationInput = {
@@ -19326,6 +19627,9 @@ export namespace Prisma {
     taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    pkgCount?: IntFieldUpdateOperationsInput | number
+    pkgType?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type QuotationLineItemUncheckedUpdateManyInput = {
@@ -19339,6 +19643,9 @@ export namespace Prisma {
     taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    pkgCount?: IntFieldUpdateOperationsInput | number
+    pkgType?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CompanySettingCreateInput = {
@@ -19363,8 +19670,8 @@ export namespace Prisma {
     quotationPrefix?: string
     defaultGstType?: string
     currency?: string
-    showPkgDetails?: boolean
     updatedAt?: Date | string
+    showPkgDetails?: boolean
   }
 
   export type CompanySettingUncheckedCreateInput = {
@@ -19389,8 +19696,8 @@ export namespace Prisma {
     quotationPrefix?: string
     defaultGstType?: string
     currency?: string
-    showPkgDetails?: boolean
     updatedAt?: Date | string
+    showPkgDetails?: boolean
   }
 
   export type CompanySettingUpdateInput = {
@@ -19415,8 +19722,8 @@ export namespace Prisma {
     quotationPrefix?: StringFieldUpdateOperationsInput | string
     defaultGstType?: StringFieldUpdateOperationsInput | string
     currency?: StringFieldUpdateOperationsInput | string
-    showPkgDetails?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    showPkgDetails?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CompanySettingUncheckedUpdateInput = {
@@ -19441,8 +19748,8 @@ export namespace Prisma {
     quotationPrefix?: StringFieldUpdateOperationsInput | string
     defaultGstType?: StringFieldUpdateOperationsInput | string
     currency?: StringFieldUpdateOperationsInput | string
-    showPkgDetails?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    showPkgDetails?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CompanySettingCreateManyInput = {
@@ -19467,8 +19774,8 @@ export namespace Prisma {
     quotationPrefix?: string
     defaultGstType?: string
     currency?: string
-    showPkgDetails?: boolean
     updatedAt?: Date | string
+    showPkgDetails?: boolean
   }
 
   export type CompanySettingUpdateManyMutationInput = {
@@ -19493,8 +19800,8 @@ export namespace Prisma {
     quotationPrefix?: StringFieldUpdateOperationsInput | string
     defaultGstType?: StringFieldUpdateOperationsInput | string
     currency?: StringFieldUpdateOperationsInput | string
-    showPkgDetails?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    showPkgDetails?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CompanySettingUncheckedUpdateManyInput = {
@@ -19519,8 +19826,8 @@ export namespace Prisma {
     quotationPrefix?: StringFieldUpdateOperationsInput | string
     defaultGstType?: StringFieldUpdateOperationsInput | string
     currency?: StringFieldUpdateOperationsInput | string
-    showPkgDetails?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    showPkgDetails?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type InvoiceLineItemCreateInput = {
@@ -19533,6 +19840,9 @@ export namespace Prisma {
     taxPercent: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    unit?: string
+    pkgCount?: number
+    pkgType?: string | null
     invoice: InvoiceCreateNestedOneWithoutLineItemsInput
   }
 
@@ -19547,6 +19857,9 @@ export namespace Prisma {
     taxPercent: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    unit?: string
+    pkgCount?: number
+    pkgType?: string | null
   }
 
   export type InvoiceLineItemUpdateInput = {
@@ -19559,6 +19872,9 @@ export namespace Prisma {
     taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    pkgCount?: IntFieldUpdateOperationsInput | number
+    pkgType?: NullableStringFieldUpdateOperationsInput | string | null
     invoice?: InvoiceUpdateOneRequiredWithoutLineItemsNestedInput
   }
 
@@ -19573,6 +19889,9 @@ export namespace Prisma {
     taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    pkgCount?: IntFieldUpdateOperationsInput | number
+    pkgType?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type InvoiceLineItemCreateManyInput = {
@@ -19586,6 +19905,9 @@ export namespace Prisma {
     taxPercent: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    unit?: string
+    pkgCount?: number
+    pkgType?: string | null
   }
 
   export type InvoiceLineItemUpdateManyMutationInput = {
@@ -19598,6 +19920,9 @@ export namespace Prisma {
     taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    pkgCount?: IntFieldUpdateOperationsInput | number
+    pkgType?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type InvoiceLineItemUncheckedUpdateManyInput = {
@@ -19611,6 +19936,9 @@ export namespace Prisma {
     taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    pkgCount?: IntFieldUpdateOperationsInput | number
+    pkgType?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AuditLogCreateInput = {
@@ -19703,6 +20031,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    createdById?: string | null
+    updatedById?: string | null
     purchases?: PurchaseCreateNestedManyWithoutVendorInput
   }
 
@@ -19720,6 +20050,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    createdById?: string | null
+    updatedById?: string | null
     purchases?: PurchaseUncheckedCreateNestedManyWithoutVendorInput
   }
 
@@ -19737,6 +20069,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUpdateManyWithoutVendorNestedInput
   }
 
@@ -19754,6 +20088,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUncheckedUpdateManyWithoutVendorNestedInput
   }
 
@@ -19771,6 +20107,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    createdById?: string | null
+    updatedById?: string | null
   }
 
   export type VendorUpdateManyMutationInput = {
@@ -19787,6 +20125,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type VendorUncheckedUpdateManyInput = {
@@ -19803,6 +20143,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PurchaseCreateInput = {
@@ -19820,11 +20162,12 @@ export namespace Prisma {
     vehicleNo?: string | null
     notes?: string | null
     createdById?: string | null
+    updatedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
-    vendor: VendorCreateNestedOneWithoutPurchasesInput
     lineItems?: PurchaseLineItemCreateNestedManyWithoutPurchaseInput
+    vendor: VendorCreateNestedOneWithoutPurchasesInput
   }
 
   export type PurchaseUncheckedCreateInput = {
@@ -19843,6 +20186,7 @@ export namespace Prisma {
     vehicleNo?: string | null
     notes?: string | null
     createdById?: string | null
+    updatedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -19864,11 +20208,12 @@ export namespace Prisma {
     vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    vendor?: VendorUpdateOneRequiredWithoutPurchasesNestedInput
     lineItems?: PurchaseLineItemUpdateManyWithoutPurchaseNestedInput
+    vendor?: VendorUpdateOneRequiredWithoutPurchasesNestedInput
   }
 
   export type PurchaseUncheckedUpdateInput = {
@@ -19887,6 +20232,7 @@ export namespace Prisma {
     vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -19909,6 +20255,7 @@ export namespace Prisma {
     vehicleNo?: string | null
     notes?: string | null
     createdById?: string | null
+    updatedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -19929,6 +20276,7 @@ export namespace Prisma {
     vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -19950,6 +20298,7 @@ export namespace Prisma {
     vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -19965,6 +20314,7 @@ export namespace Prisma {
     taxPercent: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    unit?: string
     pkgCount?: number
     pkgType?: string
     purchase: PurchaseCreateNestedOneWithoutLineItemsInput
@@ -19981,6 +20331,7 @@ export namespace Prisma {
     taxPercent: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    unit?: string
     pkgCount?: number
     pkgType?: string
   }
@@ -19995,6 +20346,7 @@ export namespace Prisma {
     taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
     pkgCount?: IntFieldUpdateOperationsInput | number
     pkgType?: StringFieldUpdateOperationsInput | string
     purchase?: PurchaseUpdateOneRequiredWithoutLineItemsNestedInput
@@ -20011,6 +20363,7 @@ export namespace Prisma {
     taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
     pkgCount?: IntFieldUpdateOperationsInput | number
     pkgType?: StringFieldUpdateOperationsInput | string
   }
@@ -20026,6 +20379,7 @@ export namespace Prisma {
     taxPercent: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    unit?: string
     pkgCount?: number
     pkgType?: string
   }
@@ -20040,6 +20394,7 @@ export namespace Prisma {
     taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
     pkgCount?: IntFieldUpdateOperationsInput | number
     pkgType?: StringFieldUpdateOperationsInput | string
   }
@@ -20055,6 +20410,7 @@ export namespace Prisma {
     taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
     pkgCount?: IntFieldUpdateOperationsInput | number
     pkgType?: StringFieldUpdateOperationsInput | string
   }
@@ -20391,22 +20747,24 @@ export namespace Prisma {
     sku?: SortOrder
     description?: SortOrder
     hsn?: SortOrder
-    purchaseRate?: SortOrder
-    sellingRate?: SortOrder
     gstRate?: SortOrder
-    unit?: SortOrder
-    pkgType?: SortOrder
-    notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
     active?: SortOrder
+    notes?: SortOrder
+    pkgType?: SortOrder
+    purchaseRate?: SortOrder
+    sellingRate?: SortOrder
+    unit?: SortOrder
+    createdById?: SortOrder
+    updatedById?: SortOrder
   }
 
   export type ProductAvgOrderByAggregateInput = {
+    gstRate?: SortOrder
     purchaseRate?: SortOrder
     sellingRate?: SortOrder
-    gstRate?: SortOrder
   }
 
   export type ProductMaxOrderByAggregateInput = {
@@ -20414,16 +20772,18 @@ export namespace Prisma {
     sku?: SortOrder
     description?: SortOrder
     hsn?: SortOrder
-    purchaseRate?: SortOrder
-    sellingRate?: SortOrder
     gstRate?: SortOrder
-    unit?: SortOrder
-    pkgType?: SortOrder
-    notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
     active?: SortOrder
+    notes?: SortOrder
+    pkgType?: SortOrder
+    purchaseRate?: SortOrder
+    sellingRate?: SortOrder
+    unit?: SortOrder
+    createdById?: SortOrder
+    updatedById?: SortOrder
   }
 
   export type ProductMinOrderByAggregateInput = {
@@ -20431,22 +20791,24 @@ export namespace Prisma {
     sku?: SortOrder
     description?: SortOrder
     hsn?: SortOrder
-    purchaseRate?: SortOrder
-    sellingRate?: SortOrder
     gstRate?: SortOrder
-    unit?: SortOrder
-    pkgType?: SortOrder
-    notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
     active?: SortOrder
+    notes?: SortOrder
+    pkgType?: SortOrder
+    purchaseRate?: SortOrder
+    sellingRate?: SortOrder
+    unit?: SortOrder
+    createdById?: SortOrder
+    updatedById?: SortOrder
   }
 
   export type ProductSumOrderByAggregateInput = {
+    gstRate?: SortOrder
     purchaseRate?: SortOrder
     sellingRate?: SortOrder
-    gstRate?: SortOrder
   }
 
   export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
@@ -20516,6 +20878,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deletedAt?: SortOrder
     createdById?: SortOrder
+    updatedById?: SortOrder
     notes?: SortOrder
     billingAddress1?: SortOrder
     billingAddress2?: SortOrder
@@ -20560,6 +20923,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deletedAt?: SortOrder
     createdById?: SortOrder
+    updatedById?: SortOrder
     notes?: SortOrder
     billingAddress1?: SortOrder
     billingAddress2?: SortOrder
@@ -20596,6 +20960,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deletedAt?: SortOrder
     createdById?: SortOrder
+    updatedById?: SortOrder
     notes?: SortOrder
     billingAddress1?: SortOrder
     billingAddress2?: SortOrder
@@ -20712,6 +21077,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deletedAt?: SortOrder
     createdById?: SortOrder
+    updatedById?: SortOrder
     billingAddress1?: SortOrder
     billingAddress2?: SortOrder
     billingGst?: SortOrder
@@ -20752,6 +21118,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deletedAt?: SortOrder
     createdById?: SortOrder
+    updatedById?: SortOrder
     billingAddress1?: SortOrder
     billingAddress2?: SortOrder
     billingGst?: SortOrder
@@ -20785,6 +21152,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deletedAt?: SortOrder
     createdById?: SortOrder
+    updatedById?: SortOrder
     billingAddress1?: SortOrder
     billingAddress2?: SortOrder
     billingGst?: SortOrder
@@ -20829,6 +21197,9 @@ export namespace Prisma {
     taxPercent?: SortOrder
     taxAmount?: SortOrder
     totalAmount?: SortOrder
+    unit?: SortOrder
+    pkgCount?: SortOrder
+    pkgType?: SortOrder
   }
 
   export type QuotationLineItemAvgOrderByAggregateInput = {
@@ -20837,6 +21208,7 @@ export namespace Prisma {
     taxPercent?: SortOrder
     taxAmount?: SortOrder
     totalAmount?: SortOrder
+    pkgCount?: SortOrder
   }
 
   export type QuotationLineItemMaxOrderByAggregateInput = {
@@ -20850,6 +21222,9 @@ export namespace Prisma {
     taxPercent?: SortOrder
     taxAmount?: SortOrder
     totalAmount?: SortOrder
+    unit?: SortOrder
+    pkgCount?: SortOrder
+    pkgType?: SortOrder
   }
 
   export type QuotationLineItemMinOrderByAggregateInput = {
@@ -20863,6 +21238,9 @@ export namespace Prisma {
     taxPercent?: SortOrder
     taxAmount?: SortOrder
     totalAmount?: SortOrder
+    unit?: SortOrder
+    pkgCount?: SortOrder
+    pkgType?: SortOrder
   }
 
   export type QuotationLineItemSumOrderByAggregateInput = {
@@ -20871,6 +21249,7 @@ export namespace Prisma {
     taxPercent?: SortOrder
     taxAmount?: SortOrder
     totalAmount?: SortOrder
+    pkgCount?: SortOrder
   }
 
   export type CompanySettingOrderByRelevanceInput = {
@@ -20901,8 +21280,8 @@ export namespace Prisma {
     quotationPrefix?: SortOrder
     defaultGstType?: SortOrder
     currency?: SortOrder
-    showPkgDetails?: SortOrder
     updatedAt?: SortOrder
+    showPkgDetails?: SortOrder
   }
 
   export type CompanySettingMaxOrderByAggregateInput = {
@@ -20927,8 +21306,8 @@ export namespace Prisma {
     quotationPrefix?: SortOrder
     defaultGstType?: SortOrder
     currency?: SortOrder
-    showPkgDetails?: SortOrder
     updatedAt?: SortOrder
+    showPkgDetails?: SortOrder
   }
 
   export type CompanySettingMinOrderByAggregateInput = {
@@ -20953,8 +21332,8 @@ export namespace Prisma {
     quotationPrefix?: SortOrder
     defaultGstType?: SortOrder
     currency?: SortOrder
-    showPkgDetails?: SortOrder
     updatedAt?: SortOrder
+    showPkgDetails?: SortOrder
   }
 
   export type InvoiceLineItemOrderByRelevanceInput = {
@@ -20974,6 +21353,9 @@ export namespace Prisma {
     taxPercent?: SortOrder
     taxAmount?: SortOrder
     totalAmount?: SortOrder
+    unit?: SortOrder
+    pkgCount?: SortOrder
+    pkgType?: SortOrder
   }
 
   export type InvoiceLineItemAvgOrderByAggregateInput = {
@@ -20982,6 +21364,7 @@ export namespace Prisma {
     taxPercent?: SortOrder
     taxAmount?: SortOrder
     totalAmount?: SortOrder
+    pkgCount?: SortOrder
   }
 
   export type InvoiceLineItemMaxOrderByAggregateInput = {
@@ -20995,6 +21378,9 @@ export namespace Prisma {
     taxPercent?: SortOrder
     taxAmount?: SortOrder
     totalAmount?: SortOrder
+    unit?: SortOrder
+    pkgCount?: SortOrder
+    pkgType?: SortOrder
   }
 
   export type InvoiceLineItemMinOrderByAggregateInput = {
@@ -21008,6 +21394,9 @@ export namespace Prisma {
     taxPercent?: SortOrder
     taxAmount?: SortOrder
     totalAmount?: SortOrder
+    unit?: SortOrder
+    pkgCount?: SortOrder
+    pkgType?: SortOrder
   }
 
   export type InvoiceLineItemSumOrderByAggregateInput = {
@@ -21016,6 +21405,7 @@ export namespace Prisma {
     taxPercent?: SortOrder
     taxAmount?: SortOrder
     totalAmount?: SortOrder
+    pkgCount?: SortOrder
   }
 
   export type UserNullableScalarRelationFilter = {
@@ -21092,6 +21482,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
+    createdById?: SortOrder
+    updatedById?: SortOrder
   }
 
   export type VendorMaxOrderByAggregateInput = {
@@ -21108,6 +21500,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
+    createdById?: SortOrder
+    updatedById?: SortOrder
   }
 
   export type VendorMinOrderByAggregateInput = {
@@ -21124,17 +21518,19 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
-  }
-
-  export type VendorScalarRelationFilter = {
-    is?: VendorWhereInput
-    isNot?: VendorWhereInput
+    createdById?: SortOrder
+    updatedById?: SortOrder
   }
 
   export type PurchaseLineItemListRelationFilter = {
     every?: PurchaseLineItemWhereInput
     some?: PurchaseLineItemWhereInput
     none?: PurchaseLineItemWhereInput
+  }
+
+  export type VendorScalarRelationFilter = {
+    is?: VendorWhereInput
+    isNot?: VendorWhereInput
   }
 
   export type PurchaseLineItemOrderByRelationAggregateInput = {
@@ -21163,6 +21559,7 @@ export namespace Prisma {
     vehicleNo?: SortOrder
     notes?: SortOrder
     createdById?: SortOrder
+    updatedById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
@@ -21191,6 +21588,7 @@ export namespace Prisma {
     vehicleNo?: SortOrder
     notes?: SortOrder
     createdById?: SortOrder
+    updatedById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
@@ -21212,6 +21610,7 @@ export namespace Prisma {
     vehicleNo?: SortOrder
     notes?: SortOrder
     createdById?: SortOrder
+    updatedById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
@@ -21246,6 +21645,7 @@ export namespace Prisma {
     taxPercent?: SortOrder
     taxAmount?: SortOrder
     totalAmount?: SortOrder
+    unit?: SortOrder
     pkgCount?: SortOrder
     pkgType?: SortOrder
   }
@@ -21270,6 +21670,7 @@ export namespace Prisma {
     taxPercent?: SortOrder
     taxAmount?: SortOrder
     totalAmount?: SortOrder
+    unit?: SortOrder
     pkgCount?: SortOrder
     pkgType?: SortOrder
   }
@@ -21285,6 +21686,7 @@ export namespace Prisma {
     taxPercent?: SortOrder
     taxAmount?: SortOrder
     totalAmount?: SortOrder
+    unit?: SortOrder
     pkgCount?: SortOrder
     pkgType?: SortOrder
   }
@@ -21714,12 +22116,6 @@ export namespace Prisma {
     deleteMany?: PurchaseScalarWhereInput | PurchaseScalarWhereInput[]
   }
 
-  export type VendorCreateNestedOneWithoutPurchasesInput = {
-    create?: XOR<VendorCreateWithoutPurchasesInput, VendorUncheckedCreateWithoutPurchasesInput>
-    connectOrCreate?: VendorCreateOrConnectWithoutPurchasesInput
-    connect?: VendorWhereUniqueInput
-  }
-
   export type PurchaseLineItemCreateNestedManyWithoutPurchaseInput = {
     create?: XOR<PurchaseLineItemCreateWithoutPurchaseInput, PurchaseLineItemUncheckedCreateWithoutPurchaseInput> | PurchaseLineItemCreateWithoutPurchaseInput[] | PurchaseLineItemUncheckedCreateWithoutPurchaseInput[]
     connectOrCreate?: PurchaseLineItemCreateOrConnectWithoutPurchaseInput | PurchaseLineItemCreateOrConnectWithoutPurchaseInput[]
@@ -21727,19 +22123,17 @@ export namespace Prisma {
     connect?: PurchaseLineItemWhereUniqueInput | PurchaseLineItemWhereUniqueInput[]
   }
 
+  export type VendorCreateNestedOneWithoutPurchasesInput = {
+    create?: XOR<VendorCreateWithoutPurchasesInput, VendorUncheckedCreateWithoutPurchasesInput>
+    connectOrCreate?: VendorCreateOrConnectWithoutPurchasesInput
+    connect?: VendorWhereUniqueInput
+  }
+
   export type PurchaseLineItemUncheckedCreateNestedManyWithoutPurchaseInput = {
     create?: XOR<PurchaseLineItemCreateWithoutPurchaseInput, PurchaseLineItemUncheckedCreateWithoutPurchaseInput> | PurchaseLineItemCreateWithoutPurchaseInput[] | PurchaseLineItemUncheckedCreateWithoutPurchaseInput[]
     connectOrCreate?: PurchaseLineItemCreateOrConnectWithoutPurchaseInput | PurchaseLineItemCreateOrConnectWithoutPurchaseInput[]
     createMany?: PurchaseLineItemCreateManyPurchaseInputEnvelope
     connect?: PurchaseLineItemWhereUniqueInput | PurchaseLineItemWhereUniqueInput[]
-  }
-
-  export type VendorUpdateOneRequiredWithoutPurchasesNestedInput = {
-    create?: XOR<VendorCreateWithoutPurchasesInput, VendorUncheckedCreateWithoutPurchasesInput>
-    connectOrCreate?: VendorCreateOrConnectWithoutPurchasesInput
-    upsert?: VendorUpsertWithoutPurchasesInput
-    connect?: VendorWhereUniqueInput
-    update?: XOR<XOR<VendorUpdateToOneWithWhereWithoutPurchasesInput, VendorUpdateWithoutPurchasesInput>, VendorUncheckedUpdateWithoutPurchasesInput>
   }
 
   export type PurchaseLineItemUpdateManyWithoutPurchaseNestedInput = {
@@ -21754,6 +22148,14 @@ export namespace Prisma {
     update?: PurchaseLineItemUpdateWithWhereUniqueWithoutPurchaseInput | PurchaseLineItemUpdateWithWhereUniqueWithoutPurchaseInput[]
     updateMany?: PurchaseLineItemUpdateManyWithWhereWithoutPurchaseInput | PurchaseLineItemUpdateManyWithWhereWithoutPurchaseInput[]
     deleteMany?: PurchaseLineItemScalarWhereInput | PurchaseLineItemScalarWhereInput[]
+  }
+
+  export type VendorUpdateOneRequiredWithoutPurchasesNestedInput = {
+    create?: XOR<VendorCreateWithoutPurchasesInput, VendorUncheckedCreateWithoutPurchasesInput>
+    connectOrCreate?: VendorCreateOrConnectWithoutPurchasesInput
+    upsert?: VendorUpsertWithoutPurchasesInput
+    connect?: VendorWhereUniqueInput
+    update?: XOR<XOR<VendorUpdateToOneWithWhereWithoutPurchasesInput, VendorUpdateWithoutPurchasesInput>, VendorUncheckedUpdateWithoutPurchasesInput>
   }
 
   export type PurchaseLineItemUncheckedUpdateManyWithoutPurchaseNestedInput = {
@@ -22068,6 +22470,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     createdById?: string | null
+    updatedById?: string | null
     notes?: string | null
     billingAddress1?: string | null
     billingAddress2?: string | null
@@ -22105,6 +22508,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     createdById?: string | null
+    updatedById?: string | null
     notes?: string | null
     billingAddress1?: string | null
     billingAddress2?: string | null
@@ -22150,6 +22554,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     createdById?: string | null
+    updatedById?: string | null
     billingAddress1?: string | null
     billingAddress2?: string | null
     billingGst?: string | null
@@ -22183,6 +22588,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     createdById?: string | null
+    updatedById?: string | null
     billingAddress1?: string | null
     billingAddress2?: string | null
     billingGst?: string | null
@@ -22248,6 +22654,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Invoice"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     createdById?: StringNullableFilter<"Invoice"> | string | null
+    updatedById?: StringNullableFilter<"Invoice"> | string | null
     notes?: StringNullableFilter<"Invoice"> | string | null
     billingAddress1?: StringNullableFilter<"Invoice"> | string | null
     billingAddress2?: StringNullableFilter<"Invoice"> | string | null
@@ -22301,6 +22708,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Quotation"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Quotation"> | Date | string | null
     createdById?: StringNullableFilter<"Quotation"> | string | null
+    updatedById?: StringNullableFilter<"Quotation"> | string | null
     billingAddress1?: StringNullableFilter<"Quotation"> | string | null
     billingAddress2?: StringNullableFilter<"Quotation"> | string | null
     billingGst?: StringNullableFilter<"Quotation"> | string | null
@@ -22326,6 +22734,9 @@ export namespace Prisma {
     taxPercent: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    unit?: string
+    pkgCount?: number
+    pkgType?: string | null
   }
 
   export type InvoiceLineItemUncheckedCreateWithoutInvoiceInput = {
@@ -22338,6 +22749,9 @@ export namespace Prisma {
     taxPercent: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    unit?: string
+    pkgCount?: number
+    pkgType?: string | null
   }
 
   export type InvoiceLineItemCreateOrConnectWithoutInvoiceInput = {
@@ -22457,6 +22871,9 @@ export namespace Prisma {
     taxPercent?: DecimalFilter<"InvoiceLineItem"> | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFilter<"InvoiceLineItem"> | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFilter<"InvoiceLineItem"> | Decimal | DecimalJsLike | number | string
+    unit?: StringFilter<"InvoiceLineItem"> | string
+    pkgCount?: IntFilter<"InvoiceLineItem"> | number
+    pkgType?: StringNullableFilter<"InvoiceLineItem"> | string | null
   }
 
   export type ClientUpsertWithoutInvoicesInput = {
@@ -22559,6 +22976,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     createdById?: string | null
+    updatedById?: string | null
     notes?: string | null
     billingAddress1?: string | null
     billingAddress2?: string | null
@@ -22597,6 +23015,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     createdById?: string | null
+    updatedById?: string | null
     notes?: string | null
     billingAddress1?: string | null
     billingAddress2?: string | null
@@ -22649,6 +23068,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress1?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress2?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22687,6 +23107,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress1?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress2?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22714,6 +23135,9 @@ export namespace Prisma {
     taxPercent: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    unit?: string
+    pkgCount?: number
+    pkgType?: string | null
   }
 
   export type QuotationLineItemUncheckedCreateWithoutQuotationInput = {
@@ -22726,6 +23150,9 @@ export namespace Prisma {
     taxPercent: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    unit?: string
+    pkgCount?: number
+    pkgType?: string | null
   }
 
   export type QuotationLineItemCreateOrConnectWithoutQuotationInput = {
@@ -22811,6 +23238,9 @@ export namespace Prisma {
     taxPercent?: DecimalFilter<"QuotationLineItem"> | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFilter<"QuotationLineItem"> | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFilter<"QuotationLineItem"> | Decimal | DecimalJsLike | number | string
+    unit?: StringFilter<"QuotationLineItem"> | string
+    pkgCount?: IntFilter<"QuotationLineItem"> | number
+    pkgType?: StringNullableFilter<"QuotationLineItem"> | string | null
   }
 
   export type ClientUpsertWithoutQuotationsInput = {
@@ -22879,6 +23309,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     createdById?: string | null
+    updatedById?: string | null
     billingAddress1?: string | null
     billingAddress2?: string | null
     billingGst?: string | null
@@ -22913,6 +23344,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     createdById?: string | null
+    updatedById?: string | null
     billingAddress1?: string | null
     billingAddress2?: string | null
     billingGst?: string | null
@@ -22961,6 +23393,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress1?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress2?: NullableStringFieldUpdateOperationsInput | string | null
     billingGst?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22995,6 +23428,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress1?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress2?: NullableStringFieldUpdateOperationsInput | string | null
     billingGst?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23029,6 +23463,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     createdById?: string | null
+    updatedById?: string | null
     notes?: string | null
     billingAddress1?: string | null
     billingAddress2?: string | null
@@ -23067,6 +23502,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     createdById?: string | null
+    updatedById?: string | null
     notes?: string | null
     billingAddress1?: string | null
     billingAddress2?: string | null
@@ -23119,6 +23555,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress1?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress2?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23157,6 +23594,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress1?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress2?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23265,6 +23703,7 @@ export namespace Prisma {
     vehicleNo?: string | null
     notes?: string | null
     createdById?: string | null
+    updatedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -23286,6 +23725,7 @@ export namespace Prisma {
     vehicleNo?: string | null
     notes?: string | null
     createdById?: string | null
+    updatedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -23337,9 +23777,50 @@ export namespace Prisma {
     vehicleNo?: StringNullableFilter<"Purchase"> | string | null
     notes?: StringNullableFilter<"Purchase"> | string | null
     createdById?: StringNullableFilter<"Purchase"> | string | null
+    updatedById?: StringNullableFilter<"Purchase"> | string | null
     createdAt?: DateTimeFilter<"Purchase"> | Date | string
     updatedAt?: DateTimeFilter<"Purchase"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Purchase"> | Date | string | null
+  }
+
+  export type PurchaseLineItemCreateWithoutPurchaseInput = {
+    id?: string
+    productId?: string | null
+    description: string
+    hsn?: string | null
+    qty: number
+    rate: Decimal | DecimalJsLike | number | string
+    taxPercent: Decimal | DecimalJsLike | number | string
+    taxAmount: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
+    unit?: string
+    pkgCount?: number
+    pkgType?: string
+  }
+
+  export type PurchaseLineItemUncheckedCreateWithoutPurchaseInput = {
+    id?: string
+    productId?: string | null
+    description: string
+    hsn?: string | null
+    qty: number
+    rate: Decimal | DecimalJsLike | number | string
+    taxPercent: Decimal | DecimalJsLike | number | string
+    taxAmount: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
+    unit?: string
+    pkgCount?: number
+    pkgType?: string
+  }
+
+  export type PurchaseLineItemCreateOrConnectWithoutPurchaseInput = {
+    where: PurchaseLineItemWhereUniqueInput
+    create: XOR<PurchaseLineItemCreateWithoutPurchaseInput, PurchaseLineItemUncheckedCreateWithoutPurchaseInput>
+  }
+
+  export type PurchaseLineItemCreateManyPurchaseInputEnvelope = {
+    data: PurchaseLineItemCreateManyPurchaseInput | PurchaseLineItemCreateManyPurchaseInput[]
+    skipDuplicates?: boolean
   }
 
   export type VendorCreateWithoutPurchasesInput = {
@@ -23356,6 +23837,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    createdById?: string | null
+    updatedById?: string | null
   }
 
   export type VendorUncheckedCreateWithoutPurchasesInput = {
@@ -23372,92 +23855,13 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    createdById?: string | null
+    updatedById?: string | null
   }
 
   export type VendorCreateOrConnectWithoutPurchasesInput = {
     where: VendorWhereUniqueInput
     create: XOR<VendorCreateWithoutPurchasesInput, VendorUncheckedCreateWithoutPurchasesInput>
-  }
-
-  export type PurchaseLineItemCreateWithoutPurchaseInput = {
-    id?: string
-    productId?: string | null
-    description: string
-    hsn?: string | null
-    qty: number
-    rate: Decimal | DecimalJsLike | number | string
-    taxPercent: Decimal | DecimalJsLike | number | string
-    taxAmount: Decimal | DecimalJsLike | number | string
-    totalAmount: Decimal | DecimalJsLike | number | string
-    pkgCount?: number
-    pkgType?: string
-  }
-
-  export type PurchaseLineItemUncheckedCreateWithoutPurchaseInput = {
-    id?: string
-    productId?: string | null
-    description: string
-    hsn?: string | null
-    qty: number
-    rate: Decimal | DecimalJsLike | number | string
-    taxPercent: Decimal | DecimalJsLike | number | string
-    taxAmount: Decimal | DecimalJsLike | number | string
-    totalAmount: Decimal | DecimalJsLike | number | string
-    pkgCount?: number
-    pkgType?: string
-  }
-
-  export type PurchaseLineItemCreateOrConnectWithoutPurchaseInput = {
-    where: PurchaseLineItemWhereUniqueInput
-    create: XOR<PurchaseLineItemCreateWithoutPurchaseInput, PurchaseLineItemUncheckedCreateWithoutPurchaseInput>
-  }
-
-  export type PurchaseLineItemCreateManyPurchaseInputEnvelope = {
-    data: PurchaseLineItemCreateManyPurchaseInput | PurchaseLineItemCreateManyPurchaseInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type VendorUpsertWithoutPurchasesInput = {
-    update: XOR<VendorUpdateWithoutPurchasesInput, VendorUncheckedUpdateWithoutPurchasesInput>
-    create: XOR<VendorCreateWithoutPurchasesInput, VendorUncheckedCreateWithoutPurchasesInput>
-    where?: VendorWhereInput
-  }
-
-  export type VendorUpdateToOneWithWhereWithoutPurchasesInput = {
-    where?: VendorWhereInput
-    data: XOR<VendorUpdateWithoutPurchasesInput, VendorUncheckedUpdateWithoutPurchasesInput>
-  }
-
-  export type VendorUpdateWithoutPurchasesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    gst?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    address1?: StringFieldUpdateOperationsInput | string
-    address2?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: StringFieldUpdateOperationsInput | string
-    pinCode?: NullableStringFieldUpdateOperationsInput | string | null
-    active?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type VendorUncheckedUpdateWithoutPurchasesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    gst?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    address1?: StringFieldUpdateOperationsInput | string
-    address2?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: StringFieldUpdateOperationsInput | string
-    pinCode?: NullableStringFieldUpdateOperationsInput | string | null
-    active?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type PurchaseLineItemUpsertWithWhereUniqueWithoutPurchaseInput = {
@@ -23490,8 +23894,56 @@ export namespace Prisma {
     taxPercent?: DecimalFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFilter<"PurchaseLineItem"> | Decimal | DecimalJsLike | number | string
+    unit?: StringFilter<"PurchaseLineItem"> | string
     pkgCount?: IntFilter<"PurchaseLineItem"> | number
     pkgType?: StringFilter<"PurchaseLineItem"> | string
+  }
+
+  export type VendorUpsertWithoutPurchasesInput = {
+    update: XOR<VendorUpdateWithoutPurchasesInput, VendorUncheckedUpdateWithoutPurchasesInput>
+    create: XOR<VendorCreateWithoutPurchasesInput, VendorUncheckedCreateWithoutPurchasesInput>
+    where?: VendorWhereInput
+  }
+
+  export type VendorUpdateToOneWithWhereWithoutPurchasesInput = {
+    where?: VendorWhereInput
+    data: XOR<VendorUpdateWithoutPurchasesInput, VendorUncheckedUpdateWithoutPurchasesInput>
+  }
+
+  export type VendorUpdateWithoutPurchasesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    gst?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address1?: StringFieldUpdateOperationsInput | string
+    address2?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: StringFieldUpdateOperationsInput | string
+    pinCode?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type VendorUncheckedUpdateWithoutPurchasesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    gst?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address1?: StringFieldUpdateOperationsInput | string
+    address2?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: StringFieldUpdateOperationsInput | string
+    pinCode?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PurchaseCreateWithoutLineItemsInput = {
@@ -23509,6 +23961,7 @@ export namespace Prisma {
     vehicleNo?: string | null
     notes?: string | null
     createdById?: string | null
+    updatedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -23531,6 +23984,7 @@ export namespace Prisma {
     vehicleNo?: string | null
     notes?: string | null
     createdById?: string | null
+    updatedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -23567,6 +24021,7 @@ export namespace Prisma {
     vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -23589,6 +24044,7 @@ export namespace Prisma {
     vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -23653,6 +24109,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     createdById?: string | null
+    updatedById?: string | null
     notes?: string | null
     billingAddress1?: string | null
     billingAddress2?: string | null
@@ -23686,6 +24143,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     createdById?: string | null
+    updatedById?: string | null
     billingAddress1?: string | null
     billingAddress2?: string | null
     billingGst?: string | null
@@ -23720,6 +24178,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress1?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress2?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23757,6 +24216,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress1?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress2?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23794,6 +24254,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress1?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress2?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23827,6 +24288,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress1?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress2?: NullableStringFieldUpdateOperationsInput | string | null
     billingGst?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23860,6 +24322,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress1?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress2?: NullableStringFieldUpdateOperationsInput | string | null
     billingGst?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23893,6 +24356,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress1?: NullableStringFieldUpdateOperationsInput | string | null
     billingAddress2?: NullableStringFieldUpdateOperationsInput | string | null
     billingGst?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23918,6 +24382,9 @@ export namespace Prisma {
     taxPercent: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    unit?: string
+    pkgCount?: number
+    pkgType?: string | null
   }
 
   export type PaymentCreateManyInvoiceInput = {
@@ -23942,6 +24409,9 @@ export namespace Prisma {
     taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    pkgCount?: IntFieldUpdateOperationsInput | number
+    pkgType?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type InvoiceLineItemUncheckedUpdateWithoutInvoiceInput = {
@@ -23954,6 +24424,9 @@ export namespace Prisma {
     taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    pkgCount?: IntFieldUpdateOperationsInput | number
+    pkgType?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type InvoiceLineItemUncheckedUpdateManyWithoutInvoiceInput = {
@@ -23966,6 +24439,9 @@ export namespace Prisma {
     taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    pkgCount?: IntFieldUpdateOperationsInput | number
+    pkgType?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PaymentUpdateWithoutInvoiceInput = {
@@ -24014,6 +24490,9 @@ export namespace Prisma {
     taxPercent: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    unit?: string
+    pkgCount?: number
+    pkgType?: string | null
   }
 
   export type QuotationLineItemUpdateWithoutQuotationInput = {
@@ -24026,6 +24505,9 @@ export namespace Prisma {
     taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    pkgCount?: IntFieldUpdateOperationsInput | number
+    pkgType?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type QuotationLineItemUncheckedUpdateWithoutQuotationInput = {
@@ -24038,6 +24520,9 @@ export namespace Prisma {
     taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    pkgCount?: IntFieldUpdateOperationsInput | number
+    pkgType?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type QuotationLineItemUncheckedUpdateManyWithoutQuotationInput = {
@@ -24050,6 +24535,9 @@ export namespace Prisma {
     taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
+    pkgCount?: IntFieldUpdateOperationsInput | number
+    pkgType?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PurchaseCreateManyVendorInput = {
@@ -24067,6 +24555,7 @@ export namespace Prisma {
     vehicleNo?: string | null
     notes?: string | null
     createdById?: string | null
+    updatedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -24087,6 +24576,7 @@ export namespace Prisma {
     vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -24108,6 +24598,7 @@ export namespace Prisma {
     vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -24129,6 +24620,7 @@ export namespace Prisma {
     vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -24144,6 +24636,7 @@ export namespace Prisma {
     taxPercent: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    unit?: string
     pkgCount?: number
     pkgType?: string
   }
@@ -24158,6 +24651,7 @@ export namespace Prisma {
     taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
     pkgCount?: IntFieldUpdateOperationsInput | number
     pkgType?: StringFieldUpdateOperationsInput | string
   }
@@ -24172,6 +24666,7 @@ export namespace Prisma {
     taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
     pkgCount?: IntFieldUpdateOperationsInput | number
     pkgType?: StringFieldUpdateOperationsInput | string
   }
@@ -24186,6 +24681,7 @@ export namespace Prisma {
     taxPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: StringFieldUpdateOperationsInput | string
     pkgCount?: IntFieldUpdateOperationsInput | number
     pkgType?: StringFieldUpdateOperationsInput | string
   }

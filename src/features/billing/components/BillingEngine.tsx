@@ -86,9 +86,27 @@ export function BillingEngine({ clients, products, mode = "INVOICE", initialData
                     setShippingAddress(address);
                 }
                 setPrevClientId(state.clientId);
+
+                // Automated GST Selection: 
+                // Per request: Karnataka = IGST, Others = CGST_SGST
+                if (client.state?.toLowerCase() === "karnataka") {
+                    setGstType("IGST");
+                } else {
+                    setGstType("CGST_SGST");
+                }
             }
         }
-    }, [state.clientId, clients, setBillingAddress, setShippingAddress, state.shippingSameAsBilling, prevClientId]);
+    }, [state.clientId, clients, setBillingAddress, setShippingAddress, state.shippingSameAsBilling, prevClientId, setGstType]);
+
+    // Also watch for manual billing address state changes
+    useEffect(() => {
+        const currentState = state.billingAddress?.state?.toLowerCase();
+        if (currentState === "karnataka") {
+            if (state.gstType !== "IGST") setGstType("IGST");
+        } else if (currentState) {
+            if (state.gstType !== "CGST_SGST") setGstType("CGST_SGST");
+        }
+    }, [state.billingAddress?.state, state.gstType, setGstType]);
 
     return (
         <div className="space-y-10 max-w-7xl mx-auto pb-24 animate-fade-up">

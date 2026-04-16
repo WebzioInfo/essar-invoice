@@ -1,6 +1,7 @@
 import { db } from "@/db/prisma/client";
 import { serializePrisma } from "@/utils/serialization";
 import { recordAuditLog } from "@/lib/audit";
+import { nextInvoiceNumber, nextQuotationNumber } from "@/lib/utils/documentNumber";
 
 export class QuotationService {
   /**
@@ -13,7 +14,12 @@ export class QuotationService {
         orderBy: { sequenceNumber: "desc" },
       });
       const nextSeq = (lastQuo?.sequenceNumber || 0) + 1;
-      const quoNo = `QUO-2026-${nextSeq.toString().padStart(3, "0")}`;
+
+      const settings = await tx.companySetting.findFirst();
+      // Format: SRQUO-26-27-001 (quotationPrefix from settings, Indian FY, 3-digit per-FY seq)
+      const quoPrefix = settings?.quotationPrefix || "SRQUO";
+      const quoDate = new Date(data.date);
+      const quoNo = await nextQuotationNumber(tx, quoPrefix, quoDate);
 
       // 2. Create the quotation
       const quotation = await tx.quotation.create({
@@ -54,6 +60,9 @@ export class QuotationService {
               rate: item.rate,
               taxPercent: item.taxPercent,
               taxAmount: item.taxAmount,
+              unit: item.unit || "NOS",
+              pkgCount: item.pkgCount || 0,
+              pkgType: item.pkgType || "BOX",
               totalAmount: item.totalAmount,
             })),
           },
@@ -105,7 +114,12 @@ export class QuotationService {
         orderBy: { sequenceNumber: "desc" },
       });
       const nextSeq = (lastInv?.sequenceNumber || 0) + 1;
-      const invNo = `INV-2026-${nextSeq.toString().padStart(3, "0")}`;
+
+      const settings = await tx.companySetting.findFirst();
+      // Format: SRB2B-26-27-001 (invoicePrefix from settings, Indian FY, 3-digit per-FY seq)
+      const invPrefix = settings?.invoicePrefix || "SRB2B";
+      const invDate = new Date();
+      const invNo = await nextInvoiceNumber(tx, invPrefix, invDate);
 
       // 2. Create the Invoice
       const invoice = await tx.invoice.create({
@@ -145,6 +159,9 @@ export class QuotationService {
               rate: item.rate,
               taxPercent: item.taxPercent,
               taxAmount: item.taxAmount,
+              unit: item.unit,
+              pkgCount: item.pkgCount,
+              pkgType: item.pkgType,
               totalAmount: item.totalAmount,
             })),
           },

@@ -12,7 +12,9 @@ const prismaClientSingleton = () => {
         // Strict connection limits for development to avoid exhausting the 9-connection DB pool
         datasources: {
             db: {
-                url: process.env.DATABASE_URL + (process.env.DATABASE_URL?.includes('?') ? '&' : '?') + 'connection_limit=1&pool_timeout=30'
+                // connection_limit=1 prevents exhausting the 9-connection free tier pool.
+                // pool_timeout=60 & connect_timeout=15 help with transient drops on databaseasp.net.
+                url: process.env.DATABASE_URL + (process.env.DATABASE_URL?.includes('?') ? '&' : '?') + 'connection_limit=1&pool_timeout=60&connect_timeout=15&socket_timeout=30'
             }
         }
     })

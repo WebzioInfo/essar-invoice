@@ -207,6 +207,48 @@ export default async function SettingsPage() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Document Numbering */}
+            <Card className="border-indigo-100 shadow-2xl shadow-indigo-500/5 ring-1 ring-indigo-500/10">
+              <CardHeader className="bg-linear-to-r from-indigo-700 to-indigo-500 text-white">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center border border-white/10">
+                    <span className="text-white font-black text-xs font-mono">#</span>
+                  </div>
+                  <div>
+                    <CardTitle className="text-white mt-0">Document Numbering</CardTitle>
+                    <CardDescription className="text-indigo-100">Prefix for invoice &amp; quotation numbers</CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6 pt-6">
+                <div className="bg-indigo-50 p-4 rounded-2xl border border-indigo-100 border-l-4 border-l-indigo-500 flex gap-3 mb-6">
+                  <Info className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-[10px] leading-relaxed font-black italic text-indigo-800 uppercase tracking-wider">Format: PREFIX-YY-YY-NNN</p>
+                    <p className="text-[10px] leading-relaxed font-bold text-indigo-700 mt-0.5">
+                      e.g. <span className="font-mono font-black">{settings.invoicePrefix}-26-27-01</span> · resets every April (Indian FY)
+                    </p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <Input
+                    label="Invoice Prefix"
+                    name="invoicePrefix"
+                    defaultValue={settings.invoicePrefix}
+                    placeholder="e.g. SRB2B"
+                    className="uppercase font-mono tracking-widest"
+                  />
+                  <Input
+                    label="Quotation Prefix"
+                    name="quotationPrefix"
+                    defaultValue={settings.quotationPrefix}
+                    placeholder="e.g. SRQUO"
+                    className="uppercase font-mono tracking-widest"
+                  />
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* ── Right Column: Bank & Action ── */}

@@ -169,7 +169,7 @@ export function DashboardClient({ data }: DashboardClientProps) {
                         </div>
                         <div className="flex items-center gap-4 shrink-0">
                           <StatusBadge status={inv.status} />
-                          <p className="font-bold text-sm text-slate-900">{formatCurrency(inv.grandTotal.toNumber())}</p>
+                          <p className="font-bold text-sm text-slate-900">{formatCurrency(inv.grandTotal)}</p>
                           <ChevronRight className="w-4 h-4 text-slate-200 group-hover:text-slate-400 transition-colors" />
                         </div>
                       </div>
@@ -214,7 +214,7 @@ export function DashboardClient({ data }: DashboardClientProps) {
                           <p className="text-xs font-bold text-slate-700 truncate">{inv.client.name}</p>
                           <p className="text-[10px] text-slate-400 font-semibold">{inv.invoiceNo}</p>
                         </div>
-                        <p className="text-xs font-bold text-red-600 ml-2 shrink-0">{formatCurrency(inv.grandTotal.toNumber())}</p>
+                        <p className="text-xs font-bold text-red-600 ml-2 shrink-0">{formatCurrency(inv.grandTotal)}</p>
                       </div>
                     </Link>
                   ))

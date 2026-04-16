@@ -80,6 +80,16 @@ export default async function DashboardPage() {
   const statusMap: Record<string, number> = {};
   statusCounts.forEach((s) => { statusMap[s.status] = s._count.status; });
 
+  const serializedPendingInvoices = pendingInvoices.map(inv => ({
+    ...inv,
+    grandTotal: inv.grandTotal.toNumber()
+  }));
+
+  const serializedRecentInvoices = recentInvoices.map(inv => ({
+    ...inv,
+    grandTotal: inv.grandTotal.toNumber()
+  }));
+
   return (
     <ErrorBoundary name="Dashboard">
       <DashboardClient 
@@ -91,8 +101,8 @@ export default async function DashboardPage() {
           totalOutstanding,
           thisMonthRevenue,
           statusMap,
-          pendingInvoices,
-          recentInvoices
+          pendingInvoices: serializedPendingInvoices,
+          recentInvoices: serializedRecentInvoices
         }}
       />
     </ErrorBoundary>

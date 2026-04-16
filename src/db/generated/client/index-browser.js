@@ -159,16 +159,18 @@ exports.Prisma.ProductScalarFieldEnum = {
   sku: 'sku',
   description: 'description',
   hsn: 'hsn',
-  purchaseRate: 'purchaseRate',
-  sellingRate: 'sellingRate',
   gstRate: 'gstRate',
-  unit: 'unit',
-  pkgType: 'pkgType',
-  notes: 'notes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt',
-  active: 'active'
+  active: 'active',
+  notes: 'notes',
+  pkgType: 'pkgType',
+  purchaseRate: 'purchaseRate',
+  sellingRate: 'sellingRate',
+  unit: 'unit',
+  createdById: 'createdById',
+  updatedById: 'updatedById'
 };
 
 exports.Prisma.InvoiceScalarFieldEnum = {
@@ -191,6 +193,7 @@ exports.Prisma.InvoiceScalarFieldEnum = {
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt',
   createdById: 'createdById',
+  updatedById: 'updatedById',
   notes: 'notes',
   billingAddress1: 'billingAddress1',
   billingAddress2: 'billingAddress2',
@@ -238,6 +241,7 @@ exports.Prisma.QuotationScalarFieldEnum = {
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt',
   createdById: 'createdById',
+  updatedById: 'updatedById',
   billingAddress1: 'billingAddress1',
   billingAddress2: 'billingAddress2',
   billingGst: 'billingGst',
@@ -263,7 +267,10 @@ exports.Prisma.QuotationLineItemScalarFieldEnum = {
   rate: 'rate',
   taxPercent: 'taxPercent',
   taxAmount: 'taxAmount',
-  totalAmount: 'totalAmount'
+  totalAmount: 'totalAmount',
+  unit: 'unit',
+  pkgCount: 'pkgCount',
+  pkgType: 'pkgType'
 };
 
 exports.Prisma.CompanySettingScalarFieldEnum = {
@@ -288,8 +295,8 @@ exports.Prisma.CompanySettingScalarFieldEnum = {
   quotationPrefix: 'quotationPrefix',
   defaultGstType: 'defaultGstType',
   currency: 'currency',
-  showPkgDetails: 'showPkgDetails',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  showPkgDetails: 'showPkgDetails'
 };
 
 exports.Prisma.InvoiceLineItemScalarFieldEnum = {
@@ -302,7 +309,10 @@ exports.Prisma.InvoiceLineItemScalarFieldEnum = {
   rate: 'rate',
   taxPercent: 'taxPercent',
   taxAmount: 'taxAmount',
-  totalAmount: 'totalAmount'
+  totalAmount: 'totalAmount',
+  unit: 'unit',
+  pkgCount: 'pkgCount',
+  pkgType: 'pkgType'
 };
 
 exports.Prisma.AuditLogScalarFieldEnum = {
@@ -329,7 +339,9 @@ exports.Prisma.VendorScalarFieldEnum = {
   active: 'active',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
+  deletedAt: 'deletedAt',
+  createdById: 'createdById',
+  updatedById: 'updatedById'
 };
 
 exports.Prisma.PurchaseScalarFieldEnum = {
@@ -348,6 +360,7 @@ exports.Prisma.PurchaseScalarFieldEnum = {
   vehicleNo: 'vehicleNo',
   notes: 'notes',
   createdById: 'createdById',
+  updatedById: 'updatedById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
@@ -364,6 +377,7 @@ exports.Prisma.PurchaseLineItemScalarFieldEnum = {
   taxPercent: 'taxPercent',
   taxAmount: 'taxAmount',
   totalAmount: 'totalAmount',
+  unit: 'unit',
   pkgCount: 'pkgCount',
   pkgType: 'pkgType'
 };
@@ -406,9 +420,11 @@ exports.Prisma.ProductOrderByRelevanceFieldEnum = {
   sku: 'sku',
   description: 'description',
   hsn: 'hsn',
-  unit: 'unit',
+  notes: 'notes',
   pkgType: 'pkgType',
-  notes: 'notes'
+  unit: 'unit',
+  createdById: 'createdById',
+  updatedById: 'updatedById'
 };
 
 exports.Prisma.InvoiceOrderByRelevanceFieldEnum = {
@@ -421,6 +437,7 @@ exports.Prisma.InvoiceOrderByRelevanceFieldEnum = {
   vehicleNo: 'vehicleNo',
   dispatchedThrough: 'dispatchedThrough',
   createdById: 'createdById',
+  updatedById: 'updatedById',
   notes: 'notes',
   billingAddress1: 'billingAddress1',
   billingAddress2: 'billingAddress2',
@@ -454,6 +471,7 @@ exports.Prisma.QuotationOrderByRelevanceFieldEnum = {
   convertedInvoiceId: 'convertedInvoiceId',
   notes: 'notes',
   createdById: 'createdById',
+  updatedById: 'updatedById',
   billingAddress1: 'billingAddress1',
   billingAddress2: 'billingAddress2',
   billingGst: 'billingGst',
@@ -473,7 +491,9 @@ exports.Prisma.QuotationLineItemOrderByRelevanceFieldEnum = {
   quotationId: 'quotationId',
   productId: 'productId',
   description: 'description',
-  hsn: 'hsn'
+  hsn: 'hsn',
+  unit: 'unit',
+  pkgType: 'pkgType'
 };
 
 exports.Prisma.CompanySettingOrderByRelevanceFieldEnum = {
@@ -505,7 +525,9 @@ exports.Prisma.InvoiceLineItemOrderByRelevanceFieldEnum = {
   invoiceId: 'invoiceId',
   productId: 'productId',
   description: 'description',
-  hsn: 'hsn'
+  hsn: 'hsn',
+  unit: 'unit',
+  pkgType: 'pkgType'
 };
 
 exports.Prisma.AuditLogOrderByRelevanceFieldEnum = {
@@ -527,7 +549,9 @@ exports.Prisma.VendorOrderByRelevanceFieldEnum = {
   address1: 'address1',
   address2: 'address2',
   state: 'state',
-  pinCode: 'pinCode'
+  pinCode: 'pinCode',
+  createdById: 'createdById',
+  updatedById: 'updatedById'
 };
 
 exports.Prisma.PurchaseOrderByRelevanceFieldEnum = {
@@ -540,7 +564,8 @@ exports.Prisma.PurchaseOrderByRelevanceFieldEnum = {
   ewayBillUrl: 'ewayBillUrl',
   vehicleNo: 'vehicleNo',
   notes: 'notes',
-  createdById: 'createdById'
+  createdById: 'createdById',
+  updatedById: 'updatedById'
 };
 
 exports.Prisma.PurchaseLineItemOrderByRelevanceFieldEnum = {
@@ -549,6 +574,7 @@ exports.Prisma.PurchaseLineItemOrderByRelevanceFieldEnum = {
   productId: 'productId',
   description: 'description',
   hsn: 'hsn',
+  unit: 'unit',
   pkgType: 'pkgType'
 };
 
