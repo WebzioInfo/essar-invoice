@@ -36,7 +36,7 @@ export function InvoiceActions({ invoiceId, status, isDeleted = false }: Invoice
         if (!confirm("Are you sure you want to move this invoice to trash?")) return;
         startTransition(async () => {
             const res = await deleteInvoiceAction(invoiceId);
-            if (res?.success) {
+            if (res && 'success' in res) {
                 success("Invoice moved to trash.");
                 router.push("/invoices");
             } else {
@@ -48,7 +48,7 @@ export function InvoiceActions({ invoiceId, status, isDeleted = false }: Invoice
     const handleRestore = () => {
         startTransition(async () => {
             const res = await restoreInvoiceAction(invoiceId);
-            if (res?.success) {
+            if (res && 'success' in res) {
                 success("Invoice restored successfully.");
                 router.refresh();
             } else {
@@ -61,7 +61,7 @@ export function InvoiceActions({ invoiceId, status, isDeleted = false }: Invoice
         if (!confirm("CRITICAL: This will permanently delete the invoice record. This action cannot be undone. Proceed?")) return;
         startTransition(async () => {
             const res = await permanentlyDeleteInvoiceAction(invoiceId);
-            if (res?.success) {
+            if (res && 'success' in res) {
                 success("Invoice permanently deleted.");
                 router.push("/invoices?trash=true");
             } else {

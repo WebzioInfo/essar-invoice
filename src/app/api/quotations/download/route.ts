@@ -57,6 +57,7 @@ export async function POST(req: NextRequest) {
                 shippingAddress2: true,
                 shippingState: true,
                 shippingPinCode: true,
+                notes: true,
                 client: true,
                 lineItems: {
                     orderBy: { id: "asc" }
@@ -125,14 +126,14 @@ export async function POST(req: NextRequest) {
         // --- INFO & ADDRESSES ---
         let infoY = y;
         const infoX = W - RIGHT_MARGIN;
-        doc.setFont("helvetica", "bold").setFontSize(9).text("Quotation No:", infoX - 50);
+        doc.setFont("helvetica", "bold").setFontSize(9).text("Quotation No:", infoX - 50, infoY);
         doc.setFont("helvetica", "normal").text(quotation.quotationNo, infoX, infoY, { align: "right" });
         infoY += 6;
-        doc.setFont("helvetica", "bold").text("Date:", infoX - 50);
+        doc.setFont("helvetica", "bold").text("Date:", infoX - 50, infoY);
         doc.setFont("helvetica", "normal").text(fmtDate(quotation.date), infoX, infoY, { align: "right" });
         infoY += 6;
         if (quotation.validUntil) {
-            doc.setFont("helvetica", "bold").text("Valid Until:", infoX - 50);
+            doc.setFont("helvetica", "bold").text("Valid Until:", infoX - 50, infoY);
             doc.setFont("helvetica", "normal").text(fmtDate(quotation.validUntil), infoX, infoY, { align: "right" });
             infoY += 6;
         }
