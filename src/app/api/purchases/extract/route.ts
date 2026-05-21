@@ -48,7 +48,8 @@ export async function POST(req: NextRequest) {
 
 // ─── PDF Text Extraction using pdf-parse (Node.js native, no worker needed) ──
 async function extractTextFromPdf(buffer: Buffer): Promise<string> {
-    const pdfParse = (await import("pdf-parse")).default;
+    const pdfParseModule = await import("pdf-parse");
+    const pdfParse = (pdfParseModule as any).default || pdfParseModule;
     const data = await pdfParse(buffer);
     return data.text || "";
 }
