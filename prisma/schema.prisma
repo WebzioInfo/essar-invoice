@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/db/generated/client"
 }
 
 datasource db {
@@ -8,12 +7,98 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ==========================================
+// ENUMS (Type Safety & Data Integrity)
+// ==========================================
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  VIEWER
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PARTIAL
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum QuotationStatus {
+  DRAFT
+  SENT
+  ACCEPTED
+  REJECTED
+  CONVERTED
+  CANCELLED
+}
+
+enum PurchaseStatus {
+  ORDERED
+  RECEIVED
+  PAID
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH
+  BANK_TRANSFER
+  UPI
+  CHEQUE
+  OTHER
+}
+
+enum StockLogType {
+  ADD
+  REMOVE
+  UPDATE
+  MANUAL
+  ADJUSTMENT
+  RETURN
+}
+
+enum LedgerEntryType {
+  CREDIT
+  DEBIT
+}
+
+enum LedgerReferenceType {
+  INVOICE
+  PAYMENT
+  EXPENSE
+  ADJUSTMENT
+  OPENING_BALANCE
+}
+
+enum GstType {
+  CGST_SGST
+  IGST
+  NONE
+}
+
+enum LedgerTransactionType {
+  PAYMENT_RECEIVED
+  PAYMENT_MADE
+  EXPENSE
+  INVOICE
+  PURCHASE
+  FOUNDER_CONTRIBUTION
+  FOUNDER_WITHDRAWAL
+  TRANSFER
+}
+
+// ==========================================
+// CORE MODELS
+// ==========================================
+
 model User {
   id            String     @id @default(cuid())
   email         String     @unique
   name          String?
   passwordHash  String
-  role          String     @default("VIEWER")
+  role          UserRole   @default(VIEWER)
   lastLoginAt   DateTime?
   lastLoginIp   String?
   failedLogins  Int        @default(0)
@@ -23,6 +108,8 @@ model User {
   deletedAt     DateTime?
   createdAudits AuditLog[] @relation("UserAudits")
 
+  @@index([role])
+  @@index([deletedAt])
   @@map("users")
 }
 
@@ -35,43 +122,49 @@ model Client {
   address1    String
   address2    String?
   state       String
+  pinCode     String?
+  active      Boolean     @default(true)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   deletedAt   DateTime?
   createdById String?
   updatedById String?
-  pinCode     String?
-  active      Boolean     @default(true)
+  
   invoices    Invoice[]
   quotations  Quotation[]
+  payments    Payment[]
+  account     Account?
 
-  @@index([deletedAt])
-  @@index([active])
-  @@index([active, deletedAt])
+  @@index([deletedAt, active])
+  @@index([name])
   @@map("clients")
 }
 
 model Product {
-  id           String    @id @default(cuid())
-  sku          String?   @unique
-  description  String    @db.Text
+  id           String            @id @default(cuid())
+  sku          String?           @unique
+  description  String            @db.Text
   hsn          String?
-  gstRate      Decimal   @db.Decimal(5, 2)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  gstRate      Decimal           @db.Decimal(5, 2)
+  unit         String            @default("NOS")
+  notes        String?           @db.Text
+  pkgType      String?           @default("BOX")
+  purchaseRate Decimal           @default(0.00) @db.Decimal(12, 2)
+  sellingRate  Decimal           @default(0.00) @db.Decimal(12, 2)
+  qtyPerBox    Decimal           @default(0.00) @db.Decimal(12, 3)
+  active       Boolean           @default(true)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
   deletedAt    DateTime?
-  active       Boolean   @default(true)
-  notes        String?   @db.Text
-  pkgType      String?   @default("BOX")
-  purchaseRate Decimal   @default(0.00) @db.Decimal(12, 2)
-  sellingRate  Decimal   @default(0.00) @db.Decimal(12, 2)
-  unit         String    @default("BOX")
-  createdById  String?
-  updatedById  String?
 
-  @@index([deletedAt])
-  @@index([active])
-  @@index([active, deletedAt])
+  invoiceLines  InvoiceLineItem[]
+  quotationLines QuotationLineItem[]
+  purchaseLines  PurchaseLineItem[]
+  stock          Stock?
+  stockLogs      StockLog[]
+
+  @@index([deletedAt, active])
+  @@index([hsn])
   @@map("products")
 }
 
@@ -81,64 +174,199 @@ model Invoice {
   sequenceNumber        Int               @unique
   invoiceNo             String            @unique
   date                  DateTime
-  dueDate               DateTime?
-  gstType               String
+  gstType               GstType           @default(CGST_SGST)
   subTotal              Decimal           @db.Decimal(12, 2)
   taxTotal              Decimal           @db.Decimal(12, 2)
   grandTotal            Decimal           @db.Decimal(12, 2)
-  amountPaid            Decimal           @default(0.00) @db.Decimal(12, 2)
-  status                String            @default("DRAFT")
+  status                InvoiceStatus     @default(DRAFT)
+  isFinalized           Boolean           @default(false)
+
+
   ewayBill              String?
+  ewayBillUrl           String?
   vehicleNo             String?
   dispatchedThrough     String?
+  isFreightCollect      Boolean           @default(false)
+  freightAmount         Decimal           @default(0.00) @db.Decimal(12, 2)
+  freightTaxPercent     Decimal           @default(0.00) @db.Decimal(5, 2)
+  notes                 String?           @db.Text
+  
+  // Address snapshots (denormalized for historical integrity)
+  billingName           String?
+  billingAddress1       String?
+  billingAddress2       String?
+  billingState          String?
+  billingPinCode        String?
+  billingPhone          String?
+  billingGst            String?
+  shippingSameAsBilling Boolean           @default(true)
+  shippingName          String?
+  shippingAddress1      String?
+  shippingAddress2      String?
+  shippingState         String?
+  shippingPinCode       String?
+
   createdAt             DateTime          @default(now())
   updatedAt             DateTime          @updatedAt
   deletedAt             DateTime?
   createdById           String?
   updatedById           String?
-  notes                 String?           @db.Text
-  billingAddress1       String?
-  billingAddress2       String?
-  billingGst            String?
-  billingName           String?
-  billingPhone          String?
-  billingPinCode        String?
-  billingState          String?
-  shippingAddress1      String?
-  shippingAddress2      String?
-  shippingName          String?
-  shippingPinCode       String?
-  shippingSameAsBilling Boolean           @default(true)
-  shippingState         String?
-  lineItems             InvoiceLineItem[]
-  client                Client            @relation(fields: [clientId], references: [id])
-  payments              Payment[]
 
-  @@index([date])
-  @@index([status])
+  client                Client            @relation(fields: [clientId], references: [id])
+  lineItems             InvoiceLineItem[]
+  payments              Payment[]
+  allocations           PaymentAllocation[]
+
   @@index([clientId, deletedAt])
-  @@index([invoiceNo, deletedAt])
-  @@index([date, deletedAt])
-  @@index([status, deletedAt])
+  @@index([status, date])
+  @@index([date])
+
+  @@index([invoiceNo])
   @@map("invoices")
 }
 
-model Payment {
-  id         String   @id @default(cuid())
-  invoiceId  String
-  amount     Decimal  @db.Decimal(12, 2)
-  paidAt     DateTime @default(now())
-  method     String
-  reference  String?
-  notes      String?  @db.Text
-  recordedBy String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  invoice    Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
 
+model Payment {
+  id         String        @id @default(cuid())
+  clientId   String?
+  vendorId   String?
+  invoiceId  String?
+  purchaseId String?
+  amount     Decimal       @db.Decimal(12, 2)
+  paidAt     DateTime      @default(now())
+  method     PaymentMethod @default(CASH)
+  reference  String?
+  notes      String?       @db.Text
+  recordedBy String?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  deletedAt  DateTime?
+
+  client     Client?       @relation(fields: [clientId], references: [id])
+  vendor     Vendor?       @relation(fields: [vendorId], references: [id])
+  invoice    Invoice?      @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+  purchase   Purchase?     @relation(fields: [purchaseId], references: [id], onDelete: SetNull)
+  allocations PaymentAllocation[]
+
+  @@index([clientId])
+  @@index([vendorId])
   @@index([invoiceId])
+  @@index([purchaseId])
   @@index([paidAt])
+  @@index([deletedAt])
   @@map("payments")
+}
+
+model PaymentAllocation {
+  id          String   @id @default(cuid())
+  paymentId   String
+  invoiceId   String?  // For Client Payments
+  purchaseId  String?  // For Supplier Payments
+  amount      Decimal  @db.Decimal(12, 2)
+  createdAt   DateTime @default(now())
+
+  payment     Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  invoice     Invoice? @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  purchase    Purchase?@relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+
+  @@index([paymentId])
+  @@index([invoiceId])
+  @@index([purchaseId])
+  @@map("payment_allocations")
+}
+
+
+
+
+// ==========================================
+// FINANCIAL & ACCOUNTING MODELS (V2 - Double Entry)
+// ==========================================
+
+enum AccountType {
+  CASH
+  BANK
+  CLIENT
+  SUPPLIER
+  EXPENSE
+  PURCHASE
+  REVENUE
+  LOAN
+  ADVANCE
+  EQUITY
+}
+
+model Account {
+  id              String      @id @default(cuid())
+  name            String      @unique
+  type            AccountType
+  openingBalance  Decimal     @default(0.00) @db.Decimal(12, 2)
+  clientId        String?     @unique
+  vendorId        String?     @unique
+  active          Boolean     @default(true)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  client          Client?     @relation(fields: [clientId], references: [id])
+  vendor          Vendor?     @relation(fields: [vendorId], references: [id])
+
+  debitEntries    LedgerEntry[] @relation("DebitAccount")
+  creditEntries   LedgerEntry[] @relation("CreditAccount")
+
+  @@index([type])
+  @@map("accounts")
+}
+
+model LedgerEntry {
+  id              String      @id @default(cuid())
+  debitAccountId  String?
+  creditAccountId String?
+  amount          Decimal     @db.Decimal(12, 2)
+  date            DateTime    @default(now())
+  referenceType   String?     // INVOICE, PAYMENT, EXPENSE, LOAN, etc.
+  referenceId     String?
+  transactionType LedgerTransactionType?
+  description     String?     @db.Text
+  createdAt       DateTime    @default(now())
+
+  debitAccount    Account?    @relation("DebitAccount", fields: [debitAccountId], references: [id])
+  creditAccount   Account?    @relation("CreditAccount", fields: [creditAccountId], references: [id])
+
+  @@index([debitAccountId])
+  @@index([creditAccountId])
+  @@index([date])
+  @@map("ledger_entries")
+}
+
+model Loan {
+  id            String   @id @default(cuid())
+  type          String   // GIVEN, TAKEN
+  partyName     String
+  amount        Decimal  @db.Decimal(12, 2)
+  interestRate  Decimal? @db.Decimal(5, 2)
+  date          DateTime @default(now())
+  dueDate       DateTime?
+  status        String   @default("ACTIVE") // ACTIVE, CLOSED
+  notes         String?  @db.Text
+  accountId     String?  // Linked financial account
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("loans")
+}
+
+model Advance {
+  id            String   @id @default(cuid())
+  type          String   // GIVEN, RECEIVED
+  partyName     String
+  amount        Decimal  @db.Decimal(12, 2)
+  date          DateTime @default(now())
+  status        String   @default("PENDING") // PENDING, ADJUSTED
+  notes         String?  @db.Text
+  accountId     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("advances")
 }
 
 model Quotation {
@@ -148,40 +376,69 @@ model Quotation {
   quotationNo           String              @unique
   date                  DateTime
   validUntil            DateTime?
-  gstType               String
+  gstType               GstType             @default(CGST_SGST)
   subTotal              Decimal             @db.Decimal(12, 2)
   taxTotal              Decimal             @db.Decimal(12, 2)
   grandTotal            Decimal             @db.Decimal(12, 2)
-  status                String              @default("DRAFT")
+  status                QuotationStatus     @default(DRAFT)
   convertedInvoiceId    String?
+  isFreightCollect      Boolean             @default(false)
+  freightAmount         Decimal             @default(0.00) @db.Decimal(12, 2)
+  freightTaxPercent     Decimal             @default(0.00) @db.Decimal(5, 2)
   notes                 String?             @db.Text
+
+  // Address snapshots
+  billingName           String?
+  billingAddress1       String?
+  billingAddress2       String?
+  billingState          String?
+  billingPinCode        String?
+  billingPhone          String?
+  billingGst            String?
+  shippingSameAsBilling Boolean             @default(true)
+  shippingName          String?
+  shippingAddress1      String?
+  shippingAddress2      String?
+  shippingState         String?
+  shippingPinCode       String?
+
   createdAt             DateTime            @default(now())
   updatedAt             DateTime            @updatedAt
   deletedAt             DateTime?
   createdById           String?
   updatedById           String?
-  billingAddress1       String?
-  billingAddress2       String?
-  billingGst            String?
-  billingName           String?
-  billingPhone          String?
-  billingPinCode        String?
-  billingState          String?
-  shippingAddress1      String?
-  shippingAddress2      String?
-  shippingName          String?
-  shippingPinCode       String?
-  shippingSameAsBilling Boolean             @default(true)
-  shippingState         String?
-  lineItems             QuotationLineItem[]
-  client                Client              @relation(fields: [clientId], references: [id])
 
-  @@index([date])
-  @@index([status])
-  @@index([clientId], map: "quotations_clientId_fkey")
-  @@index([date, deletedAt])
-  @@index([status, deletedAt])
+  client                Client              @relation(fields: [clientId], references: [id])
+  lineItems             QuotationLineItem[]
+
+  @@index([clientId, deletedAt])
+  @@index([status, date])
+  @@index([quotationNo])
   @@map("quotations")
+}
+
+model InvoiceLineItem {
+  id          String   @id @default(cuid())
+  invoiceId   String
+  productId   String?
+  description String   @db.Text
+  hsn         String?
+  qty         Decimal  @db.Decimal(12, 3)
+  rate        Decimal  @db.Decimal(12, 2)
+  taxPercent  Decimal  @db.Decimal(5, 2)
+  taxAmount   Decimal  @db.Decimal(12, 2)
+  unit        String   @default("NOS")
+  pkgCount    Int?     @default(0)
+  pkgType     String?  @default("BOX")
+  qtyPerBox   Decimal  @default(0.00) @db.Decimal(12, 3)
+  totalAmount Decimal  @db.Decimal(12, 2)
+
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  product     Product? @relation(fields: [productId], references: [id])
+
+  @@index([invoiceId])
+  @@index([productId], map: "invoice_line_items_productId_fkey")
+  @@map("invoice_line_items")
 }
 
 model QuotationLineItem {
@@ -190,18 +447,164 @@ model QuotationLineItem {
   productId   String?
   description String    @db.Text
   hsn         String?
-  qty         Int
-  rate        Decimal   @db.Decimal(10, 2)
+  qty         Decimal   @db.Decimal(12, 3)
+  rate        Decimal   @db.Decimal(12, 2)
   taxPercent  Decimal   @db.Decimal(5, 2)
-  taxAmount   Decimal   @db.Decimal(10, 2)
-  totalAmount Decimal   @db.Decimal(12, 2)
+  taxAmount   Decimal   @db.Decimal(12, 2)
   unit        String    @default("NOS")
-  pkgCount    Int       @default(0)
+  pkgCount    Int?      @default(0)
   pkgType     String?   @default("BOX")
+  qtyPerBox   Decimal   @default(0.00) @db.Decimal(12, 3)
+  totalAmount Decimal   @db.Decimal(12, 2)
+
   quotation   Quotation @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+  product     Product?  @relation(fields: [productId], references: [id])
 
   @@index([quotationId])
+  @@index([productId])
   @@map("quotation_line_items")
+}
+
+model Vendor {
+  id          String     @id @default(cuid())
+  name        String
+  gst         String?
+  email       String?
+  phone       String?
+  address1    String
+  address2    String?
+  state       String
+  pinCode     String?
+  active      Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  deletedAt   DateTime?
+  createdById String?
+  updatedById String?
+
+  purchases   Purchase[]
+  payments    Payment[]
+  account     Account?
+
+  @@index([deletedAt, active])
+  @@index([name])
+  @@map("vendors")
+}
+
+model Purchase {
+  id                String             @id @default(cuid())
+  vendorId          String
+  sequenceNumber    Int                @unique
+  purchaseNo        String             @unique
+  date              DateTime
+  gstType           GstType            @default(CGST_SGST)
+  subTotal          Decimal            @db.Decimal(12, 2)
+  taxTotal          Decimal            @db.Decimal(12, 2)
+  grandTotal        Decimal            @db.Decimal(12, 2)
+  status            PurchaseStatus     @default(RECEIVED)
+  isFinalized       Boolean            @default(true)
+
+
+  ewayBill          String?
+  ewayBillUrl       String?
+  vehicleNo         String?
+  dispatchedThrough String?
+  isFreightCollect  Boolean            @default(false)
+  freightAmount     Decimal            @default(0.00) @db.Decimal(12, 2)
+  freightTaxPercent Decimal            @default(0.00) @db.Decimal(5, 2)
+  notes             String?            @db.Text
+
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  deletedAt         DateTime?
+  createdById       String?
+
+  vendor            Vendor             @relation(fields: [vendorId], references: [id])
+  lineItems         PurchaseLineItem[]
+  payments          Payment[]
+  allocations       PaymentAllocation[]
+
+  @@index([vendorId, deletedAt])
+  @@index([status, date])
+  @@index([date])
+
+
+  @@index([purchaseNo])
+  @@map("purchases")
+}
+
+model PurchaseLineItem {
+  id          String   @id @default(cuid())
+  purchaseId  String
+  productId   String?
+  description String   @db.Text
+  hsn         String?
+  qty         Decimal  @db.Decimal(12, 3)
+  rate        Decimal  @db.Decimal(12, 2)
+  taxPercent  Decimal  @db.Decimal(5, 2)
+  taxAmount   Decimal  @db.Decimal(12, 2)
+  unit        String   @default("NOS")
+  pkgCount    Int?     @default(0)
+  pkgType     String?  @default("BOX")
+  qtyPerBox   Decimal  @default(0.00) @db.Decimal(12, 3)
+  totalAmount Decimal  @db.Decimal(12, 2)
+
+  purchase    Purchase  @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  product     Product?  @relation(fields: [productId], references: [id])
+
+  @@index([purchaseId])
+  @@index([productId])
+  @@map("purchase_line_items")
+}
+
+model Stock {
+  id        String   @id @default(cuid())
+  productId String   @unique
+  quantity  Decimal  @default(0.000) @db.Decimal(12, 3)
+  updatedAt DateTime @updatedAt
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("stocks")
+}
+
+model StockLog {
+  id             String       @id @default(cuid())
+  productId      String
+  type           StockLogType @default(MANUAL)
+  quantityBefore Decimal      @db.Decimal(12, 3)
+  quantityChange Decimal      @db.Decimal(12, 3)
+  quantityAfter  Decimal      @db.Decimal(12, 3)
+  referenceId    String?
+  notes          String?      @db.Text
+  createdAt      DateTime     @default(now())
+
+  product        Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId, createdAt])
+  @@map("stock_logs")
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  action     String
+  entityType String
+  entityId   String?
+  oldValue   Json?
+  newValue   Json?
+  changes    Json?
+  details    Json?
+
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+
+  user       User?    @relation("UserAudits", fields: [userId], references: [id])
+
+  @@index([createdAt])
+  @@index([userId], map: "audit_logs_userId_fkey")
+  @@index([entityType, entityId])
+  @@map("audit_logs")
 }
 
 model CompanySetting {
@@ -224,121 +627,25 @@ model CompanySetting {
   bankAccountName String   @default("ESSAR ENTERPRISES")
   invoicePrefix   String   @default("SRB2B")
   quotationPrefix String   @default("SRQUO")
-  defaultGstType  String   @default("CGST_SGST")
+  defaultGstType  GstType  @default(CGST_SGST)
   currency        String   @default("INR")
+  showPkgDetails  Boolean  @default(true)
+  showLogo        Boolean  @default(false)
+  logoUrl         String   @default("logo.png")
   updatedAt       DateTime @updatedAt
-  showPkgDetails  Boolean  @default(false)
 
   @@map("company_settings")
 }
 
-model InvoiceLineItem {
-  id          String  @id @default(cuid())
-  invoiceId   String
-  productId   String?
-  description String  @db.Text
-  hsn         String?
-  qty         Int
-  rate        Decimal @db.Decimal(10, 2)
-  taxPercent  Decimal @db.Decimal(5, 2)
-  taxAmount   Decimal @db.Decimal(10, 2)
-  totalAmount Decimal @db.Decimal(12, 2)
-  unit        String  @default("NOS")
-  pkgCount    Int     @default(0)
-  pkgType     String? @default("BOX")
-  invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
-
-  @@index([invoiceId])
-  @@map("invoice_line_items")
-}
-
-model AuditLog {
-  id         String   @id @default(cuid())
-  userId     String?
-  action     String
-  entityType String
-  entityId   String?
-  details    String?  @db.LongText
-  ipAddress  String?
-  createdAt  DateTime @default(now())
-  user       User?    @relation("UserAudits", fields: [userId], references: [id])
-
-  @@index([createdAt])
-  @@index([userId], map: "audit_logs_userId_fkey")
-  @@index([entityType, entityId])
-  @@index([action])
-  @@map("audit_logs")
-}
-
-model Vendor {
-  id        String     @id @default(cuid())
-  name      String
-  gst       String?
-  email     String?
-  phone     String?
-  address1  String
-  address2  String?
-  state     String
-  pinCode   String?
-  active    Boolean    @default(true)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  deletedAt DateTime?
-  createdById String?
-  updatedById String?
-  purchases Purchase[]
-
-  @@index([deletedAt])
-  @@index([active])
-  @@map("vendors")
-}
-
-model Purchase {
-  id             String             @id @default(cuid())
-  vendorId       String
-  sequenceNumber Int                @unique
-  purchaseNo     String             @unique
-  date           DateTime
-  gstType        String             @default("CGST_SGST")
-  subTotal       Decimal            @db.Decimal(12, 2)
-  taxTotal       Decimal            @db.Decimal(12, 2)
-  grandTotal     Decimal            @db.Decimal(12, 2)
-  status         String             @default("RECEIVED")
-  ewayBill       String?
-  ewayBillUrl    String?
-  vehicleNo      String?
-  notes          String?            @db.Text
-  createdById    String?
-  updatedById    String?
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
-  deletedAt      DateTime?
-  lineItems      PurchaseLineItem[]
-  vendor         Vendor             @relation(fields: [vendorId], references: [id])
+model Expense {
+  id          String   @id @default(cuid())
+  amount      Decimal  @db.Decimal(12, 2)
+  category    String
+  description String?  @db.Text
+  date        DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@index([date])
-  @@index([status])
-  @@index([vendorId, deletedAt])
-  @@index([purchaseNo, deletedAt])
-  @@map("purchases")
-}
-
-model PurchaseLineItem {
-  id          String   @id @default(cuid())
-  purchaseId  String
-  productId   String?
-  description String   @db.Text
-  hsn         String?
-  qty         Int
-  rate        Decimal  @db.Decimal(12, 2)
-  taxPercent  Decimal  @db.Decimal(5, 2)
-  taxAmount   Decimal  @db.Decimal(12, 2)
-  totalAmount Decimal  @db.Decimal(12, 2)
-  unit        String   @default("NOS")
-  pkgCount    Int      @default(0)
-  pkgType     String   @default("BOX")
-  purchase    Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
-
-  @@index([purchaseId])
-  @@map("purchase_line_items")
+  @@map("expenses")
 }

@@ -17,45 +17,32 @@ import { deleteClientAction } from "@/features/clients/actions/clientActions";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useToast } from "@/context/ToastContext";
 import { ClientForm } from "./ClientForm";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import type { Client } from "@/features/clients/types";
-import { ErrorBoundary } from "@/ui/core/ErrorBoundary";
-import { useQuery } from "@tanstack/react-query";
-import apiClient from "@/lib/apiClient";
-import { useConfirmStore } from "@/hooks/useConfirmStore";
+import { ErrorBoundary } from "@/components/common/ErrorBoundary";
+import { Modal } from "@/ui/core/Modal";
 
 interface ClientTableProps {
     clients: Client[];
 }
 
 const ClientTableRow = ({ client, onEdit }: { client: Client, onEdit: (client: Client) => void }) => {
-    const queryClient = useQueryClient();
+    const [isPending, startTransition] = useTransition();
+    const [showConfirm, setShowConfirm] = useState(false);
     const { success, error } = useToast();
-    const { confirm } = useConfirmStore();
 
-    const deleteMutation = useMutation({
-        mutationFn: (id: string) => apiClient.delete(`/api/clients/${id}`),
-        onSuccess: () => {
-            success("Client removed from directory successfully.");
-            queryClient.invalidateQueries({ queryKey: ["clients"] });
-        },
-        onError: (err: any) => {
-            error(err.response?.data?.error || "Failed to delete client.");
-        }
-    });
-
-    const handleDelete = async () => {
-        const confirmed = await confirm({
-            title: "Delete Client",
-            message: `Are you sure you want to remove ${client.name} from the directory? This will not affect existing invoices.`,
-            type: "danger",
-            confirmText: "Remove Client"
+    const handleDelete = () => {
+        startTransition(async () => {
+            const res = await deleteClientAction(client.id);
+            if (res && 'success' in res) {
+                success("Client removed from directory successfully.");
+                setShowConfirm(false);
+            } else if (res && 'error' in res) {
+                error(res.error || "Failed to delete client.");
+            } else {
+                error("Failed to delete client.");
+            }
         });
-
-        if (confirmed) {
-            deleteMutation.mutate(client.id);
-        }
     };
 
     return (
@@ -110,25 +97,51 @@ const ClientTableRow = ({ client, onEdit }: { client: Client, onEdit: (client: C
             </TableCell>
             <TableCell className="text-right pr-8">
                 <div className="flex items-center justify-end gap-2">
-                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all scale-95 group-hover:scale-100">
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => onEdit(client)}
-                            className="h-9 w-9 p-0 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-xl"
-                        >
-                            <Edit3 className="h-4 w-4" />
-                        </Button>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={handleDelete}
-                            disabled={deleteMutation.isPending}
-                            className="h-9 w-9 p-0 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl"
-                        >
-                            {deleteMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin text-red-500" /> : <Trash2 className="h-4 w-4" />}
-                        </Button>
-                    </div>
+                    {!showConfirm ? (
+                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all scale-95 group-hover:scale-100">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => onEdit(client)}
+                                className="h-9 w-9 p-0 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-xl"
+                            >
+                                <Edit3 className="h-4 w-4" />
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setShowConfirm(true)}
+                                className="h-9 w-9 p-0 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl"
+                            >
+                                <Trash2 className="h-4 w-4" />
+                            </Button>
+                        </div>
+                    ) : (
+                        <div className="flex items-center gap-2 animate-in fade-in slide-in-from-right-2">
+                            <div className="hidden lg:flex items-center gap-2 px-3 py-1 bg-red-50 rounded-lg mr-2 border border-red-100">
+                                <AlertTriangle className="h-3 w-3 text-red-500" />
+                                <span className="text-[9px] font-black text-red-600 uppercase tracking-widest">Confirm?</span>
+                            </div>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 px-3 rounded-lg text-[10px] font-black uppercase"
+                                onClick={() => setShowConfirm(false)}
+                                disabled={isPending}
+                            >
+                                No
+                            </Button>
+                            <Button
+                                variant="danger"
+                                size="sm"
+                                className="h-8 px-4 rounded-lg text-[10px] font-black uppercase shadow-lg shadow-red-500/20"
+                                onClick={handleDelete}
+                                disabled={isPending}
+                            >
+                                {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "YES"}
+                            </Button>
+                        </div>
+                    )}
                 </div>
             </TableCell>
         </TableRow>
@@ -136,36 +149,24 @@ const ClientTableRow = ({ client, onEdit }: { client: Client, onEdit: (client: C
 };
 
 const ClientMobileCard = ({ client, onEdit }: { client: Client, onEdit: (client: Client) => void }) => {
-    const queryClient = useQueryClient();
+    const [isPending, startTransition] = useTransition();
+    const [showConfirm, setShowConfirm] = useState(false);
     const { success, error } = useToast();
-    const { confirm } = useConfirmStore();
 
-    const deleteMutation = useMutation({
-        mutationFn: (id: string) => apiClient.delete(`/api/clients/${id}`),
-        onSuccess: () => {
-            success("Client removed successfully.");
-            queryClient.invalidateQueries({ queryKey: ["clients"] });
-        },
-        onError: () => {
-            error("Removal failed.");
-        }
-    });
-
-    const handleDelete = async () => {
-        const confirmed = await confirm({
-            title: "Delete Client",
-            message: `Are you sure you want to remove ${client.name}? This action is permanent.`,
-            type: "danger",
-            confirmText: "Remove"
+    const handleDelete = () => {
+        startTransition(async () => {
+            const res = await deleteClientAction(client.id);
+            if (res && 'success' in res) {
+                success("Client removed successfully.");
+                setShowConfirm(false);
+            } else {
+                error("Removal failed.");
+            }
         });
-
-        if (confirmed) {
-            deleteMutation.mutate(client.id);
-        }
     };
 
     return (
-        <div className="clay-card p-6 space-y-5 animate-in fade-in zoom-in duration-500 fill-mode-both border-0">
+        <Card className="p-6 space-y-5 animate-in fade-in zoom-in duration-500 fill-mode-both border-0 shadow-lg">
             <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center border border-slate-100">
@@ -187,14 +188,8 @@ const ClientMobileCard = ({ client, onEdit }: { client: Client, onEdit: (client:
                     <Button variant="ghost" size="icon" onClick={() => onEdit(client)} className="h-9 w-9 rounded-xl text-slate-400">
                         <Edit3 size={16} />
                     </Button>
-                    <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        onClick={handleDelete} 
-                        disabled={deleteMutation.isPending}
-                        className="h-9 w-9 rounded-xl text-slate-400 hover:text-red-500"
-                    >
-                        {deleteMutation.isPending ? <Loader2 size={16} className="animate-spin text-red-500" /> : <Trash2 size={16} />}
+                    <Button variant="ghost" size="icon" onClick={() => setShowConfirm(true)} className="h-9 w-9 rounded-xl text-slate-400 hover:text-red-500">
+                        <Trash2 size={16} />
                     </Button>
                 </div>
             </div>
@@ -216,29 +211,29 @@ const ClientMobileCard = ({ client, onEdit }: { client: Client, onEdit: (client:
                 </div>
             </div>
 
-
-        </div>
+            {showConfirm && (
+                <div className="flex items-center justify-between gap-4 p-3 bg-red-50 rounded-2xl animate-reveal">
+                    <div className="flex items-center gap-2">
+                        <AlertTriangle className="h-4 w-4 text-red-500" />
+                        <span className="text-[10px] font-black text-red-600 uppercase tracking-widest">Delete client?</span>
+                    </div>
+                    <div className="flex gap-2">
+                        <Button variant="ghost" size="sm" onClick={() => setShowConfirm(false)} className="text-[10px] font-black">NO</Button>
+                        <Button variant="danger" size="sm" onClick={handleDelete} loading={isPending} className="text-[10px] font-black px-4">YES</Button>
+                    </div>
+                </div>
+            )}
+        </Card>
     );
 };
 
-export function ClientTable({ clients: initialClients }: ClientTableProps) {
+export function ClientTable({ clients }: ClientTableProps) {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "");
     const [editingClient, setEditingClient] = useState<Client | null>(null);
     const [isAdding, setIsAdding] = useState(false);
-
-    // React Query for live updates and searching
-    const { data: clients = initialClients, isLoading, isError } = useQuery({
-        queryKey: ["clients", searchTerm],
-        queryFn: async () => {
-            const { data } = await apiClient.get<Client[]>(`/api/clients?q=${searchTerm}`);
-            return data;
-        },
-        placeholderData: (previousData) => previousData,
-        staleTime: 30000,
-    });
 
     const handleSearch = (term: string) => {
         setSearchTerm(term);
@@ -254,23 +249,25 @@ export function ClientTable({ clients: initialClients }: ClientTableProps) {
     return (
         <div className="space-y-10">
             {/* Unified Modal Overlay */}
-            {(editingClient || isAdding) && (
-                <div className="fixed inset-0 z-100 h-full flex p-10 items-center justify-center bg-slate-900/60 backdrop-blur-xl animate-in fade-in duration-500">
-                    <div className="w-full max-w-4xl h-full overflow-y-auto">
-                        <ClientForm
-                            client={editingClient || undefined}
-                            onSuccess={() => {
-                                setEditingClient(null);
-                                setIsAdding(false);
-                            }}
-                            onCancel={() => {
-                                setEditingClient(null);
-                                setIsAdding(false);
-                            }}
-                        />
-                    </div>
-                </div>
-            )}
+            <Modal
+                isOpen={!!editingClient || isAdding}
+                onClose={() => {
+                    setEditingClient(null);
+                    setIsAdding(false);
+                }}
+            >
+                <ClientForm
+                    client={editingClient || undefined}
+                    onSuccess={() => {
+                        setEditingClient(null);
+                        setIsAdding(false);
+                    }}
+                    onCancel={() => {
+                        setEditingClient(null);
+                        setIsAdding(false);
+                    }}
+                />
+            </Modal>
 
             <Card className="p-6 shadow-none bg-transparent overflow-hidden rounded-3xl">
                 <CardHeader className="flex flex-col lg:flex-row items-center justify-between gap-8 px-0 py-6">
@@ -301,7 +298,7 @@ export function ClientTable({ clients: initialClients }: ClientTableProps) {
                 <CardContent className="p-0">
                     <ErrorBoundary name="Client Directory">
                         {clients.length === 0 ? (
-                            <div className="py-32 text-center clay-card animate-in fade-in zoom-in duration-700 bg-white">
+                            <Card className="py-32 text-center border-0 animate-in fade-in zoom-in duration-700 bg-white shadow-xl">
                                 <div className="mx-auto w-24 h-24 bg-slate-50 rounded-[2.5rem] flex items-center justify-center mb-8 shadow-inner">
                                     <UserMinus className="h-10 w-10 text-slate-300" />
                                 </div>
@@ -309,11 +306,11 @@ export function ClientTable({ clients: initialClients }: ClientTableProps) {
                                 <p className="text-sm font-bold text-slate-400 mt-3 max-w-sm mx-auto leading-relaxed uppercase tracking-widest opacity-60">
                                     No corporate records match your current criteria.
                                 </p>
-                            </div>
+                            </Card>
                         ) : (
                             <>
                                 {/* Desktop Table View */}
-                                <div className="hidden lg:block clay-card overflow-hidden border-0 bg-white">
+                                <Card className="hidden lg:block overflow-hidden border-0 bg-white shadow-2xl">
                                     <Table>
                                         <TableHeader className="bg-slate-50/50 border-b border-slate-100">
                                             <TableRow>
@@ -334,7 +331,7 @@ export function ClientTable({ clients: initialClients }: ClientTableProps) {
                                             ))}
                                         </TableBody>
                                     </Table>
-                                </div>
+                                </Card>
 
                                 {/* Mobile Grid View */}
                                 <div className="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-6 pb-20">

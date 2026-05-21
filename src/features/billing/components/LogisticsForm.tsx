@@ -1,11 +1,6 @@
-"use client";
-
 import { FileText, Truck, Package, CloudUpload } from 'lucide-react';
-import { useToast } from '@/context/ToastContext';
 
 export default function LogisticsForm({ logistics, setLogistics }: any) {
-  const { error } = useToast();
-  
   return (
     <div className="space-y-6">
       <div className="relative">
@@ -50,7 +45,7 @@ export default function LogisticsForm({ logistics, setLogistics }: any) {
                     setLogistics({ ...logistics, ewayBillUrl: data.url });
                 } catch (err) {
                     console.error('Upload Error:', err);
-                    error('Failed to upload EWAYbill to Cloudinary.');
+                    alert('Failed to upload EWAYbill to Cloudinary.');
                 }
             }} />
         </label>

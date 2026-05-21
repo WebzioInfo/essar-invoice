@@ -1,27 +1,17 @@
 import type { Metadata } from "next";
-import { Outfit, Inter } from "next/font/google";
+import { Suspense } from "react";
 import { ToastProvider } from "@/context/ToastContext";
-import { LenisProvider } from "@/components/providers/LenisProvider";
-import { QueryProvider } from "@/providers/QueryProvider";
+import { TransitionProvider } from "@/components/providers/TransitionProvider";
 import "./globals.css";
-
-const outfit = Outfit({
-  variable: "--font-outfit",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
-
-import { ConfirmDialog } from "@/ui/core/ConfirmDialog";
 
 export const metadata: Metadata = {
   title: "ESSAR Enterprises | ERP Command Center",
   description: "Internal Business Operations & Billing for ESSAR Enterprises",
 };
+
+import { ConfirmDialog } from "@/ui/core/ConfirmDialog";
+import { LoadingBar } from "@/ui/core/LoadingBar";
+import { NetworkActivityIndicator } from "@/ui/core/NetworkActivityIndicator";
 
 export default function RootLayout({
   children,
@@ -30,17 +20,24 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+      </head>
       <body
-        className={`${outfit.variable} ${inter.variable} font-sans antialiased selection:bg-primary-100 selection:text-primary-900 overflow-x-hidden`}
+        className="font-sans antialiased selection:bg-primary-100 selection:text-primary-900"
       >
-        <LenisProvider>
-          <QueryProvider>
-            <ToastProvider>
-              {children}
-              <ConfirmDialog />
-            </ToastProvider>
-          </QueryProvider>
-        </LenisProvider>
+        <ToastProvider>
+          <TransitionProvider>
+            <Suspense fallback={null}>
+              <LoadingBar />
+            </Suspense>
+            {children}
+            <ConfirmDialog />
+            <NetworkActivityIndicator />
+          </TransitionProvider>
+        </ToastProvider>
       </body>
     </html>
   );

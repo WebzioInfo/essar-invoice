@@ -18,10 +18,8 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/context/ToastContext";
 import { formatCurrency } from "@/utils/financials";
 import { ProductForm } from "./ProductForm";
-import { ErrorBoundary } from "@/ui/core/ErrorBoundary";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import apiClient from "@/lib/apiClient";
-import { useConfirmStore } from "@/hooks/useConfirmStore";
+import { ErrorBoundary } from "@/components/common/ErrorBoundary";
+import { Modal } from "@/ui/core/Modal";
 
 interface Product {
     id: string;
@@ -33,39 +31,30 @@ interface Product {
     gstRate: any; // Prisma Decimal
     unit: string;
     notes?: string | null;
+    currentStock: number;
 }
 
 interface ProductTableProps {
     products: Product[];
+    onSuccess?: () => void;
 }
 
-const ProductTableRow = ({ product, onEdit }: { product: Product, onEdit: (product: Product) => void }) => {
-    const queryClient = useQueryClient();
+const ProductTableRow = ({ product, onEdit, onSuccess }: { product: Product, onEdit: (product: Product) => void, onSuccess?: () => void }) => {
+    const [isPending, startTransition] = useTransition();
+    const [showConfirm, setShowConfirm] = useState(false);
     const { success, error } = useToast();
-    const { confirm } = useConfirmStore();
 
-    const deleteMutation = useMutation({
-        mutationFn: (id: string) => apiClient.delete(`/api/products/${id}`),
-        onSuccess: () => {
-            success("Catalog item removed successfully.");
-            queryClient.invalidateQueries({ queryKey: ["products"] });
-        },
-        onError: (err: any) => {
-            error(err.response?.data?.error || "Failed to delete item.");
-        }
-    });
-
-    const handleDelete = async () => {
-        const confirmed = await confirm({
-            title: "Delete Item",
-            message: `Are you sure you want to remove ${product.description} from the catalog? This is irreversible.`,
-            type: "danger",
-            confirmText: "Remove Item"
+    const handleDelete = () => {
+        startTransition(async () => {
+            const res = await deleteProductAction(product.id);
+            if (res && 'success' in res) {
+                success("Catalog item removed successfully.");
+                setShowConfirm(false);
+                if (onSuccess) onSuccess();
+            } else if (res && 'error' in res) {
+                error(res.error || "Failed to delete item.");
+            }
         });
-
-        if (confirmed) {
-            deleteMutation.mutate(product.id);
-        }
     };
 
     return (
@@ -107,6 +96,22 @@ const ProductTableRow = ({ product, onEdit }: { product: Product, onEdit: (produ
             </TableCell>
             <TableCell>
                 <div className="flex flex-col items-start gap-1">
+                    <span className={`text-lg font-black italic tabular-nums tracking-tighter ${product.currentStock <= 0 ? "text-rose-600" : "text-slate-900"}`}>
+                        {product.currentStock}
+                    </span>
+                    <div className="flex items-center gap-1.5">
+                        {product.currentStock <= 0 ? (
+                            <span className="flex items-center gap-1 px-2 py-0.5 bg-rose-50 rounded-lg text-[8px] font-black text-rose-600 uppercase tracking-widest border border-rose-100">
+                                <AlertTriangle className="w-2 h-2" /> OUT OF STOCK
+                            </span>
+                        ) : (
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest italic opacity-60">Current Reserve</span>
+                        )}
+                    </div>
+                </div>
+            </TableCell>
+            <TableCell>
+                <div className="flex flex-col items-start gap-1">
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-emerald-50 text-emerald-700 border border-emerald-100 italic shadow-sm">
                         {Number(product.gstRate)}% GST
                     </span>
@@ -114,62 +119,73 @@ const ProductTableRow = ({ product, onEdit }: { product: Product, onEdit: (produ
             </TableCell>
             <TableCell className="text-right pr-8">
                 <div className="flex items-center justify-end gap-2">
-                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all scale-95 group-hover:scale-100">
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => onEdit(product)}
-                            className="h-9 w-9 p-0 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-xl"
-                        >
-                            <Edit3 className="h-4 w-4" />
-                        </Button>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={handleDelete}
-                            disabled={deleteMutation.isPending}
-                            className="h-9 w-9 p-0 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl"
-                        >
-                            {deleteMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin text-red-500" /> : <Trash2 className="h-4 w-4" />}
-                        </Button>
-                    </div>
+                    {!showConfirm ? (
+                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all scale-95 group-hover:scale-100">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => onEdit(product)}
+                                className="h-9 w-9 p-0 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-xl"
+                            >
+                                <Edit3 className="h-4 w-4" />
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setShowConfirm(true)}
+                                className="h-9 w-9 p-0 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl"
+                            >
+                                <Trash2 className="h-4 w-4" />
+                            </Button>
+                        </div>
+                    ) : (
+                        <div className="flex items-center gap-2 animate-in fade-in slide-in-from-right-2">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 px-3 rounded-lg text-[10px] font-black uppercase"
+                                onClick={() => setShowConfirm(false)}
+                                disabled={isPending}
+                            >
+                                No
+                            </Button>
+                            <Button
+                                variant="danger"
+                                size="sm"
+                                className="h-8 px-4 rounded-lg text-[10px] font-black uppercase shadow-lg shadow-red-500/20"
+                                onClick={handleDelete}
+                                disabled={isPending}
+                            >
+                                {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "YES"}
+                            </Button>
+                        </div>
+                    )}
                 </div>
             </TableCell>
         </TableRow>
     );
 };
 
-const ProductMobileCard = ({ product, onEdit }: { product: Product, onEdit: (product: Product) => void }) => {
-    const queryClient = useQueryClient();
+const ProductMobileCard = ({ product, onEdit, onSuccess }: { product: Product, onEdit: (product: Product) => void, onSuccess?: () => void }) => {
+    const [isPending, startTransition] = useTransition();
+    const [showConfirm, setShowConfirm] = useState(false);
     const { success, error } = useToast();
-    const { confirm } = useConfirmStore();
 
-    const deleteMutation = useMutation({
-        mutationFn: (id: string) => apiClient.delete(`/api/products/${id}`),
-        onSuccess: () => {
-            success("Item removed successfully.");
-            queryClient.invalidateQueries({ queryKey: ["products"] });
-        },
-        onError: () => {
-            error("Removal failed.");
-        }
-    });
-
-    const handleDelete = async () => {
-        const confirmed = await confirm({
-            title: "Remov Catalog Item",
-            message: `Delete ${product.description}? You cannot undo this action.`,
-            type: "danger",
-            confirmText: "Purge Record"
+    const handleDelete = () => {
+        startTransition(async () => {
+            const res = await deleteProductAction(product.id);
+            if (res && 'success' in res) {
+                success("Item removed successfully.");
+                setShowConfirm(false);
+                if (onSuccess) onSuccess();
+            } else {
+                error("Removal failed.");
+            }
         });
-
-        if (confirmed) {
-            deleteMutation.mutate(product.id);
-        }
     };
 
     return (
-        <div className="clay-card p-6 space-y-6 animate-in fade-in zoom-in duration-500 fill-mode-both border-0">
+        <Card className="p-6 space-y-6 animate-in fade-in zoom-in duration-500 fill-mode-both border-0 shadow-lg">
             <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center border border-slate-100">
@@ -191,22 +207,23 @@ const ProductMobileCard = ({ product, onEdit }: { product: Product, onEdit: (pro
                     <Button variant="ghost" size="icon" onClick={() => onEdit(product)} className="h-10 w-10 rounded-2xl text-slate-400 bg-slate-50">
                         <Edit3 size={18} />
                     </Button>
-                    <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        onClick={handleDelete} 
-                        disabled={deleteMutation.isPending}
-                        className="h-10 w-10 rounded-2xl text-slate-400 hover:text-red-500 hover:bg-red-50"
-                    >
-                        {deleteMutation.isPending ? <Loader2 size={18} className="animate-spin text-red-500" /> : <Trash2 size={18} />}
+                    <Button variant="ghost" size="icon" onClick={() => setShowConfirm(true)} className="h-10 w-10 rounded-2xl text-slate-400 hover:text-red-500 hover:bg-red-50">
+                        <Trash2 size={18} />
                     </Button>
                 </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 pt-5 border-t border-slate-50">
+            <div className="grid grid-cols-3 gap-4 pt-5 border-t border-slate-50">
                 <div className="flex flex-col">
                     <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest mb-1 italic">Selling Price</span>
                     <span className="text-base font-black text-slate-900 italic tracking-tighter">{formatCurrency(Number(product.sellingRate))}</span>
+                </div>
+                <div className="flex flex-col">
+                    <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest mb-1 italic">Stock Level</span>
+                    <span className={`text-base font-black italic tracking-tighter ${product.currentStock <= 0 ? "text-rose-600" : "text-slate-900"}`}>
+                        {product.currentStock}
+                    </span>
+                    {product.currentStock <= 0 && <span className="text-[7px] font-black text-rose-500 uppercase">Alert</span>}
                 </div>
                 {product.sku && (
                     <div className="flex flex-col">
@@ -216,65 +233,63 @@ const ProductMobileCard = ({ product, onEdit }: { product: Product, onEdit: (pro
                 )}
             </div>
 
-
-        </div>
+            {showConfirm && (
+                <div className="flex items-center justify-between gap-4 p-4 bg-red-50 rounded-2xl border border-red-100 animate-reveal shadow-inner">
+                    <div className="flex items-center gap-2">
+                        <AlertTriangle className="h-4 w-4 text-red-500" />
+                        <span className="text-[10px] font-black text-red-600 uppercase tracking-[0.2em] italic">Purge record?</span>
+                    </div>
+                    <div className="flex gap-2">
+                        <Button variant="ghost" size="sm" onClick={() => setShowConfirm(false)} className="text-[10px] font-black text-slate-500">NO</Button>
+                        <Button variant="danger" size="sm" onClick={handleDelete} loading={isPending} className="text-[10px] font-black px-6 rounded-xl shadow-lg shadow-red-500/20">YES</Button>
+                    </div>
+                </div>
+            )}
+        </Card>
     );
 };
 
-export function ProductTable({ products: initialProducts }: ProductTableProps) {
+export function ProductTable({ products, onSuccess }: ProductTableProps) {
     const [searchTerm, setSearchTerm] = useState("");
     const [editingProduct, setEditingProduct] = useState<Product | null>(null);
     const [isAdding, setIsAdding] = useState(false);
 
-    // React Query for live updates and searching
-    const { data: products = initialProducts, isLoading } = useQuery({
-        queryKey: ["products", searchTerm],
-        queryFn: async () => {
-            const { data } = await apiClient.get<Product[]>(`/api/products?q=${searchTerm}`);
-            return data;
-        },
-        placeholderData: (previousData) => previousData,
-        staleTime: 30000,
-    });
-
-    const filtered = products; // Searching now handled via API query parameter for scalability
+    const filtered = products.filter(p =>
+        p.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.sku?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.hsn?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <div className="space-y-10">
             {/* Unified Modal Overlay */}
-            {(editingProduct || isAdding) && (
-                <div className="fixed inset-0 z-100 flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-xl animate-in fade-in duration-500">
-                    <div className="w-full max-w-4xl max-h-[95vh] overflow-y-auto custom-scrollbar">
-                        <ProductForm
-                            product={editingProduct || undefined}
-                            onSuccess={() => {
-                                setEditingProduct(null);
-                                setIsAdding(false);
-                            }}
-                            onCancel={() => {
-                                setEditingProduct(null);
-                                setIsAdding(false);
-                            }}
-                        />
-                    </div>
-                </div>
-            )}
+            <Modal
+                isOpen={!!editingProduct || isAdding}
+                onClose={() => {
+                    setEditingProduct(null);
+                    setIsAdding(false);
+                }}
+            >
+                <ProductForm
+                    product={editingProduct || undefined}
+                    onSuccess={() => {
+                        setEditingProduct(null);
+                        setIsAdding(false);
+                        if (onSuccess) onSuccess();
+                    }}
+                    onCancel={() => {
+                        setEditingProduct(null);
+                        setIsAdding(false);
+                    }}
+                />
+            </Modal>
 
             <Card className="border-0 shadow-none p-4 bg-transparent overflow-hidden rounded-3xl">
                 <CardHeader className="flex flex-col lg:flex-row items-center justify-between gap-8 px-0 py-6">
                     <div className="text-center lg:text-left">
                     </div>
 
-                    <div className="flex flex-col md:flex-row items-center gap-4 w-full lg:w-max">
-                        <div className="relative w-full md:w-80">
-                            <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300" />
-                            <Input
-                                placeholder="Search inventory..."
-                                className="pl-14 h-16 w-full"
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                            />
-                        </div>
+                    <div className="flex flex-col md:flex-row items-center justify-end gap-4 w-full">
                         <button
                             onClick={() => setIsAdding(true)}
                             className="w-full md:w-max h-16 px-10 bg-slate-900 text-white rounded-2xl font-black text-sm uppercase tracking-widest shadow-2xl hover:bg-primary-600 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3"
@@ -287,7 +302,7 @@ export function ProductTable({ products: initialProducts }: ProductTableProps) {
                 <CardContent className="p-0">
                     <ErrorBoundary name="Inventory Catalog">
                         {filtered.length === 0 ? (
-                            <div className="py-32 text-center clay-card border-0 animate-in fade-in zoom-in duration-700 bg-white">
+                            <Card className="py-32 text-center border-0 animate-in fade-in zoom-in duration-700 bg-white shadow-xl">
                                 <div className="mx-auto w-24 h-24 bg-slate-50 rounded-[2.5rem] flex items-center justify-center mb-8 border-2 border-dashed border-slate-200 shadow-inner">
                                     <ArchiveX className="h-10 w-10 text-slate-300" />
                                 </div>
@@ -295,17 +310,18 @@ export function ProductTable({ products: initialProducts }: ProductTableProps) {
                                 <p className="text-sm font-bold text-slate-400 mt-3 max-w-sm mx-auto leading-relaxed uppercase tracking-widest opacity-60">
                                     No master inventory records match your criteria.
                                 </p>
-                            </div>
+                            </Card>
                         ) : (
                             <>
                                 {/* Desktop Table View */}
-                                <div className="hidden lg:block clay-card overflow-hidden border-0 bg-white">
+                                <Card className="hidden lg:block overflow-hidden border-0 bg-white shadow-2xl">
                                     <Table>
                                         <TableHeader className="bg-slate-50/50 border-b border-slate-100">
                                             <TableRow>
-                                                <TableHead className="w-[50%] px-8 text-[10px] font-black uppercase tracking-[0.25em] italic">Product Specifications</TableHead>
+                                                <TableHead className="w-[40%] px-8 text-[10px] font-black uppercase tracking-[0.25em] italic">Product Specifications</TableHead>
                                                 <TableHead className="w-[15%] text-[10px] font-black uppercase tracking-[0.25em] italic">Base Rate</TableHead>
-                                                <TableHead className="w-[15%] text-[10px] font-black uppercase tracking-[0.25em] italic">Tax Class</TableHead>
+                                                <TableHead className="w-[15%] text-[10px] font-black uppercase tracking-[0.25em] italic">Stock Status</TableHead>
+                                                <TableHead className="w-[10%] text-[10px] font-black uppercase tracking-[0.25em] italic">Tax Class</TableHead>
                                                 <TableHead className="w-[20%] text-right px-8 text-[10px] font-black uppercase tracking-[0.25em] italic">Operations</TableHead>
                                             </TableRow>
                                         </TableHeader>
@@ -315,11 +331,12 @@ export function ProductTable({ products: initialProducts }: ProductTableProps) {
                                                     key={product.id}
                                                     product={product}
                                                     onEdit={setEditingProduct}
+                                                    onSuccess={onSuccess}
                                                 />
                                             ))}
                                         </TableBody>
                                     </Table>
-                                </div>
+                                </Card>
 
                                 {/* Mobile Grid View */}
                                 <div className="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-6 pb-20">
@@ -328,6 +345,7 @@ export function ProductTable({ products: initialProducts }: ProductTableProps) {
                                             key={product.id}
                                             product={product}
                                             onEdit={setEditingProduct}
+                                            onSuccess={onSuccess}
                                         />
                                     ))}
                                 </div>

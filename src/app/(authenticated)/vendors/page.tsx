@@ -1,19 +1,32 @@
-import { verifySessionCookie } from "@/lib/auth";
-import { redirect } from "next/navigation";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import { VendorTable } from "@/features/procurement/components/VendorTable";
-import { VendorService } from "@/features/procurement/services/VendorService";
 import { Building2 } from "lucide-react";
+import apiClient from "@/lib/apiClient";
+import { TableSkeleton } from "@/ui/core/Skeleton";
+import { toast } from "sonner";
 
-interface PageProps {
-    searchParams: Promise<{ q?: string }>;
-}
+export default function VendorsPage() {
+    const [vendors, setVendors] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
 
-export default async function VendorsPage({ searchParams }: PageProps) {
-    const session = await verifySessionCookie();
-    if (!session) redirect("/login");
+    useEffect(() => {
+        const fetchVendors = async () => {
+            try {
+                setLoading(true);
+                const res = await apiClient.get("/api/vendors/list");
+                setVendors(res.data);
+            } catch (error: any) {
+                toast.error("Failed to sync vendor directory.");
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchVendors();
+    }, []);
 
-    const vendorService = new VendorService();
-    const { data: vendors } = await vendorService.getAllVendors();
+    if (loading && vendors.length === 0) return <div className="p-8"><TableSkeleton /></div>;
 
     return (
         <div className="space-y-12 animate-in fade-in duration-700 pb-20">

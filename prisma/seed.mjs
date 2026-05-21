@@ -1,17 +1,18 @@
-import { PrismaClient } from '../src/db/generated/client/index.js'
-import * as argon2 from 'argon2'
+import { PrismaClient } from '@prisma/client'
+import bcrypt from 'bcryptjs'
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: process.env.DATABASE_URL + (process.env.DATABASE_URL?.includes('?') ? '&' : '?') + 'connection_limit=1&pool_timeout=30'
+    }
+  }
+})
 
 async function main() {
   const email = 'admin@essar.com'
   const password = 'admin123'
-  const hashedPassword = await argon2.hash(password, {
-    type: argon2.argon2id,
-    memoryCost: 65536,
-    timeCost: 3,
-    parallelism: 4
-  })
+  const hashedPassword = await bcrypt.hash(password, 10)
 
   console.log(`Seeding user: ${email}...`)
 
@@ -30,6 +31,31 @@ async function main() {
   })
 
   console.log(`User seeded: ${user.email} (ID: ${user.id})`)
+
+  // --- Seed Company Settings ---
+  console.log('Seeding company settings...')
+  const settings = await prisma.companySetting.upsert({
+    where: { id: 'default-settings' },
+    update: {},
+    create: {
+      id: 'default-settings',
+      companyName: "ESSAR ENTERPRISES",
+      gstin: "32BMAPJ5504M1Z9",
+      address1: "MP 4/3 IIA, MOONIYUR",
+      address2: "VELIMUKKU PO, MALAPPURAM DIST",
+      city: "Malappuram",
+      pincode: "676317",
+      phone: "+91 85531 85300",
+      email: "essarwater.info@gmail.com",
+      bankName: "FEDERAL BANK",
+      bankBranch: "CHELARI",
+      bankAccountNo: "16470200011150 ",
+      bankIfsc: "FDRL0001647",
+      bankAccountName: "ESSAR ENTERPRISES",
+      showPkgDetails: true
+    }
+  })
+  console.log(`Company settings seeded: ${settings.companyName}`)
 }
 
 main()

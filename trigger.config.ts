@@ -1,10 +1,11 @@
 import { defineConfig } from "@trigger.dev/sdk/v3";
+import { prismaExtension } from "@trigger.dev/build/extensions/prisma";
 
 export default defineConfig({
-  project: "essar-invoice",
-  runtime: "node",
-  logLevel: "log",
-  maxDuration: 60,
-  // The directories where your Trigger.dev tasks are located
+  project: "essar-erp",
   dirs: ["./src/trigger"],
+  maxDuration: 3600,
+  build: {
+    extensions: [prismaExtension({ mode: "legacy", schema: "prisma/schema.prisma" })],
+  },
 });

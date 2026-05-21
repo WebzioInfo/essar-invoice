@@ -3,6 +3,7 @@
 import { verifySessionVerified } from "@/lib/auth-server";
 import { revalidatePath } from "next/cache";
 import { QuotationService } from "../services/QuotationService";
+import { QuotationStatus } from "../types";
 import { handleActionError } from "@/lib/validation";
 import { db } from "@/db/prisma/client";
 
@@ -39,7 +40,9 @@ export async function convertQuotationToInvoiceAction(formData: FormData) {
     }
 }
 
-export async function updateQuotationStatusAction(quotationId: string, status: string) {
+
+
+export async function updateQuotationStatusAction(quotationId: string, status: QuotationStatus) {
     const session = await verifySessionVerified();
     if (!session) throw new Error("Unauthorized");
 
@@ -50,6 +53,48 @@ export async function updateQuotationStatusAction(quotationId: string, status: s
         });
         revalidatePath(`/quotations/${quotationId}`);
         revalidatePath("/quotations");
+        return { success: true };
+    } catch (error: any) {
+        return handleActionError(error);
+    }
+}
+
+export async function deleteQuotationAction(quotationId: string) {
+    const session = await verifySessionVerified();
+    if (!session) throw new Error("Unauthorized");
+
+    try {
+        await QuotationService.softDeleteQuotation(quotationId, session.userId);
+        revalidatePath("/quotations");
+        revalidatePath("/dashboard");
+        return { success: true };
+    } catch (error: any) {
+        return handleActionError(error);
+    }
+}
+
+export async function restoreQuotationAction(quotationId: string) {
+    const session = await verifySessionVerified();
+    if (!session) throw new Error("Unauthorized");
+
+    try {
+        await QuotationService.restoreQuotation(quotationId, session.userId);
+        revalidatePath("/quotations");
+        revalidatePath("/dashboard");
+        return { success: true };
+    } catch (error: any) {
+        return handleActionError(error);
+    }
+}
+
+export async function permanentlyDeleteQuotationAction(quotationId: string) {
+    const session = await verifySessionVerified();
+    if (!session) throw new Error("Unauthorized");
+
+    try {
+        await QuotationService.permanentlyDeleteQuotation(quotationId, session.userId);
+        revalidatePath("/quotations");
+        revalidatePath("/dashboard");
         return { success: true };
     } catch (error: any) {
         return handleActionError(error);

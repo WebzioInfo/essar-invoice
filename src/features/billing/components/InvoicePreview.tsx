@@ -2,6 +2,7 @@ import { formatDateDMY } from '@/utils/date';
 import { numberToWords } from '@/utils/financials';
 import { Invoice } from '@/types/invoice';
 import React from 'react';
+import Image from 'next/image';
 
 
 interface Props {
@@ -39,11 +40,15 @@ export default function InvoicePreview({ invoice }: Props) {
     0
   );
 
+  const fAmount = Number(invoice.freightAmount || 0);
+  const fTaxPercent = Number(invoice.freightTaxPercent || 0);
+  const fTax = (fAmount * fTaxPercent) / 100;
+
   const gstTotal = showGST
     ? items.reduce(
       (s: number, p: any) => s + Number(p.taxAmount || 0),
       0
-    )
+    ) + fTax
     : 0;
 
   let cgst = 0,
@@ -59,9 +64,10 @@ export default function InvoicePreview({ invoice }: Props) {
     igst = gstTotal;
   }
 
-  const gross = subTotal + gstTotal;
+  const gross = subTotal + gstTotal + fAmount;
   const rounded = Math.round(gross);
   const roundOff = rounded - gross;
+
 
   return (
     <div className="bg-white p-12 text-sm max-w-4xl mx-auto border shadow-sm print:shadow-none print:border-0" style={{ fontFamily: "'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" }}>
@@ -69,18 +75,20 @@ export default function InvoicePreview({ invoice }: Props) {
       {/* HEADER WITH LOGO & TITLE */}
       <div className="flex justify-between items-start mb-10 pb-8 border-b border-slate-100">
         <div className="flex items-start gap-5">
-          <img
+          <Image
             src="/logo.png"
             alt="Company Logo"
-            className="w-32 h-20 object-contain"
+            width={128}
+            height={80}
+            className="object-contain"
+            priority
           />
           <div className="space-y-1">
             <h2 className="text-2xl font-black text-slate-900 tracking-tight leading-none uppercase">ESSAR Enterprises</h2>
             <div className="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-relaxed">
-              SITE NO.9, SEEGAHALLI VILLAGE<br />
-              KR PURAM HOBLI,<br />
-              BANGALORE - 560049, KARNATAKA<br />
-              <span className="text-slate-900">GSTIN: 29AOPPM7487J1ZV</span><br />
+              MP 4/3 IIA, MOONIYUR<br />
+              VELIMUKKU PO, MALAPPURAM DIST - 676317<br />
+              <span className="text-slate-900">GSTIN: 32BMAPJ5504M1Z9</span><br />
               Mobile: +91 85531 85300 | Email: essarwater.info@gmail.com
             </div>
           </div>
@@ -147,6 +155,12 @@ export default function InvoicePreview({ invoice }: Props) {
             {invoice.vehicleNo && (
               <div className="bg-slate-100 px-2 py-1 rounded text-[9px] font-bold text-slate-500 border border-slate-200 uppercase tracking-widest">V#: {invoice.vehicleNo}</div>
             )}
+            {invoice.isFreightCollect && (
+              <div className="bg-primary-950 px-2 py-1 rounded text-[9px] font-black text-white border border-primary-900 uppercase tracking-widest italic flex items-center gap-1.5">
+                <div className="w-1.5 h-1.5 bg-primary-400 rounded-full animate-pulse" />
+                Freight Collect
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -157,6 +171,7 @@ export default function InvoicePreview({ invoice }: Props) {
           <thead>
             <tr className="bg-slate-950 text-white font-mono uppercase tracking-[0.2em] text-[9px]">
               <th className="p-4 text-center border-r border-white/10">Sl</th>
+              <th className="p-4 text-center border-r border-white/10 whitespace-pre-line leading-tight">No. & Kind{"\n"}of Pkgs</th>
               <th className="p-4 text-left border-r border-white/10">Description of Goods</th>
               <th className="p-4 text-center border-r border-white/10">HSN</th>
               <th className="p-4 text-center border-r border-white/10">Qty</th>
@@ -166,23 +181,42 @@ export default function InvoicePreview({ invoice }: Props) {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {items.map((p: any, i: number) => (
-              <tr key={i} className="hover:bg-slate-50 transition-colors">
-                <td className="p-4 text-center border-r border-slate-100 font-bold text-slate-400">{i + 1}</td>
-                <td className="p-4 border-r border-slate-100 font-bold text-slate-900 italic">{p.description}</td>
-                <td className="p-4 text-center border-r border-slate-100 font-mono text-slate-400">{p.hsn || '-'}</td>
-                <td className="p-4 text-center border-r border-slate-100 font-black text-slate-800">
-                  {Number(p.qty || 0).toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 3 })} {p.unit || "NOS"}
-                </td>
-                <td className="p-4 text-right border-r border-slate-100 font-bold">Rs. {Number(p.rate || 0).toFixed(2)}</td>
-                {showGST && (
-                  <td className="p-4 text-center border-r border-slate-100 font-bold">{Number(p.taxPercent || p.gstRate || 0)}%</td>
-                )}
-                <td className="p-4 text-right font-black text-slate-950">
-                  Rs. {((p.qty || 0) * Number(p.rate || 0)).toFixed(2)}
-                </td>
-              </tr>
-            ))}
+            {items.map((p: any, i: number) => {
+              const prod = p.product;
+              const pkgCount = Number(p.pkgCount || 0);
+              const perBox = Number(p.qtyPerBox || prod?.qtyPerBox || 0);
+              const unit = (p.unit && p.unit !== "NOS") ? p.unit : (prod?.unit || "NOS");
+
+              const pkgTypeRaw = (p.pkgType || prod?.pkgType || "BOX").toUpperCase();
+              const pkgType = pkgCount > 1 
+                ? (pkgTypeRaw.endsWith('X') ? `${pkgTypeRaw}ES` : `${pkgTypeRaw}S`)
+                : pkgTypeRaw;
+              
+              const pkgDisplay = (pkgCount > 0 && perBox > 0)
+                ? `${pkgCount} ${pkgType}\nX ${perBox} ${unit}`
+                : (pkgCount > 0 ? `${pkgCount} ${pkgType}` : "-");
+
+              return (
+                <tr key={i} className="hover:bg-slate-50 transition-colors">
+                  <td className="p-4 text-center border-r border-slate-100 font-bold text-slate-400">{i + 1}</td>
+                  <td className="p-4 border-r border-slate-100 text-center text-slate-900 uppercase">
+                    {pkgDisplay}
+                  </td>
+                  <td className="p-4 border-r border-slate-100 text-slate-900 italic">{p.description}</td>
+                  <td className="p-4 text-center border-r border-slate-100 font-mono text-slate-400">{p.hsn || '-'}</td>
+                  <td className="p-4 text-center border-r border-slate-100 font-black text-slate-800">
+                    {Number(p.qty || 0).toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 3 })} {p.unit || "NOS"}
+                  </td>
+                  <td className="p-4 text-right border-r border-slate-100 font-bold">Rs. {Number(p.rate || 0).toFixed(2)}</td>
+                  {showGST && (
+                    <td className="p-4 text-center border-r border-slate-100 font-bold">{Number(p.taxPercent || p.gstRate || 0)}%</td>
+                  )}
+                  <td className="p-4 text-right font-black text-slate-950">
+                    Rs. {((p.qty || 0) * Number(p.rate || 0)).toFixed(2)}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -203,6 +237,13 @@ export default function InvoicePreview({ invoice }: Props) {
             <span>Subtotal Value</span>
             <span className="text-slate-900 font-black">Rs. {subTotal.toFixed(2)}</span>
           </div>
+
+          {fAmount > 0 && (
+            <div className="flex justify-between text-xs font-bold text-slate-400 uppercase tracking-widest px-4">
+              <span>Freight Amount {invoice.isFreightCollect ? '(Collect)' : ''}</span>
+              <span className="text-slate-900 font-black">Rs. {fAmount.toFixed(2)}</span>
+            </div>
+          )}
 
           {cgst > 0 && (
             <>
@@ -256,11 +297,11 @@ export default function InvoicePreview({ invoice }: Props) {
             </div>
             <div className="flex justify-between border-b border-slate-200/50 pb-1.5 font-mono">
               <span className="font-bold text-slate-400 uppercase tracking-widest">Identifier 1</span>
-              <span className="font-black text-slate-900 font-mono tracking-tighter text-xs underline decoration-primary-500/20 underline-offset-4">21650200003173</span>
+              <span className="font-black text-slate-900 font-mono tracking-tighter text-xs underline decoration-primary-500/20 underline-offset-4">16470200011150 </span>
             </div>
             <div className="flex justify-between font-mono">
               <span className="font-bold text-slate-400 uppercase tracking-widest text-[9px]">IFSC PROTOCOL</span>
-              <span className="font-black text-slate-900 font-mono tracking-widest text-xs uppercase">FDRL0002165</span>
+              <span className="font-black text-slate-900 font-mono tracking-widest text-xs uppercase">FDRL0001647</span>
             </div>
           </div>
         </div>

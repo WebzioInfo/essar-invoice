@@ -30,6 +30,7 @@ export default async function EditInvoicePage({ params }: PageProps) {
             grandTotal: true,
             status: true,
             ewayBill: true,
+            ewayBillUrl: true,
             vehicleNo: true,
             notes: true,
             billingName: true,
@@ -45,7 +46,9 @@ export default async function EditInvoicePage({ params }: PageProps) {
             shippingState: true,
             shippingPinCode: true,
             shippingSameAsBilling: true,
-            lineItems: true
+            lineItems: {
+                include: { product: true }
+            }
         }
     });
 

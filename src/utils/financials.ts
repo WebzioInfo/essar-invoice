@@ -53,21 +53,39 @@ export interface BillingTotals {
     subTotal: number;
     taxTotal: number;
     grandTotal: number;
+    roundOff?: number;
 }
 
 /**
- * Aggregates a list of line items into final billing totals.
+ * Aggregates a list of line items and optional freight into final billing totals.
  */
-export function calculateBillingTotals(items: { qty: number; rate: number; taxPercent: number }[]): BillingTotals {
-    return items.reduce((acc, item) => {
+export function calculateBillingTotals(
+    items: { qty: number; rate: number; taxPercent: number }[],
+    freightAmount: number = 0,
+    freightTaxPercent: number = 0
+): BillingTotals {
+    const totals = items.reduce((acc, item) => {
         const { amount, taxAmount } = calculateItemTotals(item.qty, item.rate, item.taxPercent);
         
         acc.subTotal = roundTo2(acc.subTotal + amount);
         acc.taxTotal = roundTo2(acc.taxTotal + taxAmount);
-        acc.grandTotal = roundTo2(acc.subTotal + acc.taxTotal);
         
         return acc;
     }, { subTotal: 0, taxTotal: 0, grandTotal: 0 });
+
+    // Add Freight
+    const fAmount = roundTo2(freightAmount);
+    const fTax = roundTo2((fAmount * freightTaxPercent) / 100);
+
+    totals.subTotal = roundTo2(totals.subTotal + fAmount);
+    totals.taxTotal = roundTo2(totals.taxTotal + fTax);
+    const rawGrandTotal = totals.subTotal + totals.taxTotal;
+    totals.grandTotal = Math.round(rawGrandTotal);
+    
+    // Add roundOff property
+    (totals as any).roundOff = roundTo2(totals.grandTotal - rawGrandTotal);
+
+    return totals as BillingTotals;
 }
 
 /**
@@ -104,4 +122,78 @@ export function numberToWords(num: number): string {
     }
 
     return result ? result + " Only" : "Zero Rupees Only";
+}
+
+/**
+ * Formats a date into Indian medium style (e.g., 03-May-2026).
+ */
+export function fmtDate(d: Date | string | null): string {
+    if (!d) return "N/A";
+    try {
+        return new Intl.DateTimeFormat("en-IN", { dateStyle: "medium" }).format(new Date(d));
+    } catch (e) {
+        return "Invalid Date";
+    }
+}
+
+/**
+ * Maps technical ledger/reference types to user-friendly business terms.
+ */
+export function getBusinessLabel(type: string | null | undefined, debitAccountType?: string, creditAccountType?: string): string {
+    if (!type) return 'Ledger Entry';
+
+    const mapping: Record<string, string> = {
+        'PAYMENT_RECEIVED': 'Collection Received',
+        'PAYMENT_MADE': 'Settlement Paid',
+        'PAYMENT': 'Payment',
+        'EXPENSE': 'Business Expense',
+        'INVOICE': 'Sales Invoice',
+        'PURCHASE': 'Stock Purchase',
+        'OPENING_BALANCE': 'Opening Standing',
+        'FOUNDER_CONTRIBUTION': 'Capital Infusion',
+        'FOUNDER_WITHDRAWAL': 'Owner Withdrawal',
+        'ADJUSTMENT': 'Ledger Correction',
+        'TRANSFER': 'Internal Transfer',
+        'ADVANCE': 'Direct Advance',
+    };
+
+    if (type === 'PAYMENT' || type === 'PAYMENT_RECEIVED') {
+        if (creditAccountType === 'CLIENT') return 'Collection Received';
+        if (debitAccountType === 'SUPPLIER') return 'Supplier Settlement';
+    }
+
+    if (type === 'TRANSFER') {
+        if (debitAccountType === 'CASH' && creditAccountType === 'BANK') return 'Cash Withdrawal';
+        if (debitAccountType === 'BANK' && creditAccountType === 'CASH') return 'Cash Deposit';
+    }
+
+    return mapping[type] || mapping[type.replace('_', ' ')] || type;
+}
+
+/**
+ * Standardized Financial Summary Calculation.
+ */
+export function calculatePartySummary(invoices: { total: number; paid: number }[], payments: { amount: number; allocated: number }[]) {
+    const outstanding = roundTo2(invoices.reduce((sum, inv) => sum + (inv.total - inv.paid), 0));
+    const advance = roundTo2(payments.reduce((sum, p) => sum + (p.amount - p.allocated), 0));
+    
+    return {
+        outstanding,
+        advance,
+        netBalance: roundTo2(outstanding - advance)
+    };
+}
+
+/**
+ * Maps account types to business-friendly labels.
+ */
+export function getAccountLabel(type: string): string {
+    const mapping: Record<string, string> = {
+        'EQUITY': 'Owner Account',
+        'CASH': 'Cash in Hand',
+        'BANK': 'Bank Account',
+        'CLIENT': 'Client (Receivable)',
+        'SUPPLIER': 'Supplier (Payable)',
+    };
+    return mapping[type] || type;
 }

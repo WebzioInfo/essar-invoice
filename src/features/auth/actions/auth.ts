@@ -1,8 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import * as argon2 from "argon2";
-
+import { hash, compare } from "bcryptjs";
 import { db } from "@/db/prisma/client";
 import { Prisma } from "@prisma/client";
 import { createSessionCookie } from "@/lib/auth";
@@ -36,19 +35,14 @@ export async function signupAction(formData: FormData) {
       return { error: "User with this email already exists" };
     }
 
-    const passwordHash = await argon2.hash(password, {
-      type: argon2.argon2id,
-      memoryCost: 65536,
-      timeCost: 3,
-      parallelism: 4
-    });
+    const passwordHash = await hash(password, 10);
 
     // Create User
     const user = await db.user.create({
       data: {
         email,
         passwordHash,
-        role: "OWNER",
+        role: "ADMIN",
       },
     });
 
@@ -83,14 +77,10 @@ export async function loginAction(formData: FormData) {
       return { error: "Invalid email or password" };
     }
 
-    // Verify with Argon2
-    const isValid = await argon2.verify(user.passwordHash, password);
-
+    const isValid = await compare(password, user.passwordHash);
     if (!isValid) {
       return { error: "Invalid email or password" };
     }
-
-
 
     await createSessionCookie({
       userId: user.id,

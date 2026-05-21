@@ -7,55 +7,42 @@ import { Client } from "@/features/clients/types";
 import { 
     Building2, Calendar, FileText, Truck, 
     ShieldCheck, HelpCircle, Info, MapPin, 
-    ChevronDown, ChevronUp, CheckSquare, Square
+    ChevronDown, ChevronUp, CheckSquare, Square, CloudUpload, Loader2
 } from "lucide-react";
 import { cn } from "@/utils";
 import { Address } from "@/types/invoice";
 import BillingForm from "./BillingForm";
 import ShippingForm from "./ShippingForm";
 
+import { useTransactionStore } from "@/lib/store/transactionStore";
+
 interface InvoiceDetailsCardProps {
     clients: Client[];
-    state: {
-        clientId: string;
-        date: string;
-        validUntil: string;
-        gstType: string;
-        ewayBill: string;
-        vehicleNo: string;
-        notes: string;
-        billingAddress: Address;
-        shippingAddress: Address;
-        shippingSameAsBilling: boolean;
-        invoiceNo: string;
-    };
-    mode?: "INVOICE" | "QUOTATION";
-    setClientId: (val: string) => void;
-    setDate: (val: string) => void;
-    setValidUntil: (val: string) => void;
-    setGstType: (val: any) => void;
-    setInvoiceNo: (val: string) => void;
-    setEwayBill: (val: string) => void;
-    setVehicleNo: (val: string) => void;
-    setNotes: (val: string) => void;
-    setBillingAddress: (val: Address) => void;
-    setShippingAddress: (val: Address) => void;
-    setShippingSameAsBilling: (val: boolean) => void;
 }
 
 export function InvoiceDetailsCard({
-    clients, state, mode = "INVOICE",
-    setClientId, setDate, setValidUntil,
-    setGstType, setInvoiceNo, setEwayBill, setVehicleNo, setNotes,
-    setBillingAddress, setShippingAddress, setShippingSameAsBilling
+    clients
 }: InvoiceDetailsCardProps) {
-    const { 
-        clientId, date, validUntil, gstType, 
-        invoiceNo, ewayBill, vehicleNo, notes,
-        billingAddress, shippingAddress, shippingSameAsBilling
-    } = state;
+    const mode = useTransactionStore(s => s.mode);
+    const clientId = useTransactionStore(s => s.entityId);
+    const date = useTransactionStore(s => s.date);
+    const validUntil = useTransactionStore(s => s.validUntil);
+    const gstType = useTransactionStore(s => s.gstType);
+    const invoiceNo = useTransactionStore(s => s.invoiceNo);
+    const ewayBill = useTransactionStore(s => s.ewayBill);
+    const vehicleNo = useTransactionStore(s => s.vehicleNo);
+    const notes = useTransactionStore(s => s.notes);
+    const billingAddress = useTransactionStore(s => s.billingAddress);
+    const shippingAddress = useTransactionStore(s => s.shippingAddress);
+    const shippingSameAsBilling = useTransactionStore(s => s.shippingSameAsBilling);
+    const ewayBillUrl = useTransactionStore(s => s.ewayBillUrl);
+    const isFreightCollect = useTransactionStore(s => s.isFreightCollect);
+
+    const setField = useTransactionStore(s => s.setField);
+    const setEntityId = useTransactionStore(s => s.setEntityId);
 
     const [showAddresses, setShowAddresses] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
 
 
     return (
@@ -89,7 +76,7 @@ export function InvoiceDetailsCard({
                         <select
                             className="flex w-full rounded-2xl border-0 bg-white px-4 py-3 text-sm shadow-sm ring-1 ring-slate-200 transition-all placeholder:text-slate-400 focus:ring-2 focus:ring-primary-500/20 focus:outline-none hover:ring-slate-300 appearance-none h-[46px]"
                             value={clientId}
-                            onChange={e => setClientId(e.target.value)}
+                            onChange={e => setEntityId(e.target.value)}
                         >
                             <option value="">Select a Client...</option>
                             {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -107,7 +94,7 @@ export function InvoiceDetailsCard({
                                 label="Document Date"
                                 type="date"
                                 value={date}
-                                onChange={e => setDate(e.target.value)}
+                                onChange={e => setField("date", e.target.value)}
                                 icon={<Calendar size={16} />}
                                 required
                             />
@@ -116,7 +103,7 @@ export function InvoiceDetailsCard({
                                     label="Valid Until"
                                     type="date"
                                     value={validUntil}
-                                    onChange={e => setValidUntil(e.target.value)}
+                                    onChange={e => setField("validUntil", e.target.value)}
                                     className="border-amber-100"
                                     icon={<Calendar size={16} className="text-amber-500" />}
                                 />
@@ -125,7 +112,7 @@ export function InvoiceDetailsCard({
                                 <Input
                                     label="Invoice Number"
                                     value={invoiceNo}
-                                    onChange={e => setInvoiceNo(e.target.value)}
+                                    onChange={e => setField("invoiceNo", e.target.value)}
                                     placeholder="Leave blank for auto-gen"
                                     icon={<Info size={14} className="text-primary-400" />}
                                 />
@@ -145,11 +132,11 @@ export function InvoiceDetailsCard({
                         <select
                             className="flex w-full rounded-2xl border-0 bg-slate-50 px-4 py-3 text-sm shadow-sm ring-1 ring-slate-200 transition-all focus:ring-2 focus:ring-primary-500/20 focus:outline-none hover:ring-slate-300 appearance-none h-[46px] font-bold"
                             value={gstType}
-                            onChange={e => setGstType(e.target.value)}
+                            onChange={e => setField("gstType", e.target.value as any)}
                         >
                             <option value="CGST_SGST">Intra-state (9+9)</option>
                             <option value="IGST">Inter-state (18%)</option>
-                            <option value="NO_GST">Exempted (0%)</option>
+                            <option value="NONE">Exempted (0%)</option>
                         </select>
                     </div>
 
@@ -203,7 +190,7 @@ export function InvoiceDetailsCard({
                                     </div>
                                     <BillingForm 
                                         billing={billingAddress} 
-                                        setBilling={setBillingAddress} 
+                                        setBilling={(addr) => setField("billingAddress", addr)} 
                                     />
                                 </div>
 
@@ -214,7 +201,7 @@ export function InvoiceDetailsCard({
                                         </h4>
                                         <button
                                             type="button"
-                                            onClick={() => setShippingSameAsBilling(!shippingSameAsBilling)}
+                                            onClick={() => setField("shippingSameAsBilling", !shippingSameAsBilling)}
                                             className="flex items-center gap-1.5 transition-all"
                                         >
                                             {shippingSameAsBilling ? <CheckSquare size={14} className="text-primary-600" /> : <Square size={14} className="text-slate-300" />}
@@ -226,7 +213,7 @@ export function InvoiceDetailsCard({
                                         <div className="animate-in zoom-in-95 duration-300">
                                             <ShippingForm 
                                                 shipping={shippingAddress} 
-                                                setShipping={setShippingAddress} 
+                                                setShipping={(addr) => setField("shippingAddress", addr)} 
                                             />
                                         </div>
                                     )}
@@ -244,33 +231,105 @@ export function InvoiceDetailsCard({
                     </div>
 
                     {/* Logistics & Notes */}
-                    <div className="md:col-span-12 grid grid-cols-1 lg:grid-cols-3 gap-6 pt-6 border-t border-slate-100">
+                    <div className="md:col-span-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-6 border-t border-slate-100">
                         {mode === "INVOICE" && (
                             <>
                                 <Input
                                     label="E-Way Bill Number"
                                     value={ewayBill}
-                                    onChange={e => setEwayBill(e.target.value)}
+                                    onChange={e => setField("ewayBill", e.target.value)}
                                     placeholder="Optional"
                                     icon={<Truck size={16} />}
                                 />
                                 <Input
                                     label="Vehicle Registration"
                                     value={vehicleNo}
-                                    onChange={e => setVehicleNo(e.target.value)}
+                                    onChange={e => setField("vehicleNo", e.target.value)}
                                     placeholder="e.g. AS-01-XX-1234"
                                     icon={<Truck size={16} />}
                                 />
+                                {/* Cloudinary Upload for E-Way Bill */}
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">E-Way Bill Document</label>
+                                    <label className={cn(
+                                        "flex flex-col items-center justify-center w-full h-[46px] rounded-2xl border-2 border-dashed transition-all cursor-pointer group",
+                                        ewayBillUrl ? 'border-emerald-200 bg-emerald-50/30' : 'border-slate-200 bg-slate-50/50 hover:bg-white hover:border-primary-200'
+                                    )}>
+                                            <div className="flex items-center gap-3">
+                                                {isUploading ? (
+                                                    <Loader2 className="w-5 h-5 text-primary-500 animate-spin" />
+                                                ) : (
+                                                    <CloudUpload className={cn(
+                                                        "w-5 h-5 transition-colors",
+                                                        ewayBillUrl ? 'text-emerald-500' : 'text-slate-400 group-hover:text-primary-500'
+                                                    )} />
+                                                )}
+                                                <p className={cn(
+                                                    "text-[10px] font-black uppercase tracking-widest transition-colors",
+                                                    isUploading ? 'text-primary-600' : (ewayBillUrl ? 'text-emerald-600' : 'text-slate-500 group-hover:text-primary-600')
+                                                )}>
+                                                    {isUploading ? 'Uploading System Doc...' : (ewayBillUrl ? 'Attached Successfully' : 'Upload PDF/Image')}
+                                                </p>
+                                            </div>
+                                        <input type="file" className="hidden" onChange={async (e) => {
+                                            const file = e.target.files?.[0];
+                                            if (!file) return;
+
+                                            const formData = new FormData();
+                                            formData.append('file', file);
+                                            setIsUploading(true);
+
+                                            try {
+                                                const res = await fetch('/api/upload', {
+                                                    method: 'POST',
+                                                    body: formData
+                                                });
+
+                                                if (!res.ok) {
+                                                    const errorData = await res.json();
+                                                    throw new Error(errorData.error || 'Upload failed');
+                                                }
+                                                const data = await res.json();
+                                                setField('ewayBillUrl', data.url);
+                                            } catch (err: any) {
+                                                console.error('Upload Error:', err);
+                                                alert(`Upload Failed: ${err.message}`);
+                                            } finally {
+                                                setIsUploading(false);
+                                            }
+                                        }} />
+                                    </label>
+                                </div>
                             </>
                         )}
-                        <div className={cn("space-y-2", mode === "QUOTATION" ? "lg:col-span-3" : "lg:col-span-1")}>
-                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Internal Notes</label>
-                            <textarea
-                                className="flex w-full rounded-2xl border-0 bg-white px-4 py-3 text-sm shadow-sm ring-1 ring-slate-200 transition-all placeholder:text-slate-400 focus:ring-2 focus:ring-primary-500/20 focus:outline-none hover:ring-slate-300 resize-none h-[46px]"
-                                value={notes}
-                                onChange={e => setNotes(e.target.value)}
-                                placeholder="Ref tags, PO number, etc."
-                            />
+                        <div className={cn("space-y-4 col-span-1 sm:col-span-2 lg:col-span-2", mode === "QUOTATION" ? "lg:col-span-3" : "")}>
+                            <div className="flex flex-col space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Internal Notes</label>
+                                <textarea
+                                    className="flex w-full rounded-2xl border-0 bg-white px-4 py-3 text-sm shadow-sm ring-1 ring-slate-200 transition-all placeholder:text-slate-400 focus:ring-2 focus:ring-primary-500/20 focus:outline-none hover:ring-slate-300 resize-none h-[46px]"
+                                    value={notes}
+                                    onChange={e => setField("notes", e.target.value)}
+                                    placeholder="Ref tags, PO number, etc."
+                                />
+                            </div>
+                        </div>
+                        <div className="col-span-1 sm:col-span-2 lg:col-span-1 flex items-end">
+                            <button
+                                type="button"
+                                onClick={() => setField("isFreightCollect", !isFreightCollect)}
+                                className={cn(
+                                    "flex items-center gap-3 px-6 w-full h-[46px] rounded-2xl border-2 transition-all group",
+                                    isFreightCollect 
+                                        ? "bg-slate-900 border-slate-900 text-white shadow-xl shadow-slate-900/20" 
+                                        : "bg-white border-slate-100 text-slate-400 hover:border-slate-200"
+                                )}
+                            >
+                                {isFreightCollect ? <CheckSquare className="w-5 h-5 text-primary-400" /> : <Square className="w-5 h-5 opacity-20" />}
+                                <div className="text-left">
+                                    <p className="text-[9px] font-black uppercase tracking-widest leading-none mb-1 opacity-60">Logistics Term</p>
+                                    <p className="text-xs font-black uppercase italic tracking-tighter leading-none">Freight Collect</p>
+                                </div>
+                            </button>
                         </div>
                     </div>
                 </div>

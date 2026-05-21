@@ -56,14 +56,6 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
                             </CardDescription>
                         </div>
                     </div>
-                    {onCancel && (
-                        <button
-                            onClick={onCancel}
-                            className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-slate-400 hover:bg-red-500 hover:text-white transition-all shadow-lg"
-                        >
-                            <X size={24} />
-                        </button>
-                    )}
                 </div>
             </CardHeader>
             <CardContent className="p-12 lg:p-16">
@@ -191,6 +183,17 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
                                         <option value="ROLL">ROLL</option>
                                         <option value="BDL">BUNDLE</option>
                                     </select>
+                                </div>
+                                <div className="space-y-2">
+                                    <Input
+                                        label="QTY Per Box (Default)"
+                                        name="qtyPerBox"
+                                        type="number"
+                                        step="0.001"
+                                        defaultValue={product?.qtyPerBox}
+                                        placeholder="0"
+                                        icon={<Layers size={20} />}
+                                    />
                                 </div>
                             </div>
 

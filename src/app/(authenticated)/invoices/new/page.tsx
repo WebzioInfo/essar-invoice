@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { verifySessionCookie } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { BillingEngine } from "@/features/billing/components/BillingEngine";
@@ -6,16 +7,21 @@ import { FileText } from "lucide-react";
 import { ClientService } from "@/features/clients/services/ClientService";
 import { ProductService } from "@/features/inventory/services/ProductService";
 
-import Link from "next/link";
-
 export default async function NewInvoicePage() {
     const session = await verifySessionCookie();
     if (!session) redirect("/login");
 
     // Parallel fetch relations needed for the invoice dropdowns via services
+    // Parallel fetch relations needed for the invoice dropdowns via services (Optimized Selection)
     const [clients, products] = await Promise.all([
-        ClientService.getAllActive(),
-        ProductService.getAllActive()
+        ClientService.getAllActive(undefined, {
+            id: true, name: true, gst: true, email: true, phone: true, 
+            address1: true, address2: true, state: true, pinCode: true
+        }),
+        ProductService.getAllActive({
+            id: true, sku: true, description: true, hsn: true, 
+            gstRate: true, unit: true, sellingRate: true, qtyPerBox: true
+        })
     ]);
 
     if (clients.length === 0) {
@@ -25,9 +31,9 @@ export default async function NewInvoicePage() {
                     <FileText className="w-12 h-12 text-slate-300 mx-auto mb-4" />
                     <CardTitle className="mb-2">No Clients Found</CardTitle>
                     <p className="text-slate-500 mb-6">You must add at least one client to your directory before generating an invoice.</p>
-                    <Link href="/dashboard/clients" className="inline-flex justify-center items-center rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">
+                    <a href="/dashboard/clients" className="inline-flex justify-center items-center rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">
                         Go to Clients Directory
-                    </Link>
+                    </a>
                 </Card>
             </div>
         );
@@ -46,7 +52,9 @@ export default async function NewInvoicePage() {
                 </div>
             </div>
 
-            <BillingEngine clients={clients} products={products} />
+            <Suspense fallback={<div className="h-96 w-full animate-pulse bg-slate-50 rounded-3xl" />}>
+                <BillingEngine clients={clients as any} products={products as any} />
+            </Suspense>
         </div>
     );
 }

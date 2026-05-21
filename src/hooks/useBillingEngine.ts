@@ -7,13 +7,13 @@ import { calculateBillingTotals, calculateItemTotals } from "@/utils/financials"
 import { Address } from "@/types/invoice";
 
 export type InvoiceItem = {
-    uid: string; // Internal stable key
     productId?: string;
     description: string;
     hsn: string;
     qty: number;
     rate: number;
     unit: string;
+    qtyPerBox?: number;
     pkgCount?: number;
     pkgType?: string;
     taxPercent: number;
@@ -82,27 +82,37 @@ function billingReducer(state: BillingState, action: BillingAction): BillingStat
         case "ADD_ITEM":
             return {
                 ...state,
-                items: [...state.items, { uid: Math.random().toString(36).slice(2, 11), description: "", hsn: "", qty: 1, rate: 0, unit: "NOS", pkgCount: 1, pkgType: "BOX", taxPercent: 18 }]
+                items: [...state.items, { description: "", hsn: "", qty: 1, rate: 0, unit: "NOS", pkgCount: 1, pkgType: "BOX", taxPercent: 18 }]
             };
         case "REMOVE_ITEM":
             return {
                 ...state,
-                items: state.items.filter((_, i) => i !== action.index)
+                items: state.items.filter((_: any, i) => i !== action.index)
             };
         case "UPDATE_ITEM":
             const updatedItems = [...state.items];
-            updatedItems[action.index] = { ...updatedItems[action.index], [action.field]: action.value };
+            const item = { ...updatedItems[action.index], [action.field]: action.value };
+            
+            // Auto-calculate pkgCount if qty or qtyPerBox changes
+            if ((action.field === "qty" || action.field === "qtyPerBox") && item.qtyPerBox && item.qtyPerBox > 0) {
+                item.pkgCount = Math.ceil(item.qty / item.qtyPerBox);
+            }
+            
+            updatedItems[action.index] = item;
             return { ...state, items: updatedItems };
         case "SELECT_PRODUCT":
             const itemsWithProduct = [...state.items];
             itemsWithProduct[action.index] = {
                 ...itemsWithProduct[action.index],
                 productId: action.product.id,
-                description: action.product.description, // Fix: Ensure description is populated
+                description: action.product.description,
                 hsn: action.product.hsn || "",
                 rate: Number(action.product.sellingRate),
                 unit: (action.product as any).unit || "NOS",
-                pkgCount: (action.product as any).pkgCount || 1, // Fix: Using pkgCount from product instead of qty
+                qtyPerBox: Number((action.product as any).qtyPerBox || 0),
+                pkgCount: (action.product as any).qtyPerBox && (action.product as any).qtyPerBox > 0 
+                    ? Math.ceil(itemsWithProduct[action.index].qty / (action.product as any).qtyPerBox)
+                    : (itemsWithProduct[action.index].pkgCount || 1),
                 pkgType: (action.product as any).pkgType || "BOX",
                 taxPercent: Number(action.product.gstRate)
             };
@@ -138,18 +148,6 @@ export function useBillingEngine(products: Product[], mode: "INVOICE" | "QUOTATI
             if (initialData.notes) dispatch({ type: "SET_FIELD", field: "notes", value: initialData.notes });
             if (initialData.invoiceNo) dispatch({ type: "SET_FIELD", field: "invoiceNo", value: initialData.invoiceNo });
             
-            // Line Items
-            if (initialData.lineItems && initialData.lineItems.length > 0) {
-                const itemsWithUids = initialData.lineItems.map((it: any) => ({
-                    ...it,
-                    uid: it.uid || Math.random().toString(36).slice(2, 11),
-                    unit: it.unit || "NOS",
-                    pkgCount: it.pkgCount || 1,
-                    pkgType: it.pkgType || "BOX"
-                }));
-                dispatch({ type: "SET_ITEMS", items: itemsWithUids });
-            }
-
             // Address Sync
             dispatch({ type: "SET_BILLING", address: {
                 name: initialData.billingName || "",
@@ -172,7 +170,34 @@ export function useBillingEngine(products: Product[], mode: "INVOICE" | "QUOTATI
             
             dispatch({ type: "SET_FIELD", field: "shippingSameAsBilling", value: initialData.shippingSameAsBilling });
 
-
+            // Line Items
+            if (initialData.lineItems && initialData.lineItems.length > 0) {
+                initialData.lineItems.forEach((item: any, index: number) => {
+                    if (index === 0) {
+                        // Replace the first empty item if it exists
+                        dispatch({ type: "UPDATE_ITEM", index: 0, field: "description", value: item.description });
+                        dispatch({ type: "UPDATE_ITEM", index: 0, field: "hsn", value: item.hsn });
+                        dispatch({ type: "UPDATE_ITEM", index: 0, field: "qty", value: item.qty });
+                        dispatch({ type: "UPDATE_ITEM", index: 0, field: "rate", value: item.rate });
+                        dispatch({ type: "UPDATE_ITEM", index: 0, field: "unit", value: item.unit || "NOS" });
+                        dispatch({ type: "UPDATE_ITEM", index: 0, field: "taxPercent", value: item.taxPercent });
+                        dispatch({ type: "UPDATE_ITEM", index: 0, field: "pkgCount", value: item.pkgCount || 1 });
+                        dispatch({ type: "UPDATE_ITEM", index: 0, field: "pkgType", value: item.pkgType || "BOX" });
+                        if (item.productId) dispatch({ type: "UPDATE_ITEM", index: 0, field: "productId", value: item.productId });
+                    } else {
+                        dispatch({ type: "ADD_ITEM" });
+                        dispatch({ type: "UPDATE_ITEM", index, field: "description", value: item.description });
+                        dispatch({ type: "UPDATE_ITEM", index, field: "hsn", value: item.hsn });
+                        dispatch({ type: "UPDATE_ITEM", index, field: "qty", value: item.qty });
+                        dispatch({ type: "UPDATE_ITEM", index, field: "rate", value: item.rate });
+                        dispatch({ type: "UPDATE_ITEM", index, field: "unit", value: item.unit || "NOS" });
+                        dispatch({ type: "UPDATE_ITEM", index, field: "taxPercent", value: item.taxPercent });
+                        dispatch({ type: "UPDATE_ITEM", index, field: "pkgCount", value: item.pkgCount || 1 });
+                        dispatch({ type: "UPDATE_ITEM", index, field: "pkgType", value: item.pkgType || "BOX" });
+                        if (item.productId) dispatch({ type: "UPDATE_ITEM", index, field: "productId", value: item.productId });
+                    }
+                });
+            }
         }
     }, [initialData]);
 

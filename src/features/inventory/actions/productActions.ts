@@ -19,6 +19,7 @@ export async function createProductAction(formData: FormData) {
         unit: (formData.get("unit") as string) || "NOS",
         notes: (formData.get("notes") as string) || undefined,
         pkgType: (formData.get("pkgType") as string) || "BOX",
+        qtyPerBox: formData.get("qtyPerBox") as string,
     };
 
     try {
@@ -26,6 +27,30 @@ export async function createProductAction(formData: FormData) {
         revalidatePath("/products");
         revalidatePath("/dashboard");
         return { success: true };
+    } catch (error: any) {
+        return handleActionError(error);
+    }
+}
+
+export async function createQuickProductAction(data: {
+    description: string;
+    purchaseRate: number;
+    hsn?: string;
+    unit?: string;
+}) {
+    const session = await verifySessionVerified();
+    if (!session) throw new Error("Unauthorized");
+
+    try {
+        const product = await ProductService.createProduct(session.userId, {
+            ...data,
+            purchaseRate: data.purchaseRate.toString(),
+            sellingRate: (data.purchaseRate * 1.2).toString(), // Default 20% margin
+            gstRate: "18", // Default
+            unit: data.unit || "NOS"
+        });
+        revalidatePath("/products");
+        return { success: true, product };
     } catch (error: any) {
         return handleActionError(error);
     }
@@ -45,6 +70,7 @@ export async function updateProductAction(productId: string, formData: FormData)
         unit: (formData.get("unit") as string) || "NOS",
         notes: (formData.get("notes") as string) || undefined,
         pkgType: (formData.get("pkgType") as string) || "BOX",
+        qtyPerBox: formData.get("qtyPerBox") as string,
     };
 
     try {

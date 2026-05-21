@@ -4,11 +4,11 @@ import { useVendorForm } from "../hooks/useVendorForm";
 import { Input } from "@/ui/core/Input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/ui/core/Card";
 import { Building2, UserPlus, ShieldCheck, Mail, Phone, MapPin, Hash, Save, X } from "lucide-react";
-import { StateSelect } from "@/ui/core/StateSelect";
+import { StateSelect } from "@/components/forms/StateSelect";
 
 interface VendorFormProps {
     vendor?: any;
-    onSuccess?: () => void;
+    onSuccess?: (newVendor?: any) => void;
     onCancel?: () => void;
 }
 
@@ -16,7 +16,7 @@ export function VendorForm({ vendor, onSuccess, onCancel }: VendorFormProps) {
     const { formAction, pending, isEdit } = useVendorForm(vendor, onSuccess);
 
     return (
-        <Card className="overflow-hidden group shadow-2xl custom-scrollbar">
+        <Card className="overflow-hidden group shadow-2xl animate-reveal custom-scrollbar">
             <CardHeader className="bg-slate-900 px-10 py-10 group-hover:bg-slate-800 transition-colors">
                 <div className="flex items-center justify-between gap-6">
                     <div className="flex items-center gap-6">
@@ -32,14 +32,6 @@ export function VendorForm({ vendor, onSuccess, onCancel }: VendorFormProps) {
                             </CardDescription>
                         </div>
                     </div>
-                    {onCancel && (
-                        <button
-                            onClick={onCancel}
-                            className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-slate-400 hover:bg-red-500 hover:text-white transition-all shadow-lg shadow-black/20"
-                        >
-                            <X size={24} />
-                        </button>
-                    )}
                 </div>
             </CardHeader>
             <CardContent className="p-12 lg:p-16">

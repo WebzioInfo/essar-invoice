@@ -1,10 +1,8 @@
 import * as React from "react"
 import { cn } from "@/utils"
-import { motion, HTMLMotionProps } from "framer-motion"
 
 export interface ButtonProps
-    extends Omit<HTMLMotionProps<"button">, "variant" | "children"> {
-    children?: React.ReactNode
+    extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: "primary" | "secondary" | "outline" | "ghost" | "danger" | "success"
     size?: "sm" | "md" | "lg" | "icon"
     loading?: boolean
@@ -23,20 +21,17 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
         const sizes = {
             sm: "h-9 px-4 text-xs gap-1.5 rounded-xl font-bold",
-            md: "h-11 px-6 text-sm gap-2 rounded-xl font-semibold",
-            lg: "h-13 px-8 text-base gap-3 rounded-2xl font-bold",
-            icon: "h-10 w-10 p-0 rounded-xl",
+            md: "h-12 px-6 text-sm gap-2 rounded-2xl font-extrabold uppercase tracking-widest",
+            lg: "h-14 px-8 text-base gap-3 rounded-3xl font-black uppercase tracking-wider",
+            icon: "h-11 w-11 p-0 rounded-2xl",
         }
 
         return (
-            <motion.button
+            <button
                 ref={ref}
                 disabled={disabled || loading}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 className={cn(
-                    "inline-flex items-center justify-center whitespace-nowrap transition-colors duration-200 disabled:opacity-50 disabled:pointer-events-none ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/50 focus-visible:ring-offset-2",
+                    "inline-flex items-center justify-center whitespace-nowrap transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 font-display",
                     variants[variant],
                     sizes[size],
                     className
@@ -44,10 +39,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                 {...props}
               >
                 {loading ? (
-                    <div className="h-4 w-4 border-2 border-current/30 border-t-current rounded-full animate-spin mr-2" />
+                    <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
                 ) : null}
-                <span className="relative z-10 flex items-center gap-2">{children}</span>
-            </motion.button>
+                <span className="relative z-10 flex items-center justify-center gap-[inherit]">{children}</span>
+            </button>
         )
     }
 )

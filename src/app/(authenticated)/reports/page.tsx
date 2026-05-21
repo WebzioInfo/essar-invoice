@@ -1,38 +1,45 @@
-import { verifySessionCookie } from "@/lib/auth";
-import { redirect } from "next/navigation";
-import { ReportService } from "@/features/reports/services/ReportService";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import { formatCurrency } from "@/utils/financials";
-import { RevenueChart } from "@/features/reports/components/RevenueChart";
-import { ClientRevenuePie } from "@/features/reports/components/ClientRevenuePie";
+import { ChartSkeleton } from "@/ui/core/Skeleton";
+import { ReportsChartsWrapper } from "@/components/reports/ReportsChartsWrapper";
 import {
    BarChart3, PieChart, Landmark, ShieldCheck,
    Download, Calendar, TrendingUp, Users,
    ArrowUpRight, Info, Building2
 } from "lucide-react";
 import Link from "next/link";
+import apiClient from "@/lib/apiClient";
+import { toast } from "sonner";
 
-export default async function ReportsPage() {
-   const session = await verifySessionCookie();
-   if (!session) redirect("/login");
+export default function ReportsPage() {
+   const [data, setData] = useState<any>(null);
+   const [loading, setLoading] = useState(true);
 
-   const currentYear = new Date().getFullYear();
+   useEffect(() => {
+      const fetchReports = async () => {
+         try {
+            setLoading(true);
+            const res = await apiClient.get("/api/reports/stats");
+            setData(res.data);
+         } catch (error: any) {
+            toast.error("Strategic intelligence offline. Archive sync failed.");
+         } finally {
+            setLoading(false);
+         }
+      };
+      fetchReports();
+   }, []);
 
-   // ── Parallel Data Aggregation ──
-   const [
+   if (loading && !data) return <div className="p-10 space-y-10"><ChartSkeleton /><ChartSkeleton /></div>;
+
+   const {
       monthlyRevenue,
       clientRevenue,
       quarterlySummary,
-      lastMonthSummary,
       reconciliation
-   ] = await Promise.all([
-      ReportService.getMonthlyRevenue(currentYear),
-      ReportService.getClientRevenue(5),
-      // Current Quarter (Roughly Q1 for 2026-03)
-      ReportService.getRevenueSummary(new Date(currentYear, 0, 1), new Date(currentYear, 2, 31)),
-      // Last Month (February)
-      ReportService.getRevenueSummary(new Date(currentYear, 1, 1), new Date(currentYear, 1, 28)),
-      ReportService.getGstReconciliation(new Date(currentYear, 0, 1), new Date(currentYear, 2, 31))
-   ]);
+   } = data;
 
    return (
       <div className="space-y-8 animate-fade-up pb-20">
@@ -83,37 +90,7 @@ export default async function ReportsPage() {
          </div>
 
          {/* ── Charts Row ── */}
-         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-            {/* Monthly Revenue Trend */}
-            <div className="xl:col-span-2 card border-0 shadow-lg ring-1 ring-slate-100 p-0 overflow-hidden group">
-               <div className="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between group-hover:bg-slate-100/50 transition-colors">
-                  <h3 className="font-bold text-slate-800 flex items-center gap-2 uppercase tracking-widest text-[10px]">
-                     <BarChart3 className="w-4 h-4 text-primary-600" /> Revenue Growth Trend ({currentYear})
-                  </h3>
-                  <div className="text-[10px] font-bold text-slate-400 bg-white px-2 py-1 rounded-lg border border-slate-200">
-                     REAL-TIME SYNC
-                  </div>
-               </div>
-               <div className="p-6">
-                  <RevenueChart data={monthlyRevenue} />
-               </div>
-            </div>
-
-            {/* Top Clients Distribution */}
-            <div className="card border-0 shadow-lg ring-1 ring-slate-100 p-0 overflow-hidden group">
-               <div className="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between group-hover:bg-slate-100/50 transition-colors">
-                  <h3 className="font-bold text-slate-800 flex items-center gap-2 uppercase tracking-widest text-[10px]">
-                     <PieChart className="w-4 h-4 text-amber-600" /> Revenue by Key Client
-                  </h3>
-                  <Link href="/clients" className="text-[10px] font-bold text-primary-600 hover:underline flex items-center gap-1">
-                     VIEW ALL <ArrowUpRight className="w-3 h-3" />
-                  </Link>
-               </div>
-               <div className="p-6">
-                  <ClientRevenuePie data={clientRevenue} />
-               </div>
-            </div>
-         </div>
+         <ReportsChartsWrapper monthlyRevenue={monthlyRevenue} clientRevenue={clientRevenue} />
 
          {/* ── GST Filing Summary (The "Killer" Feature) ── */}
          <div className="card border-0 shadow-2xl ring-1 ring-slate-200 p-0 overflow-hidden">

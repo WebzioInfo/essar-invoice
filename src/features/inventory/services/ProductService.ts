@@ -9,8 +9,20 @@ const productRepo = new ProductRepository();
 export class ProductService {
   static async createProduct(userId: string, data: any) {
     const validatedData = await validateData(productSchema, data);
-    const product = await productRepo.model.create({
-      data: validatedData
+    const product = await productRepo.db.$transaction(async (tx: any) => {
+      const p = await tx.product.create({
+        data: validatedData
+      });
+      
+      // Initialize Stock
+      await tx.stock.create({
+        data: {
+          productId: p.id,
+          quantity: 0
+        }
+      });
+
+      return p;
     });
 
     await recordAuditLog(productRepo.db, {
@@ -47,18 +59,10 @@ export class ProductService {
     return await productRepo.softDelete(productId, userId);
   }
 
-  static async getAllActive(search?: string) {
+  static async getAllActive(select?: any) {
     const products = await productRepo.findAll({
-      where: {
-        deletedAt: null,
-        ...(search ? {
-            OR: [
-                { description: { contains: search } },
-                { sku: { contains: search } },
-                { hsn: { contains: search } }
-            ]
-        } : {})
-      },
+      where: { deletedAt: null },
+      select,
       orderBy: { description: 'asc' }
     });
 

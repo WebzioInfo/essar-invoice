@@ -1,5 +1,5 @@
 import { db } from "@/db/prisma/client";
-import { Prisma } from "../db/generated/client";
+import { Prisma } from "@prisma/client";
 
 /**
  * Resilient Audit Logging
@@ -37,7 +37,7 @@ export async function recordAuditLog(
         action: data.action,
         entityType: data.entityType,
         entityId: data.entityId,
-        details: data.details ? JSON.stringify(data.details) : null,
+        details: data.details || {},
         ipAddress: data.ipAddress,
       },
     });

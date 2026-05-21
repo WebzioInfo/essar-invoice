@@ -7,9 +7,10 @@ import {
   ArrowLeft, CheckCircle2,
   Clock, Building2, Phone, MapPin,
   Hash, Calendar, Truck, CreditCard,
-  ShieldCheck, ArrowUpRight, Landmark, Info, AlertCircle
+  ShieldCheck, ArrowUpRight, Landmark, Info
 } from "lucide-react";
-import { InvoiceActions, StatusBadge, PDFPreview } from "@/features/billing/components";
+import { InvoiceActions, StatusBadge } from "@/features/billing/components";
+import InvoicePreview from "@/features/billing/components/InvoicePreview";
 import { cn } from "@/utils";
 
 interface PageProps {
@@ -40,11 +41,10 @@ export default async function InvoiceDetailPage({ params }: PageProps) {
   // Use findFirst because deletingAt: null is not a unique constraint field,
   // which causes findUnique to lose type inference for relations in some Prisma versions.
   const invoice = await db.invoice.findFirst({
-    where: { id },
+    where: { id, deletedAt: null },
     select: {
       id: true,
       invoiceNo: true,
-      deletedAt: true,
       date: true,
       gstType: true,
       subTotal: true,
@@ -52,6 +52,7 @@ export default async function InvoiceDetailPage({ params }: PageProps) {
       grandTotal: true,
       status: true,
       ewayBill: true,
+      ewayBillUrl: true,
       vehicleNo: true,
       dispatchedThrough: true,
       notes: true,
@@ -69,7 +70,10 @@ export default async function InvoiceDetailPage({ params }: PageProps) {
       shippingPinCode: true,
       shippingSameAsBilling: true,
       client: true,
-      lineItems: { orderBy: { id: "asc" } },
+      lineItems: { 
+        orderBy: { id: "asc" },
+        include: { product: true }
+      },
       payments: { orderBy: { paidAt: "desc" } },
     },
   });
@@ -77,7 +81,7 @@ export default async function InvoiceDetailPage({ params }: PageProps) {
   if (!invoice) notFound();
 
   const grandTotal = invoice.grandTotal.toNumber();
-  const totalPaid = invoice.payments.reduce((sum: number, p: any) => sum + p.amount.toNumber(), 0);
+  const totalPaid = invoice.payments.reduce((sum, p) => sum + p.amount.toNumber(), 0);
   const balanceDue = grandTotal - totalPaid;
 
   return (
@@ -92,27 +96,13 @@ export default async function InvoiceDetailPage({ params }: PageProps) {
           Exit to Terminal
         </Link>
         
-        <InvoiceActions invoiceId={invoice.id} status={invoice.status} isDeleted={!!invoice.deletedAt} />
+        <InvoiceActions invoiceId={invoice.id} status={invoice.status} />
       </div>
-
-      {invoice.deletedAt && (
-        <div className="bg-red-50 border border-red-200 p-6 rounded-[2rem] flex items-center gap-4 text-red-900 shadow-xl shadow-red-500/5 animate-pulse">
-          <div className="w-12 h-12 rounded-2xl bg-red-100 flex items-center justify-center shrink-0">
-            <AlertCircle className="w-6 h-6 text-red-600" />
-          </div>
-          <div>
-            <p className="font-black uppercase tracking-tight italic">Document archived in Trash</p>
-            <p className="text-xs font-bold opacity-70 mt-1 uppercase tracking-widest">
-              This invoice was moved to trash on {new Intl.DateTimeFormat("en-IN", { dateStyle: 'full', timeStyle: 'short' }).format(new Date(invoice.deletedAt))}. Restore it to enable further operations.
-            </p>
-          </div>
-        </div>
-      )}
 
       <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
          {/* ── PDF Document Preview ── */}
          <div className="card border-0 shadow-2xl ring-1 ring-slate-900/5 p-0 overflow-hidden rounded-4xl bg-slate-100/50">
-            <PDFPreview invoiceId={id} />
+            <InvoicePreview invoice={invoice} />
          </div>
 
          {/* ── Quick Stats Footer (Optional but helpful) ── */}

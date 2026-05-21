@@ -25,9 +25,14 @@ export async function GET(req: NextRequest) {
         const session = await verifySessionVerified();
         if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-        const invoices = await invoiceService.getInvoices();
+        const { searchParams } = new URL(req.url);
+        const status = searchParams.get("status") || undefined;
+        const q = searchParams.get("q") || undefined;
+        const page = parseInt(searchParams.get("page") || "1");
 
-        return NextResponse.json(invoices, { status: 200 });
+        const data = await invoiceService.getInvoices({ status, q, page });
+
+        return NextResponse.json(data, { status: 200 });
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }

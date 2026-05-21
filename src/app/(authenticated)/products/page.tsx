@@ -1,21 +1,40 @@
-import { db } from "@/db/prisma/client";
-import { verifySessionCookie } from "@/lib/auth";
-import { redirect } from "next/navigation";
-import { ProductForm } from "@/features/inventory/components/ProductForm";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { ProductTable } from "@/features/inventory/components/ProductTable";
-import { Package, TrendingUp, ShieldCheck, ArrowUpRight } from "lucide-react";
-import { serializePrisma } from "@/utils/serialization";
+import { Package } from "lucide-react";
+import { LiveSearch } from "@/components/common/LiveSearch";
+import apiClient from "@/lib/apiClient";
+import { TableSkeleton } from "@/ui/core/Skeleton";
+import { toast } from "sonner";
 
-export default async function ProductsPage() {
-    const session = await verifySessionCookie();
-    if (!session) redirect("/login");
+export default function ProductsPage() {
+    const searchParams = useSearchParams();
+    const searchQuery = searchParams.get("q") || "";
 
-    const rawProducts = await db.product.findMany({
-        where: { deletedAt: null },
-        orderBy: { createdAt: "desc" },
-    });
+    const [products, setProducts] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    const products = serializePrisma(rawProducts);
+    const [refreshTrigger, setRefreshTrigger] = useState(0);
+    const refresh = () => setRefreshTrigger(prev => prev + 1);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                setLoading(true);
+                const res = await apiClient.get(`/api/products/list?q=${searchQuery}`);
+                setProducts(res.data);
+            } catch (error: any) {
+                toast.error("Failed to sync inventory master.");
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchProducts();
+    }, [searchQuery, refreshTrigger]);
+
+    if (loading && products.length === 0) return <div className="p-8"><TableSkeleton /></div>;
 
     return (
         <div className="space-y-12 animate-in fade-in duration-700 pb-20">
@@ -41,9 +60,17 @@ export default async function ProductsPage() {
                 </div>
             </div>
 
+            {/* Search & Actions */}
+            <div className="flex flex-col md:flex-row gap-4 items-center">
+                <LiveSearch 
+                    placeholder="Search Vault by SKU or Description..." 
+                    className="flex-1 w-full"
+                />
+            </div>
+
             {/* Main Listing Area */}
             <div className="w-full">
-                <ProductTable products={products} />
+                <ProductTable products={products} onSuccess={refresh} />
             </div>
 
             {/* Bottom Insight */}

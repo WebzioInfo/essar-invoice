@@ -1,11 +1,15 @@
 import { Prisma } from "@prisma/client";
+import { StockLogType } from "@/features/inventory/services/StockService";
+
+// Local Enum Overrides (Hard Fix for Prisma Stale-ness on Windows)
+import { InvoiceStatus } from "../types";
 import { InvoiceRepository } from "../repositories/InvoiceRepository";
 import { validateData } from "@/lib/validation";
 import { invoiceSchema } from "../validators/invoiceSchema";
 import { serializePrisma } from "@/utils/serialization";
 import { db } from "@/db/prisma/client";
 import { recordAuditLog } from "@/lib/audit";
-import { nextInvoiceNumber } from "@/lib/utils/documentNumber";
+import { StockService } from "@/features/inventory/services/StockService";
 
 const invoiceRepo = new InvoiceRepository();
 
@@ -20,15 +24,34 @@ export class InvoiceService {
         orderBy: { sequenceNumber: 'desc' },
         select: { sequenceNumber: true },
       });
+      
       const nextSequence = (lastSequence?.sequenceNumber || 0) + 1;
-
+      
       let invoiceNo = validatedData.invoiceNo;
       if (!invoiceNo) {
         const settings = await tx.companySetting.findFirst();
-        // Format: SRB2B-26-27-001 (prefix from settings, Indian FY, 3-digit seq per FY)
-        const prefix = settings?.invoicePrefix || "SRB2B";
+        const prefix = settings?.invoicePrefix || "B2B";
+        
+        // Indian FY runs April 1 -> March 31
         const docDate = new Date(validatedData.date);
-        invoiceNo = await nextInvoiceNumber(tx, prefix, docDate);
+        const year = docDate.getFullYear();
+        const month = docDate.getMonth(); // 0-indexed; March = 2, April = 3
+        const fyStartYear = month >= 3 ? year : year - 1;
+        const fyEndYear = fyStartYear + 1;
+        const fy = `${String(fyStartYear).slice(-2)}-${String(fyEndYear).slice(-2)}`;
+        const fyStart = new Date(fyStartYear, 3, 1);
+        const fyEnd = new Date(fyEndYear, 2, 31, 23, 59, 59, 999);
+
+        // Count invoices in this FY to get next sequence
+        const countThisFY = await tx.invoice.count({
+            where: {
+                date: { gte: fyStart, lte: fyEnd },
+                deletedAt: null
+            }
+        });
+
+        const seq = String(countThisFY + 1).padStart(3, '0');
+        invoiceNo = `${prefix}-${fy}-${seq}`;
       }
 
       // 3. Persistence
@@ -42,10 +65,14 @@ export class InvoiceService {
           gstType: validatedData.gstType,
           subTotal: validatedData.subTotal,
           taxTotal: validatedData.taxTotal,
-          grandTotal: validatedData.grandTotal,
+          grandTotal: Math.round(Number(validatedData.grandTotal)),
           ewayBill: validatedData.ewayBill,
+          ewayBillUrl: validatedData.ewayBillUrl,
           vehicleNo: validatedData.vehicleNo,
           dispatchedThrough: validatedData.dispatchedThrough,
+          isFreightCollect: validatedData.isFreightCollect,
+          freightAmount: validatedData.freightAmount ?? 0,
+          freightTaxPercent: validatedData.freightTaxPercent ?? 0,
 
           // Address snapshots
           billingName: validatedData.billingAddress?.name,
@@ -64,7 +91,7 @@ export class InvoiceService {
 
           lineItems: {
             create: validatedData.items.map((item: any) => ({
-              productId: item.productId,
+              product: item.productId ? { connect: { id: item.productId } } : undefined,
               description: item.description,
               hsn: item.hsn,
               qty: item.qty,
@@ -74,6 +101,7 @@ export class InvoiceService {
               unit: item.unit || "NOS",
               pkgCount: item.pkgCount || 0,
               pkgType: item.pkgType || "BOX",
+              qtyPerBox: item.qtyPerBox || 0,
               totalAmount: item.totalAmount
             }))
           }
@@ -89,48 +117,100 @@ export class InvoiceService {
         details: { invoiceNo }
       });
 
+      // 5. Stock Movement
+      for (const item of validatedData.items) {
+        if (item.productId) {
+          await StockService.recordChange({
+            productId: item.productId,
+            type: StockLogType.REMOVE,
+            quantityChange: -Number(item.qty),
+            referenceId: invoice.id,
+            notes: `Invoice ${invoiceNo} Created`,
+            tx
+          });
+        }
+      }
+
       return serializePrisma(invoice);
-    }, { timeout: 15000 });
+    }, { timeout: 30000 });
   }
 
-  async getInvoices(page?: number, limit?: number) {
-    const result = await invoiceRepo.findPaginated({
-      page,
-      limit,
-      include: { client: { select: { name: true } } },
-      orderBy: { date: 'desc' }
+  async getInvoices(params: { page?: number; take?: number; status?: string; q?: string } = {}) {
+    const { page = 1, take = 100, status, q } = params;
+    const skip = (page - 1) * take;
+
+    const where: any = {};
+    if (status === "TRASH") {
+        where.deletedAt = { not: null };
+    } else {
+        where.deletedAt = null;
+        if (status) where.status = status;
+    }
+
+    if (q) {
+        where.OR = [
+            { invoiceNo: { contains: q } },
+            { client: { name: { contains: q } } },
+        ];
+    }
+
+    const [invoices, counts, trashCount] = await Promise.all([
+        invoiceRepo.findAll({
+            where,
+            orderBy: { invoiceNo: 'desc' },
+            take,
+            skip,
+            select: {
+                id: true,
+                invoiceNo: true,
+                date: true,
+                grandTotal: true,
+                status: true,
+                client: { select: { id: true, name: true } }
+            }
+        }),
+        db.invoice.groupBy({
+            by: ["status"],
+            where: { deletedAt: null },
+            _count: { status: true },
+        }),
+        db.invoice.count({
+            where: { deletedAt: { not: null } }
+        })
+    ]);
+
+    const countMap: Record<string, number> = {};
+    counts.forEach((c) => { countMap[c.status] = c._count.status; });
+    const total = counts.reduce((a, c) => a + c._count.status, 0);
+    countMap[""] = total;
+    countMap["TRASH"] = trashCount;
+
+    return serializePrisma({
+        invoices,
+        counts: countMap
     });
-    return serializePrisma(result);
   }
 
   async updateInvoice(invoiceId: string, userId: string, rawData: any) {
     const validatedData = await validateData(invoiceSchema, rawData);
     
-    // Check for duplicate invoice numbers (excluding current record)
-    if (validatedData.invoiceNo) {
-      const existingCollision = await db.invoice.findFirst({
-        where: {
-          invoiceNo: validatedData.invoiceNo,
-          id: { not: invoiceId }
-        }
-      });
-
-      if (existingCollision) {
-        throw new Error(`Collision: Invoice number '${validatedData.invoiceNo}' is already taken${existingCollision.deletedAt ? ' (in Trash)' : ''}.`);
-      }
-    }
-
     const invoice = await invoiceRepo.updateWithItems(invoiceId, {
-      clientId: validatedData.clientId,
       date: new Date(validatedData.date),
       gstType: validatedData.gstType,
       subTotal: validatedData.subTotal,
       taxTotal: validatedData.taxTotal,
-      grandTotal: validatedData.grandTotal,
+      grandTotal: Math.round(Number(validatedData.grandTotal)),
       ewayBill: validatedData.ewayBill,
+      ewayBillUrl: validatedData.ewayBillUrl,
       vehicleNo: validatedData.vehicleNo,
       invoiceNo: validatedData.invoiceNo,
       dispatchedThrough: validatedData.dispatchedThrough,
+      isFreightCollect: validatedData.isFreightCollect,
+      freightAmount: validatedData.freightAmount ?? 0,
+      freightTaxPercent: validatedData.freightTaxPercent ?? 0,
+
+      // Use Prisma relation syntax for client
+      client: { connect: { id: validatedData.clientId } },
 
       // Address snapshots
       billingName: validatedData.billingAddress?.name,
@@ -148,7 +228,7 @@ export class InvoiceService {
       shippingPinCode: validatedData.shippingSameAsBilling ? validatedData.billingAddress?.pinCode : validatedData.shippingAddress?.pinCode,
 
       lineItems: validatedData.items.map((item: any) => ({
-        productId: item.productId,
+        product: item.productId ? { connect: { id: item.productId } } : undefined,
         description: item.description,
         hsn: item.hsn,
         qty: item.qty,
@@ -158,6 +238,7 @@ export class InvoiceService {
         unit: item.unit || "NOS",
         pkgCount: item.pkgCount || 0,
         pkgType: item.pkgType || "BOX",
+        qtyPerBox: item.qtyPerBox || 0,
         totalAmount: item.totalAmount
       }))
     });
@@ -171,11 +252,72 @@ export class InvoiceService {
       details: { invoiceNo: invoice.invoiceNo }
     });
 
+    // 5. Stock Movement (Update handling)
+    // We reverse the old stock and apply the new stock to ensure consistency
+    await db.$transaction(async (tx) => {
+        const oldInvoice = await tx.invoice.findUnique({
+            where: { id: invoiceId },
+            include: { lineItems: true }
+        });
+
+        if (oldInvoice) {
+            // Reverse old stock
+            for (const item of oldInvoice.lineItems) {
+                if (item.productId) {
+                    await StockService.recordChange({
+                        productId: item.productId,
+                        type: StockLogType.ADD,
+                        quantityChange: Number(item.qty),
+                        referenceId: invoiceId,
+                        notes: `Invoice ${oldInvoice.invoiceNo} Updated (Reversal)`,
+                        tx
+                    });
+                }
+            }
+        }
+
+        // Apply new stock
+        for (const item of validatedData.items) {
+            if (item.productId) {
+                await StockService.recordChange({
+                    productId: item.productId,
+                    type: StockLogType.REMOVE,
+                    quantityChange: -Number(item.qty),
+                    referenceId: invoiceId,
+                    notes: `Invoice ${validatedData.invoiceNo || oldInvoice?.invoiceNo} Updated (New Levels)`,
+                    tx
+                });
+            }
+        }
+    }, { timeout: 30000 });
+
     return serializePrisma(invoice);
   }
 
   async softDeleteInvoice(invoiceId: string, userId: string) {
     const invoice = await invoiceRepo.softDelete(invoiceId, userId);
+    
+    // Reverse Stock
+    await db.$transaction(async (tx) => {
+        const fullInvoice = await tx.invoice.findUnique({
+            where: { id: invoiceId },
+            include: { lineItems: true }
+        });
+        if (fullInvoice) {
+            for (const item of fullInvoice.lineItems) {
+                if (item.productId) {
+                    await StockService.recordChange({
+                        productId: item.productId,
+                        type: StockLogType.ADD,
+                        quantityChange: Number(item.qty),
+                        referenceId: invoiceId,
+                        notes: `Invoice ${fullInvoice.invoiceNo} Trashed (Stock Restored)`,
+                        tx
+                    });
+                }
+            }
+        }
+    }, { timeout: 30000 });
     
     await recordAuditLog(db, {
       userId,
@@ -189,10 +331,61 @@ export class InvoiceService {
   }
 
   async restoreInvoice(invoiceId: string, userId: string) {
+    const existing = await invoiceRepo.model.findUnique({
+      where: { id: invoiceId }
+    });
+    if (!existing) throw new Error("Invoice not found");
+
+    // Remove the -DEL- suffix if present
+    let originalInvoiceNo = existing.invoiceNo;
+    if (originalInvoiceNo.includes("-DEL-")) {
+      originalInvoiceNo = originalInvoiceNo.split("-DEL-")[0];
+    }
+
+    // Handle sequenceNumber restoration
+    // We try to restore to a positive one if it was negative, but we need to find a gap or just use the absolute value if it doesn't conflict
+    let restoredSequence = Math.abs(existing.sequenceNumber);
+    
+    // Check if the number or sequence is already taken
+    const conflict = await invoiceRepo.model.findFirst({
+      where: {
+        OR: [
+          { invoiceNo: originalInvoiceNo, deletedAt: null },
+          { sequenceNumber: restoredSequence, deletedAt: null }
+        ],
+        NOT: { id: invoiceId }
+      }
+    });
+
+    if (conflict) {
+      throw new Error(`Cannot restore: Invoice number ${originalInvoiceNo} or sequence ${restoredSequence} is already taken by another active invoice.`);
+    }
+
     const invoice = await invoiceRepo.model.update({
       where: { id: invoiceId },
-      data: { deletedAt: null, updatedById: userId }
+      data: { 
+        deletedAt: null,
+        invoiceNo: originalInvoiceNo,
+        sequenceNumber: restoredSequence
+      } as any,
+      include: { lineItems: true }
     });
+
+    // Subtract Stock again
+    await db.$transaction(async (tx) => {
+        for (const item of (invoice as any).lineItems) {
+            if (item.productId) {
+                await StockService.recordChange({
+                    productId: item.productId,
+                    type: StockLogType.REMOVE,
+                    quantityChange: -Number(item.qty),
+                    referenceId: invoiceId,
+                    notes: `Invoice ${invoice.invoiceNo} Restored`,
+                    tx
+                });
+            }
+        }
+    }, { timeout: 30000 });
 
     await recordAuditLog(db, {
       userId,
@@ -221,16 +414,5 @@ export class InvoiceService {
     return await invoiceRepo.model.delete({
       where: { id: invoiceId }
     });
-  }
-
-  async getDeletedInvoices(page?: number, limit?: number) {
-    const result = await invoiceRepo.findPaginated({
-      page,
-      limit,
-      where: { deletedAt: { not: null } },
-      include: { client: { select: { name: true } } },
-      orderBy: { deletedAt: 'desc' }
-    });
-    return serializePrisma(result);
   }
 }

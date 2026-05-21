@@ -1,22 +1,23 @@
-import { db } from "@/db/prisma/client";
-import { verifySessionCookie } from "@/lib/auth";
-import { redirect } from "next/navigation";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { formatCurrency, cn } from "@/utils";
+import { useSearchParams } from "next/navigation";
+import { cn } from "@/utils/index";
+import { formatCurrency } from "@/utils/financials";
 import {
   FileText, Plus, Search, Filter,
-  ChevronRight, Calendar, ArrowUpRight, Trash2
+  ChevronRight, Calendar, ArrowUpRight,
 } from "lucide-react";
 import { StatusBadge } from "@/features/billing/components/StatusBadge";
+import { InvoiceListActions } from "@/features/billing/components/InvoiceListActions";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/ui/core/Card";
 import { Button } from "@/ui/core/Button";
-import { Input } from "@/ui/core/Input";
-import { ErrorBoundary } from "@/ui/core/ErrorBoundary";
-import { DownloadInvoiceButton } from "@/features/billing/components/DownloadInvoiceButton";
-
-interface PageProps {
-  searchParams: Promise<{ status?: string; q?: string }>;
-}
+import { ErrorBoundary } from "@/components/common/ErrorBoundary";
+import { LiveSearch } from "@/components/common/LiveSearch";
+import apiClient from "@/lib/apiClient";
+import { TableSkeleton } from "@/ui/core/Skeleton";
+import { toast } from "sonner";
 
 const STATUS_TABS = [
   { label: "All Records", value: "" },
@@ -24,56 +25,40 @@ const STATUS_TABS = [
   { label: "Sent", value: "SENT" },
   { label: "Paid", value: "PAID" },
   { label: "Overdue", value: "OVERDUE" },
-  { label: "Trash", value: "TRASH", icon: <Trash2 size={12} /> },
+  { label: "Trash", value: "TRASH" },
 ];
 
-export default async function InvoicesPage({ searchParams }: PageProps) {
-  const session = await verifySessionCookie();
-  if (!session) redirect("/login");
+export default function InvoicesPage() {
+  const searchParams = useSearchParams();
+  const statusFilter = searchParams.get("status") || "";
+  const searchQuery = searchParams.get("q") || "";
+  const page = searchParams.get("page") || "1";
 
-  const params = await searchParams;
-  const statusFilter = params.status || "";
-  const searchQuery = params.q || "";
-  const isTrash = statusFilter === "TRASH";
+  const [data, setData] = useState<{ invoices: any[]; counts: any } | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const invoices = await db.invoice.findMany({
-    where: {
-      deletedAt: isTrash ? { not: null } : null,
-      ...(!isTrash && statusFilter && { status: statusFilter }),
-      ...(searchQuery && {
-        OR: [
-          { invoiceNo: { contains: searchQuery } },
-          { client: { name: { contains: searchQuery } } },
-        ],
-      }),
-    },
-    orderBy: isTrash ? { deletedAt: "desc" } : { date: "desc" },
-    select: {
-      id: true,
-      invoiceNo: true,
-      date: true,
-      grandTotal: true,
-      status: true,
-      client: { select: { name: true } }
-    },
-  });
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const refresh = () => setRefreshTrigger(prev => prev + 1);
 
-  // Count by status for tabs
-  const [activeCounts, trashCount] = await Promise.all([
-    db.invoice.groupBy({
-      by: ["status"],
-      where: { deletedAt: null },
-      _count: { status: true },
-    }),
-    db.invoice.count({ where: { deletedAt: { not: null } } })
-  ]);
-  
-  const countMap: Record<string, number> = {};
-  activeCounts.forEach((c: any) => { countMap[c.status] = c._count.status; });
-  const totalActive = activeCounts.reduce((a: number, c: any) => a + c._count.status, 0);
-  
-  countMap[""] = totalActive;
-  countMap["TRASH"] = trashCount;
+  useEffect(() => {
+    const fetchInvoices = async () => {
+      try {
+        setLoading(true);
+        const res = await apiClient.get(`/api/invoices?status=${statusFilter}&q=${searchQuery}&page=${page}`);
+        setData(res.data);
+      } catch (error: any) {
+        toast.error("Failed to synchronize archives.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchInvoices();
+  }, [statusFilter, searchQuery, page, refreshTrigger]);
+
+  if (loading && !data) return <div className="p-8"><TableSkeleton /></div>;
+
+  const invoices = data?.invoices || [];
+  const countMap = data?.counts || {};
 
   return (
     <div className="space-y-8 animate-fade-up">
@@ -90,21 +75,13 @@ export default async function InvoicesPage({ searchParams }: PageProps) {
           </Button>
         </Link>
       </div>
-
-      {/* ── Search & Filter ── */}
       <Card className="border-0 shadow-sm ring-1 ring-slate-200/60 overflow-hidden rounded-[2.5rem] animate-in stagger-2">
         <CardContent className="p-6">
           <div className="flex flex-col lg:flex-row gap-6 items-center">
-             <form className="flex-1 w-full relative group" method="GET">
-                {statusFilter && <input type="hidden" name="status" value={statusFilter} />}
-                <Input 
-                   name="q"
-                   defaultValue={searchQuery}
-                   placeholder="Search by Invoice # or Client Name..."
-                   icon={<Search className="w-5 h-5 text-slate-400" />}
-                   className="h-12 rounded-[1.25rem] bg-slate-50 border-0 ring-1 ring-slate-200 group-focus-within:ring-primary-500 group-focus-within:ring-2 transition-all"
-                />
-             </form>
+             <LiveSearch 
+               placeholder="Search by Invoice # or Client Name..." 
+               className="flex-1 w-full"
+             />
 
              <div className="flex flex-wrap items-center gap-2">
                 {STATUS_TABS.map((tab) => {
@@ -121,7 +98,6 @@ export default async function InvoicesPage({ searchParams }: PageProps) {
                           : "text-slate-500 hover:bg-slate-100 border border-transparent hover:border-slate-200"
                       )}
                     >
-                      {"icon" in tab && tab.icon}
                       {tab.label}
                       <span className={cn(
                         "min-w-5 h-5 px-1 rounded-full flex items-center justify-center text-[9px] font-bold",
@@ -181,8 +157,16 @@ export default async function InvoicesPage({ searchParams }: PageProps) {
                       </div>
                     </td>
                     <td className="px-8 py-6">
-                      <p className="text-sm font-black text-slate-800 tracking-tight">{inv.client.name}</p>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Corporate Client</p>
+                      <Link 
+                        href={`/clients/${inv.client.id}`}
+                        className="group/client inline-flex flex-col hover:text-primary-600 transition-colors"
+                      >
+                        <div className="flex items-center gap-1.5">
+                          <p className="text-sm font-black text-slate-800 tracking-tight group-hover/client:text-primary-600 transition-colors">{inv.client.name}</p>
+                          <ArrowUpRight size={12} className="opacity-0 group-hover/client:opacity-100 transition-all text-primary-500" />
+                        </div>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Corporate Client</p>
+                      </Link>
                     </td>
                     <td className="px-8 py-6 hidden sm:table-cell">
                       <div className="flex flex-col gap-1.5">
@@ -194,7 +178,7 @@ export default async function InvoicesPage({ searchParams }: PageProps) {
                       </div>
                     </td>
                     <td className="px-8 py-6 text-right">
-                      <p className="text-lg font-black text-slate-900 italic tracking-tighter">{formatCurrency(inv.grandTotal.toNumber())}</p>
+                      <p className="text-lg font-black text-slate-900 italic tracking-tighter">{formatCurrency(Number(inv.grandTotal))}</p>
                       <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Inclusive of GST</p>
                     </td>
                     <td className="px-8 py-6 text-center">
@@ -203,14 +187,11 @@ export default async function InvoicesPage({ searchParams }: PageProps) {
                       </div>
                     </td>
                     <td className="px-8 py-6 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <DownloadInvoiceButton invoiceId={inv.id} />
-                        <Link href={`/invoices/${inv.id}`}>
-                          <Button variant="ghost" size="sm" className="rounded-xl group-hover:bg-primary-50 group-hover:text-primary-600">
-                            View Details <ArrowUpRight className="ml-2 w-4 h-4 opacity-50" />
-                          </Button>
-                        </Link>
-                      </div>
+                      <InvoiceListActions 
+                        invoiceId={inv.id} 
+                        isTrashed={statusFilter === "TRASH"} 
+                        onSuccess={refresh}
+                      />
                     </td>
                   </tr>
                 ))}

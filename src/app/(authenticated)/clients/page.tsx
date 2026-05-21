@@ -1,20 +1,36 @@
-import { verifySessionCookie } from "@/lib/auth";
-import { redirect } from "next/navigation";
-import { ClientForm } from "@/features/clients/components/ClientForm";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { ClientTable } from "@/features/clients/components/ClientTable";
-import { ClientService } from "@/features/clients/services/ClientService";
 import { Building2 } from "lucide-react";
+import apiClient from "@/lib/apiClient";
+import { TableSkeleton } from "@/ui/core/Skeleton";
+import { toast } from "sonner";
 
-interface PageProps {
-    searchParams: Promise<{ q?: string }>;
-}
+export default function ClientsPage() {
+    const searchParams = useSearchParams();
+    const query = searchParams.get("q") || "";
 
-export default async function ClientsPage({ searchParams }: PageProps) {
-    const session = await verifySessionCookie();
-    if (!session) redirect("/login");
+    const [clients, setClients] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    const query = (await searchParams).q;
-    const clients = await ClientService.getAllActive(query);
+    useEffect(() => {
+        const fetchClients = async () => {
+            try {
+                setLoading(true);
+                const res = await apiClient.get(`/api/clients/list?q=${query}`);
+                setClients(res.data);
+            } catch (error: any) {
+                toast.error("Failed to sync client directory.");
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchClients();
+    }, [query]);
+
+    if (loading && clients.length === 0) return <div className="p-8"><TableSkeleton /></div>;
 
     return (
         <div className="space-y-12 animate-in fade-in duration-700 pb-20">

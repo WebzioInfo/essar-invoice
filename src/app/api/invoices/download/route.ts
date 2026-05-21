@@ -4,6 +4,7 @@ import { db } from "@/db/prisma/client";
 import { numberToWords } from "@/utils/financials";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { PDFDocument } from "pdf-lib";
 import fs from "fs";
 import path from "path";
 
@@ -45,6 +46,7 @@ export async function POST(req: NextRequest) {
                 taxTotal: true,
                 grandTotal: true,
                 ewayBill: true,
+                ewayBillUrl: true,
                 vehicleNo: true,
                 billingName: true,
                 billingAddress1: true,
@@ -58,9 +60,13 @@ export async function POST(req: NextRequest) {
                 shippingAddress2: true,
                 shippingState: true,
                 shippingPinCode: true,
+                isFreightCollect: true,
+                freightAmount: true,
+                freightTaxPercent: true,
                 client: true,
                 lineItems: {
-                    orderBy: { id: "asc" }
+                    orderBy: { id: "asc" },
+                    include: { product: true }
                 },
             },
         });
@@ -76,7 +82,6 @@ export async function POST(req: NextRequest) {
             address2: "KR PURAM HOBLI",
             city: "BANGALORE",
             pincode: "560049",
-            state: "Karnataka",
             phone: "+91 85531 85300",
             email: "essarwater.info@gmail.com",
             bankName: "FEDERAL BANK",
@@ -84,7 +89,9 @@ export async function POST(req: NextRequest) {
             bankAccountNo: "21650200003173",
             bankIfsc: "FDRL0002165",
             bankAccountName: "ESSAR ENTERPRISES",
-            showPkgDetails: true
+            showPkgDetails: true,
+            showLogo: false,
+            logoUrl: "logo.png"
         };
 
         const gstType = invoice.gstType || "CGST_SGST";
@@ -106,46 +113,52 @@ export async function POST(req: NextRequest) {
         const W = doc.internal.pageSize.getWidth();
         let y = 15;
 
-        // --- LOGO & HEADER (SIDE-BY-SIDE) ---
-        try {
-            const logoPath = path.join(process.cwd(), "public", "logo.png");
-            if (fs.existsSync(logoPath)) {
-                const logoBase64 = fs.readFileSync(logoPath).toString("base64");
-                // Logo on the far left
-                doc.addImage(`data:image/png;base64,${logoBase64}`, "PNG", LEFT_MARGIN, 12, 40, 20);
+
+        // --- COMPANY HEADER (LEFT) ---
+        let companyX = LEFT_MARGIN;
+        
+        if (settings.showLogo) {
+            try {
+                let logoFileName = settings.logoUrl || "logo.png";
+                if (logoFileName.startsWith("/")) logoFileName = logoFileName.slice(1);
+                
+                const logoPath = path.join(process.cwd(), "public", logoFileName);
+                if (fs.existsSync(logoPath)) {
+                    const ext = path.extname(logoPath).slice(1).toUpperCase() || "PNG";
+                    const logoData = fs.readFileSync(logoPath).toString("base64");
+                    doc.addImage(logoData, ext, LEFT_MARGIN, 10, 30, 20);
+                    companyX = LEFT_MARGIN + 35;
+                } else {
+                    console.warn("[LOGO_NOT_FOUND] Checked path:", logoPath);
+                }
+
+            } catch (err) {
+                console.error("[LOGO_ERROR]", err);
             }
-        } catch (err) {
-            console.error("Logo failed to load in PDF:", err);
         }
 
-        // Header Text to the right of the logo
-        const headerX = 58;
         doc.setFont("helvetica", "bold");
-        doc.setFontSize(16);
+        doc.setFontSize(18);
         doc.setTextColor(...TEXT_BLACK);
-        doc.text(settings.companyName.toUpperCase(), headerX, 16);
+        doc.text(settings.companyName.toUpperCase(), companyX, 16);
 
         doc.setFont("helvetica", "normal");
-        doc.setFontSize(8);
+        doc.setFontSize(8.5);
         doc.setTextColor(...TEXT_GRAY);
-        doc.text([
-            `${settings.address1}, ${settings.address2 || ""}`,
-            `${settings.city} - ${settings.pincode}, ${settings.state.toUpperCase()}`,
-            `GSTIN: ${settings.gstin}`,
-            `Email: ${settings.email} | Mobile: ${settings.phone}`
-        ], headerX, 20);
+        doc.text(`${settings.address1}, ${settings.address2 || ""}`, companyX, 22);
+        doc.text(`${settings.city} - ${settings.pincode} | GSTIN: ${settings.gstin}`, companyX, 27);
+        doc.text(`Email: ${settings.email} | Mobile: ${settings.phone}`, companyX, 31);
 
-        // --- TITLE (TOP RIGHT) ---
+        // --- TITLE (RIGHT) ---
         doc.setFont("helvetica", "bold");
-        doc.setFontSize(22);
+        doc.setFontSize(26);
         doc.setTextColor(...TEXT_BLACK);
-        doc.text("TAX INVOICE", W - RIGHT_MARGIN, 20, { align: "right" });
+        doc.text("TAX INVOICE", W - RIGHT_MARGIN, 22, { align: "right" });
 
-        // Horizontal Line
+        y = 45;
         doc.setDrawColor(220, 220, 220);
-        doc.line(LEFT_MARGIN, 42, W - RIGHT_MARGIN, 42);
-        y = 50;
-
+        doc.line(LEFT_MARGIN, y, W - RIGHT_MARGIN, y);
+        y += 10;
 
         const infoX = W - RIGHT_MARGIN;
         const colWidth = 50;
@@ -250,10 +263,19 @@ export async function POST(req: NextRequest) {
             existing.taxAmount += taxAmount;
         });
 
+        const freightVal = invoice.freightAmount?.toNumber() || 0;
+        const fTaxPercent = invoice.freightTaxPercent?.toNumber() || 0;
+
+        if (freightVal > 0) {
+            const fTax = (freightVal * fTaxPercent) / 100;
+            hsnSummaryMap.set("FREIGHT", { hsn: "Freight Charges", taxableValue: freightVal, taxAmount: fTax, taxPercent: fTaxPercent });
+        }
+
+
         // --- LINE ITEMS TABLE ---
         const showPkg = !!(settings as any).showPkgDetails;
         const tableHead = showPkg
-            ? [["Sl No", "No. & Kind of Pkgs", "Description of Goods", "HSN/SAC", "Quantity", "Rate", "per", "Amount"]]
+            ? [["Sl No", "No. & Kind\nof Pkgs", "Description of Goods", "HSN/SAC", "Quantity", "Rate", "per", "Amount"]]
             : [["Sl No", "Description of Goods", "HSN/SAC", "Quantity", "Rate", "per", "Amount"]];
 
         const tableBody = lineItems.map((item: any, i: number) => {
@@ -266,11 +288,24 @@ export async function POST(req: NextRequest) {
                 : (prod?.notes ? `\n${prod.notes}` : "");
 
             const pkgCountStr = Number(item.pkgCount || 0);
-            const pkgValue = (pkgCountStr > 0) ? `${pkgCountStr} ${item.pkgType || "BOX"}` : "-";
+            const rawPerBox = (Number(item.qtyPerBox || 0) > 0) ? item.qtyPerBox : (prod?.qtyPerBox || 0);
+
+            const perBox = (rawPerBox && typeof rawPerBox === 'object' && 'toNumber' in rawPerBox)
+                ? (rawPerBox as any).toNumber()
+                : Number(rawPerBox || 0);
+
+            const pkgTypeRaw = (item.pkgType || "BOX").toUpperCase();
+            const pkgType = pkgCountStr > 1
+                ? (pkgTypeRaw.endsWith('X') ? `${pkgTypeRaw}ES` : `${pkgTypeRaw}S`)
+                : pkgTypeRaw;
+
+            const pkgValue = (pkgCountStr > 0 && perBox > 0)
+                ? `${pkgCountStr} ${pkgType}\nX ${perBox} ${item.unit || prod?.unit || "NOS"}`
+                : (pkgCountStr > 0 ? `${pkgCountStr} ${pkgType}` : "-");
 
             // If showing pkg in separate column, don't put it in description
             const pkgInDesc = (!showPkg && pkgCountStr > 0)
-                ? `\nNo. & Kind of Pkgs: ${pkgCountStr} ${item.pkgType || "BOX"}`
+                ? `\nNo. & Kind of Pkgs: ${pkgValue}`
                 : "";
 
             const row = [
@@ -303,11 +338,11 @@ export async function POST(req: NextRequest) {
                 fontSize: 7.5,
                 textColor: [0, 0, 0],
                 cellPadding: 2,
-                valign: "top",
+                valign: "middle",
             },
             columnStyles: showPkg ? {
                 0: { halign: "center", cellWidth: 10 },
-                1: { halign: "center", cellWidth: 18, fontStyle: "bold" },
+                1: { halign: "center", cellWidth: 18, fontSize: 6, cellPadding: 1, overflow: 'linebreak' },
                 2: { halign: "left" },
                 3: { halign: "center", cellWidth: 20 },
                 4: { halign: "right", cellWidth: 22 },
@@ -336,17 +371,33 @@ export async function POST(req: NextRequest) {
         doc.text(`${fmt(subTotal)}`, W - RIGHT_MARGIN, y, { align: "right" });
         y += 8;
 
-        // --- HSN/SAC SUMMARY TABLE ---
-        const hsnHead = [["HSN/SAC", "Taxable Value", `${gstType === 'IGST' ? 'IGST' : 'CGST'} Rate`, `${gstType === 'IGST' ? 'IGST' : 'CGST'} Amt`, `${gstType === 'IGST' ? '' : 'SGST Rate'}`, `${gstType === 'IGST' ? '' : 'SGST Amt'}`, "Total Tax"]];
-        const hsnBody = Array.from(hsnSummaryMap.values()).map(h => {
-            const igstRate = h.taxPercent;
-            const cgstRate = h.taxPercent / 2;
-            if (gstType === 'IGST') {
-                return [h.hsn, fmt(h.taxableValue), `${igstRate}%`, fmt(h.taxAmount), "", "", fmt(h.taxAmount)];
-            } else {
-                return [h.hsn, fmt(h.taxableValue), `${cgstRate}%`, fmt(h.taxAmount / 2), `${cgstRate}%`, fmt(h.taxAmount / 2), fmt(h.taxAmount)];
-            }
-        });
+        // --- HSN/SAC SUMMARY TABLE (Dynamic Columns) ---
+        let hsnHead, hsnBody;
+        if (gstType === 'IGST') {
+            hsnHead = [["HSN/SAC", "Taxable Value", "IGST Rate", "IGST Amount", "Total Tax"]];
+            hsnBody = Array.from(hsnSummaryMap.values()).map(h => [
+                h.hsn,
+                fmt(h.taxableValue),
+                `${h.taxPercent}%`,
+                fmt(h.taxAmount),
+                fmt(h.taxAmount)
+            ]);
+        } else {
+            hsnHead = [["HSN/SAC", "Taxable Value", "CGST Rate", "CGST Amt", "SGST Rate", "SGST Amt", "Total Tax"]];
+            hsnBody = Array.from(hsnSummaryMap.values()).map(h => {
+                const rate = h.taxPercent / 2;
+                const amt = h.taxAmount / 2;
+                return [
+                    h.hsn,
+                    fmt(h.taxableValue),
+                    `${rate}%`,
+                    fmt(amt),
+                    `${rate}%`,
+                    fmt(amt),
+                    fmt(h.taxAmount)
+                ];
+            });
+        }
 
         doc.setFontSize(8.5);
         doc.text("HSN/SAC Summary", LEFT_MARGIN, y);
@@ -366,8 +417,20 @@ export async function POST(req: NextRequest) {
             head: hsnHead,
             body: hsnBody,
             theme: "grid",
-            headStyles: { fontSize: 6.5, fillColor: [255, 255, 255], textColor: [0, 0, 0], halign: "center" },
-            bodyStyles: { fontSize: 6.5, halign: "right" },
+            headStyles: {
+                fontSize: 7.5,
+                fillColor: [255, 255, 255],
+                textColor: [0, 0, 0],
+                halign: "center",
+                lineWidth: 0.1,
+                fontStyle: "bold"
+            },
+            bodyStyles: {
+                fontSize: 7,
+                halign: "right",
+                lineWidth: 0.1,
+                textColor: [0, 0, 0]
+            },
             columnStyles: { 0: { halign: "center" } },
             margin: { left: LEFT_MARGIN, right: RIGHT_MARGIN },
         });
@@ -388,10 +451,16 @@ export async function POST(req: NextRequest) {
             y += 6;
         };
 
-        drawTotalRow("Taxable Amount:", fmt(subTotal));
-        if (cgst > 0) drawTotalRow("Output CGST @ " + (lineItems[0]?.taxPercent.toNumber() / 2) + "%:", fmt(cgst));
-        if (sgst > 0) drawTotalRow("Output SGST @ " + (lineItems[0]?.taxPercent.toNumber() / 2) + "%:", fmt(sgst));
-        if (igst > 0) drawTotalRow("Output IGST @ " + (lineItems[0]?.taxPercent.toNumber()) + "%:", fmt(igst));
+        const itemsSubTotal = subTotal - freightVal;
+
+        drawTotalRow("Taxable Amount (Items):", fmt(itemsSubTotal));
+        if (freightVal > 0) {
+            drawTotalRow(`Freight Amount ${invoice.isFreightCollect ? '(Collect)' : ''}:`, fmt(freightVal));
+        }
+
+        if (cgst > 0) drawTotalRow("Output CGST:", fmt(cgst));
+        if (sgst > 0) drawTotalRow("Output SGST:", fmt(sgst));
+        if (igst > 0) drawTotalRow("Output IGST:", fmt(igst));
 
         if (Math.abs(roundOff) > 0) {
             drawTotalRow("Rounding Off:", (roundOff > 0 ? "+" : "") + fmt(roundOff));
@@ -467,21 +536,43 @@ export async function POST(req: NextRequest) {
             W / 2, 285, { align: "center" }
         );
 
-        // --- Output ---
-        const pdfBuffer = Buffer.from(doc.output("arraybuffer"));
+        // --- Final Output Handling (Merging or Single) ---
+        let finalBuffer = Buffer.from(doc.output("arraybuffer"));
 
-        const billingName = invoice.billingName || invoice.client?.name || "CLIENT";
-        const firstName = billingName.split(" ")[0].toUpperCase().replace(/[^A-Z0-9]/g, "");
-        const invoiceParts = invoice.invoiceNo.split("-");
-        const lastNo = invoiceParts[invoiceParts.length - 1] || "00";
-        const safeFileName = `${firstName}_${lastNo}_ESSAR.pdf`;
+        if (invoice.ewayBillUrl) {
+            try {
+                const ewayBillResponse = await fetch(invoice.ewayBillUrl);
+                if (ewayBillResponse.ok) {
+                    const ewayBillBuffer = await ewayBillResponse.arrayBuffer();
+                    
+                    const mergedPdf = await PDFDocument.create();
+                    const invoiceDoc = await PDFDocument.load(finalBuffer);
+                    const ewayBillDoc = await PDFDocument.load(ewayBillBuffer);
 
-        return new NextResponse(pdfBuffer, {
+                    const invoicePages = await mergedPdf.copyPages(invoiceDoc, invoiceDoc.getPageIndices());
+                    invoicePages.forEach(p => mergedPdf.addPage(p));
+
+                    const ewayBillPages = await mergedPdf.copyPages(ewayBillDoc, ewayBillDoc.getPageIndices());
+                    ewayBillPages.forEach(p => mergedPdf.addPage(p));
+
+                    const mergedBytes = await mergedPdf.save();
+                    finalBuffer = Buffer.from(mergedBytes);
+                }
+            } catch (mergeError) {
+                console.error("[PDF_MERGE_ERROR]", mergeError);
+                // Fallback to just the invoice if merge fails
+            }
+        }
+
+        const clientName = (invoice.client?.name || "CLIENT").split(" ")[0].toUpperCase();
+        const safeFileName = `ESSAR_${invoice.invoiceNo}_${clientName}.pdf`.replace(/[/\\?%*:|"<>]/g, '-');
+
+        return new NextResponse(finalBuffer, {
             status: 200,
             headers: {
                 "Content-Type": "application/pdf",
                 "Content-Disposition": `attachment; filename="${safeFileName}"`,
-                "Content-Length": String(pdfBuffer.length),
+                "Content-Length": String(finalBuffer.length),
             },
         });
     } catch (err: unknown) {
