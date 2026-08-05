@@ -31,7 +31,7 @@ export default async function NewInvoicePage() {
                     <FileText className="w-12 h-12 text-slate-300 mx-auto mb-4" />
                     <CardTitle className="mb-2">No Clients Found</CardTitle>
                     <p className="text-slate-500 mb-6">You must add at least one client to your directory before generating an invoice.</p>
-                    <a href="/dashboard/clients" className="inline-flex justify-center items-center rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">
+                    <a href="/clients" className="inline-flex justify-center items-center rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">
                         Go to Clients Directory
                     </a>
                 </Card>

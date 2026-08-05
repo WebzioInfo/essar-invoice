@@ -194,6 +194,7 @@ export class QuotationService {
           subTotal: quotation.subTotal,
           taxTotal: quotation.taxTotal,
           grandTotal: quotation.grandTotal,
+          notes: quotation.notes,
           status: InvoiceStatus.DRAFT,
           createdById: userId,
 

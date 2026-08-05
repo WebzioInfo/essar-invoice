@@ -3,8 +3,10 @@ import bcrypt from 'bcryptjs';
 import { SignJWT } from "jose";
 import prisma from '@/db/prisma/client';
 import { registerSchema } from '@/lib/schemas/authSchema';
+import { env } from '@/lib/env';
 
-const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || 'secret');
+const getJwtSecret = () => new TextEncoder().encode(env.JWT_SECRET);
+
 
 export async function POST(req: NextRequest) {
     try {
@@ -35,7 +37,7 @@ export async function POST(req: NextRequest) {
             .setProtectedHeader({ alg: "HS256" })
             .setExpirationTime("1d")
             .setIssuedAt()
-            .sign(JWT_SECRET);
+            .sign(getJwtSecret());
 
         return NextResponse.json({ token, role: user.role }, { status: 201 });
     } catch (error: any) {

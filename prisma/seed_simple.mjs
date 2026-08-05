@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs'
 const prisma = new PrismaClient({
   datasources: {
     db: {
-      url: (process.env.DATABASE_URL || "mysql://db46959:WebzioWeb@db46959.public.databaseasp.net:3306/db46959") + (process.env.DATABASE_URL?.includes('?') ? '&' : '?') + 'connection_limit=1&pool_timeout=45'
+      url: (process.env.DATABASE_URL || "mysql://db43250:WebzioWeb@db43250.public.databaseasp.net:3306/db43250") + (process.env.DATABASE_URL?.includes('?') ? '&' : '?') + 'connection_limit=1&pool_timeout=45'
     }
   }
 })
@@ -14,7 +14,7 @@ async function main() {
   const hashedPassword = await bcrypt.hash('admin123', 10)
 
   console.log(`Seeding Admin: ${email}...`)
-  
+
   try {
     const user = await prisma.user.create({
       data: {
@@ -68,7 +68,7 @@ async function main() {
     })
     console.log('Company settings synchronized')
   } catch (e) {
-     console.log('Settings error: ', e.message)
+    console.log('Settings error: ', e.message)
   }
 
   const products = [

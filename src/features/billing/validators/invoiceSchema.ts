@@ -26,6 +26,8 @@ export const invoiceSchema = z.object({
     taxTotal: z.number().min(0),
     grandTotal: z.number().min(0),
 
+    notes: z.string().optional().nullable(),
+
     // Logistics
     ewayBill: z.string().optional(),
     ewayBillUrl: z.string().optional(),

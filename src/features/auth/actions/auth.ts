@@ -6,7 +6,6 @@ import { db } from "@/db/prisma/client";
 import { Prisma } from "@prisma/client";
 import { createSessionCookie } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
 
 const signupSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -17,6 +16,19 @@ const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(1, "Password is required"),
 });
+
+function handlePrismaError(error: any, actionName: string): string {
+  console.error(`❌ [Auth] ${actionName} error:`, error);
+  if (error instanceof Prisma.PrismaClientInitializationError) {
+    return "Database connection failed. Please ensure the database server is running and DATABASE_URL is correct.";
+  }
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    if (error.code.startsWith("P100")) {
+      return "Database connection unreachable. Please check database server status.";
+    }
+  }
+  return "An unexpected server error occurred. Please try again.";
+}
 
 export async function signupAction(formData: FormData) {
   const data = Object.fromEntries(formData);
@@ -29,7 +41,6 @@ export async function signupAction(formData: FormData) {
   const { email, password } = result.data;
 
   try {
-    // Check if user exists
     const existingUser = await db.user.findUnique({ where: { email } });
     if (existingUser) {
       return { error: "User with this email already exists" };
@@ -37,7 +48,6 @@ export async function signupAction(formData: FormData) {
 
     const passwordHash = await hash(password, 10);
 
-    // Create User
     const user = await db.user.create({
       data: {
         email,
@@ -53,8 +63,8 @@ export async function signupAction(formData: FormData) {
 
     return { success: true };
   } catch (error: any) {
-    console.error("Signup error:", error);
-    return { error: "Failed to create account. Please try again." };
+    const errorMessage = handlePrismaError(error, "signupAction");
+    return { error: errorMessage };
   }
 }
 
@@ -89,8 +99,8 @@ export async function loginAction(formData: FormData) {
 
     return { success: true };
   } catch (error: any) {
-    console.error("Login error:", error);
-    return { error: "Something went wrong. Please try again." };
+    const errorMessage = handlePrismaError(error, "loginAction");
+    return { error: errorMessage };
   }
 }
 

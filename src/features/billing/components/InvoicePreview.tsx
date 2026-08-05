@@ -230,6 +230,15 @@ export default function InvoicePreview({ invoice }: Props) {
               {numberToWords(rounded)}
             </div>
           </div>
+
+          {invoice.notes && invoice.notes.trim() && (
+            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 italic">Internal Notes / Remarks</p>
+              <div className="text-[11px] font-medium text-slate-800 leading-relaxed whitespace-pre-line border-l-4 border-primary-500 pl-3">
+                {invoice.notes.trim()}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="space-y-4">

@@ -1,0 +1,2 @@
+id,companyName,gstin,pan,address1,address2,city,state,pincode,phone,email,website,bankName,bankBranch,bankAccountNo,bankIfsc,bankAccountName,invoicePrefix,quotationPrefix,defaultGstType,currency,showPkgDetails,showLogo,logoUrl,updatedAt
+cmqagxy7n0000jp04tinvrqku,ESSAR ENTERPRISES,29AOPPM7487J1ZV,,"SITE NO.9, SEEGAHALLI VILLAGE",KR PURAM HOBLI,BANGALORE,Karnataka,560049,+91 85531 85300,essarwater.info@gmail.com,,FEDERAL BANK,DOMMASANDRA,21650200003173,FDRL0002165,ESSAR ENTERPRISES,SRB2B,SRQUO,CGST_SGST,INR,true,true,logo.png,"""2026-06-30T08:59:01.182Z"""

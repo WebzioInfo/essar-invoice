@@ -165,13 +165,40 @@ State: ${invoice.client.state}
     doc.setFontSize(9);
     doc.text(`Amount in Words: ${numberToWords(Math.round(grandTotal))}`, 10, y + 38);
 
+    let currentY = y + 48;
+
+    /* INTERNAL NOTES */
+    if (invoice.notes && invoice.notes.trim()) {
+        const notesText = invoice.notes.trim();
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(9);
+        const lines = doc.splitTextToSize(notesText, 180);
+        
+        if (currentY + lines.length * 4.5 + 40 > 275) {
+            doc.addPage();
+            currentY = 15;
+        }
+
+        doc.text("Internal Notes / Remarks:", 10, currentY);
+        currentY += 5;
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8.5);
+        doc.text(lines, 10, currentY);
+        currentY += lines.length * 4.5 + 8;
+    }
+
     /* BANK DETAILS */
+    if (currentY + 35 > 275) {
+        doc.addPage();
+        currentY = 15;
+    }
+
     doc.setFontSize(10);
     doc.setFont("helvetica", "bold");
-    doc.text("Bank Details for Settlement", 10, y + 50);
+    doc.text("Bank Details for Settlement", 10, currentY);
 
     doc.setFont("helvetica", "normal");
-    const bankY = y + 57;
+    const bankY = currentY + 7;
     const labelX = 10;
     const valueX = 40;
 

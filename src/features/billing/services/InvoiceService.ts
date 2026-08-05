@@ -66,6 +66,7 @@ export class InvoiceService {
           subTotal: validatedData.subTotal,
           taxTotal: validatedData.taxTotal,
           grandTotal: Math.round(Number(validatedData.grandTotal)),
+          notes: validatedData.notes ?? null,
           ewayBill: validatedData.ewayBill,
           ewayBillUrl: validatedData.ewayBillUrl,
           vehicleNo: validatedData.vehicleNo,
@@ -151,6 +152,7 @@ export class InvoiceService {
         where.OR = [
             { invoiceNo: { contains: q } },
             { client: { name: { contains: q } } },
+            { notes: { contains: q } },
         ];
     }
 
@@ -166,6 +168,7 @@ export class InvoiceService {
                 date: true,
                 grandTotal: true,
                 status: true,
+                notes: true,
                 client: { select: { id: true, name: true } }
             }
         }),
@@ -200,6 +203,7 @@ export class InvoiceService {
       subTotal: validatedData.subTotal,
       taxTotal: validatedData.taxTotal,
       grandTotal: Math.round(Number(validatedData.grandTotal)),
+      notes: validatedData.notes ?? null,
       ewayBill: validatedData.ewayBill,
       ewayBillUrl: validatedData.ewayBillUrl,
       vehicleNo: validatedData.vehicleNo,
@@ -414,5 +418,71 @@ export class InvoiceService {
     return await invoiceRepo.model.delete({
       where: { id: invoiceId }
     });
+  }
+
+  async findById(invoiceId: string) {
+    const invoice = await db.invoice.findFirst({
+      where: { id: invoiceId, deletedAt: null },
+      include: {
+        client: true,
+        lineItems: { include: { product: true } }
+      }
+    });
+    return serializePrisma(invoice);
+  }
+
+  async duplicateInvoice(invoiceId: string, userId: string) {
+    const original = await this.findById(invoiceId);
+    if (!original) throw new Error("Invoice not found");
+
+    const duplicateData = {
+      clientId: original.clientId,
+      date: new Date().toISOString().split("T")[0],
+      gstType: original.gstType,
+      subTotal: Number(original.subTotal),
+      taxTotal: Number(original.taxTotal),
+      grandTotal: Number(original.grandTotal),
+      notes: original.notes,
+      ewayBill: original.ewayBill || undefined,
+      ewayBillUrl: original.ewayBillUrl || undefined,
+      vehicleNo: original.vehicleNo || undefined,
+      dispatchedThrough: original.dispatchedThrough || undefined,
+      isFreightCollect: original.isFreightCollect,
+      freightAmount: Number(original.freightAmount || 0),
+      freightTaxPercent: Number(original.freightTaxPercent || 0),
+      billingAddress: {
+        name: original.billingName || original.client?.name || "",
+        address1: original.billingAddress1 || original.client?.address1 || "",
+        address2: original.billingAddress2 || original.client?.address2 || "",
+        state: original.billingState || original.client?.state || "",
+        pinCode: original.billingPinCode || original.client?.pinCode || "",
+        phone: original.billingPhone || original.client?.phone || "",
+        gst: original.billingGst || original.client?.gst || ""
+      },
+      shippingAddress: {
+        name: original.shippingName || "",
+        address1: original.shippingAddress1 || "",
+        address2: original.shippingAddress2 || "",
+        state: original.shippingState || "",
+        pinCode: original.shippingPinCode || "",
+      },
+      shippingSameAsBilling: original.shippingSameAsBilling,
+      items: (original.lineItems || []).map((item: any) => ({
+        productId: item.productId || undefined,
+        description: item.description,
+        hsn: item.hsn,
+        qty: Number(item.qty),
+        rate: Number(item.rate),
+        taxPercent: Number(item.taxPercent),
+        taxAmount: Number(item.taxAmount),
+        unit: item.unit || "NOS",
+        pkgCount: item.pkgCount || 0,
+        pkgType: item.pkgType || "BOX",
+        qtyPerBox: item.qtyPerBox || 0,
+        totalAmount: Number(item.totalAmount),
+      })),
+    };
+
+    return await this.createInvoice(userId, duplicateData);
   }
 }

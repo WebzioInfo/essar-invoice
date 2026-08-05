@@ -14,6 +14,7 @@ import {
 import { Button } from "@/ui/core/Button";
 import { deleteInvoiceAction, restoreInvoiceAction, permanentlyDeleteInvoiceAction } from "@/features/billing/actions/billing";
 import { useToast } from "@/context/ToastContext";
+import { fetchInvoicePdf, downloadPdf } from "@/lib/pdfService";
 
 interface InvoiceListActionsProps {
   invoiceId: string;
@@ -31,22 +32,8 @@ export function InvoiceListActions({ invoiceId, isTrashed = false, onSuccess }: 
   const handleDownload = async () => {
     setIsDownloading(true);
     try {
-      const response = await fetch("/api/invoices/download", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: invoiceId }),
-      });
-
-      if (!response.ok) throw new Error("Download failed");
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `Invoice_${invoiceId}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
+      const { blob, fileName } = await fetchInvoicePdf(invoiceId);
+      downloadPdf(blob, fileName);
       success("Invoice downloaded successfully.");
     } catch (err) {
       error("Failed to download invoice.");

@@ -22,7 +22,7 @@ export async function createClientAction(formData: FormData) {
 
     try {
         await ClientService.createClient(session.userId, data);
-        revalidatePath("/dashboard/clients");
+        revalidatePath("/clients");
         return { success: true };
     } catch (error: any) {
         return handleActionError(error);
@@ -46,7 +46,7 @@ export async function updateClientAction(clientId: string, formData: FormData) {
 
     try {
         await ClientService.updateClient(session.userId, clientId, data);
-        revalidatePath("/dashboard/clients");
+        revalidatePath("/clients");
         return { success: true };
     } catch (error: any) {
         return handleActionError(error);
@@ -59,7 +59,7 @@ export async function deleteClientAction(clientId: string) {
 
     try {
         await ClientService.deleteClient(session.userId, clientId);
-        revalidatePath("/dashboard/clients");
+        revalidatePath("/clients");
         return { success: true };
     } catch (error: any) {
         return handleActionError(error);

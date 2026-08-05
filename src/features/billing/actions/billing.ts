@@ -159,3 +159,17 @@ export async function permanentlyDeleteInvoiceAction(invoiceId: string) {
         return handleActionError(error);
     }
 }
+
+export async function duplicateInvoiceAction(invoiceId: string) {
+    const session = await verifySessionVerified();
+    if (!session) throw new Error("Unauthorized");
+
+    try {
+        const invoice = await invoiceService.duplicateInvoice(invoiceId, session.userId);
+        revalidatePath("/dashboard");
+        revalidatePath("/invoices");
+        return { success: true, invoiceId: invoice.id };
+    } catch (error: any) {
+        return handleActionError(error);
+    }
+}

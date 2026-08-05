@@ -3,7 +3,10 @@ import { cache } from "react";
 import { cookies } from "next/headers";
 import { env } from "./env";
 
-const SECRET_KEY = new TextEncoder().encode(env.JWT_SECRET);
+function getSecretKey() {
+    return new TextEncoder().encode(env.JWT_SECRET);
+}
+
 const SESSION_COOKIE_NAME = "essar_session";
 
 export interface SessionPayload {
@@ -18,7 +21,7 @@ export async function createSessionCookie(payload: SessionPayload) {
         .setProtectedHeader({ alg: "HS256" })
         .setExpirationTime("1d")
         .setIssuedAt()
-        .sign(SECRET_KEY);
+        .sign(getSecretKey());
 
     const cookieStore = await cookies();
 
@@ -38,7 +41,7 @@ export const verifySessionCookie = cache(async (): Promise<SessionPayload | null
     if (!token) return null;
 
     try {
-        const { payload } = await jwtVerify(token, SECRET_KEY, {
+        const { payload } = await jwtVerify(token, getSecretKey(), {
             algorithms: ["HS256"],
         });
         return payload as unknown as SessionPayload;

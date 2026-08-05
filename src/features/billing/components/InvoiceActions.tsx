@@ -3,12 +3,11 @@
 import { useState, useTransition } from "react";
 import { markInvoiceSentAction, deleteInvoiceAction } from "@/features/billing/actions/billing";
 import { useToast } from "@/context/ToastContext";
-import { Button } from "@/ui/core/Button";
 import { Send, FileDown, CheckCircle2, Edit, Loader2, Trash2, Printer } from "lucide-react";
 import Link from "next/link";
-import apiClient from "@/lib/apiClient";
 import { useConfirmStore } from "@/hooks/useConfirmStore";
 import { useRouter } from "next/navigation";
+import { fetchInvoicePdf, downloadPdf, printPdf } from "@/lib/pdfService";
 
 interface InvoiceActionsProps {
     invoiceId: string;
@@ -18,7 +17,8 @@ interface InvoiceActionsProps {
 export function InvoiceActions({ invoiceId, status }: InvoiceActionsProps) {
     const [isPending, startTransition] = useTransition();
     const [isDownloading, setIsDownloading] = useState(false);
-    const { success, error } = useToast();
+    const [isPrinting, setIsPrinting] = useState(false);
+    const { success, error, info } = useToast();
     const { confirm } = useConfirmStore();
     const router = useRouter();
 
@@ -58,43 +58,49 @@ export function InvoiceActions({ invoiceId, status }: InvoiceActionsProps) {
         });
     };
 
-    const handleDownload = async () => {
-        setIsDownloading(true);
+    const handlePrintPDF = async () => {
+        if (isPrinting || isDownloading) return;
+        setIsPrinting(true);
+        info("Generating PDF...");
         try {
-            const res = await apiClient.post("/api/invoices/download", { invoiceId }, {
-                responseType: 'blob'
-            });
+            const { blob } = await fetchInvoicePdf(invoiceId);
+            info("Printing...");
+            await printPdf(blob);
+            success("Invoice PDF sent to printer.");
+        } catch (err: any) {
+            console.error("[PRINT_ERROR]", err);
+            const errorMsg = err?.response?.data?.error || err?.message || "Print Failed";
+            error(errorMsg);
+        } finally {
+            setIsPrinting(false);
+        }
+    };
 
-            // Derive filename from Content-Disposition header or fallback
-            const disposition = (res.headers as any)["content-disposition"] || "";
-            const fileNameMatch = disposition.match(/filename="?([^"]+)"?/);
-            const fileName = fileNameMatch ? fileNameMatch[1] : `invoice-${invoiceId}.pdf`;
-
-            const url = URL.createObjectURL(res.data);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = fileName;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            URL.revokeObjectURL(url);
-
-            success("Invoice PDF downloaded successfully.");
+    const handleDownloadPDF = async () => {
+        if (isDownloading || isPrinting) return;
+        setIsDownloading(true);
+        info("Generating PDF...");
+        try {
+            const { blob, fileName } = await fetchInvoicePdf(invoiceId);
+            downloadPdf(blob, fileName);
+            success("PDF Generated");
         } catch (err: any) {
             console.error("[DOWNLOAD_ERROR]", err);
-            const errorMsg = err.response?.data?.error || "Failed to generate PDF. Please try again.";
+            const errorMsg = err?.response?.data?.error || err?.message || "Failed to generate PDF. Please try again.";
             error(errorMsg);
         } finally {
             setIsDownloading(false);
         }
     };
 
+    const isDisabled = isPending || isDownloading || isPrinting;
+
     return (
         <div className="flex flex-wrap items-center gap-4">
             {status === "DRAFT" && (
                 <button
                     onClick={handleMarkSent}
-                    disabled={isPending}
+                    disabled={isDisabled}
                     className="h-14 px-8 bg-white border border-slate-200 text-slate-700 rounded-xl font-black text-[11px] uppercase tracking-widest shadow-sm hover:bg-slate-50 transition-all flex items-center gap-3 active:scale-[0.98] disabled:opacity-50"
                 >
                     {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4 text-primary-500" />}
@@ -105,7 +111,8 @@ export function InvoiceActions({ invoiceId, status }: InvoiceActionsProps) {
             {status !== "PAID" && status !== "DRAFT" && (
                 <Link href={`/payments/new?invoiceId=${invoiceId}`}>
                     <button
-                        className="h-14 px-8 bg-emerald-600 text-white rounded-xl font-black text-[11px] uppercase tracking-widest shadow-xl shadow-emerald-500/20 hover:bg-emerald-700 transition-all flex items-center gap-3 active:scale-[0.98]"
+                        disabled={isDisabled}
+                        className="h-14 px-8 bg-emerald-600 text-white rounded-xl font-black text-[11px] uppercase tracking-widest shadow-xl shadow-emerald-500/20 hover:bg-emerald-700 transition-all flex items-center gap-3 active:scale-[0.98] disabled:opacity-50"
                     >
                         <CheckCircle2 className="w-4 h-4" /> Record Settlement
                     </button>
@@ -114,36 +121,45 @@ export function InvoiceActions({ invoiceId, status }: InvoiceActionsProps) {
 
             {status === "DRAFT" && (
                 <Link href={`/invoices/${invoiceId}/edit`}>
-                    <button className="h-14 px-8 bg-white border border-slate-200 text-slate-700 rounded-xl font-black text-[11px] uppercase tracking-widest shadow-sm hover:bg-slate-50 transition-all flex items-center gap-3 active:scale-[0.98]">
+                    <button
+                        disabled={isDisabled}
+                        className="h-14 px-8 bg-white border border-slate-200 text-slate-700 rounded-xl font-black text-[11px] uppercase tracking-widest shadow-sm hover:bg-slate-50 transition-all flex items-center gap-3 active:scale-[0.98] disabled:opacity-50"
+                    >
                         <Edit className="w-4 h-4 text-indigo-500" /> Modify
                     </button>
                 </Link>
             )}
 
             <button
-                onClick={() => window.print()}
-                className="h-14 px-8 bg-white border border-slate-200 text-slate-700 rounded-xl font-black text-[11px] uppercase tracking-widest shadow-sm hover:bg-slate-50 transition-all flex items-center gap-3 active:scale-[0.98]"
+                onClick={handlePrintPDF}
+                disabled={isDisabled}
+                className="h-14 px-8 bg-white border border-slate-200 text-slate-700 rounded-xl font-black text-[11px] uppercase tracking-widest shadow-sm hover:bg-slate-50 transition-all flex items-center gap-3 active:scale-[0.98] disabled:opacity-70"
             >
-                <Printer className="w-4 h-4 text-slate-400" />
-                Print Protocol
+                {isPrinting ? (
+                    <Loader2 className="w-4 h-4 animate-spin text-primary-600" />
+                ) : (
+                    <Printer className="w-4 h-4 text-slate-400" />
+                )}
+                {isPrinting ? "Generating PDF…" : "Print PDF"}
             </button>
 
             <button
-                onClick={handleDownload}
-                disabled={isDownloading}
+                onClick={handleDownloadPDF}
+                disabled={isDisabled}
                 className="h-14 px-8 bg-slate-900 text-white rounded-xl font-black text-[11px] uppercase tracking-widest shadow-2xl shadow-slate-900/10 hover:bg-primary-600 transition-all flex items-center gap-3 active:scale-[0.98] disabled:opacity-70"
             >
-                {isDownloading
-                    ? <Loader2 className="w-4 h-4 animate-spin" />
-                    : <FileDown className="w-4 h-4" />
-                }
-                {isDownloading ? "Protocol Generation…" : "Download"}
+                {isDownloading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                    <FileDown className="w-4 h-4" />
+                )}
+                {isDownloading ? "Generating PDF…" : "Download PDF"}
             </button>
 
             <button
                 onClick={handleTrash}
-                disabled={isPending}
-                className="h-14 px-6 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all ml-auto active:scale-90 group"
+                disabled={isDisabled}
+                className="h-14 px-6 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all ml-auto active:scale-90 group disabled:opacity-50"
                 title="Terminate Record"
             >
                 <Trash2 className="w-5 h-5 group-hover:scale-110 transition-transform" />
