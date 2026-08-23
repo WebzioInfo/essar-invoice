@@ -16,6 +16,10 @@ export const productSchema = z.object({
   notes: z.string().optional().nullable(),
   pkgType: z.string().optional().default("BOX"),
   qtyPerBox: z.coerce.number().min(0).default(0),
+  showPkgDetails: z.preprocess(
+    (val) => (val === "false" ? false : val === "true" ? true : val === false ? false : true),
+    z.boolean().default(true)
+  ),
   active: z.boolean().optional().default(true),
 });
 

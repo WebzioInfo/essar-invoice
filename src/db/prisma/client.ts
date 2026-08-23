@@ -10,7 +10,7 @@ function buildDatasourceUrl(baseUrl: string): string {
         return baseUrl;
     }
     const separator = baseUrl.includes("?") ? "&" : "?";
-    return `${baseUrl}${separator}connection_limit=1&pool_timeout=30`;
+    return `${baseUrl}${separator}connection_limit=5&connect_timeout=15&pool_timeout=30&socket_timeout=30`;
 }
 
 const prismaClientSingleton = () => {

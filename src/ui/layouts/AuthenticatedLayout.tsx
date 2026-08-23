@@ -31,6 +31,7 @@ import {
   Trash2,
   Layers,
   TrendingUp,
+  Database,
 } from "lucide-react";
 import { cn } from "@/utils";
 
@@ -175,6 +176,12 @@ const NAV_SECTIONS: NavSection[] = [
         href: "/settings",
         icon: Settings,
         description: "Configuration",
+      },
+      {
+        name: "Data Management",
+        href: "/settings/data-management",
+        icon: Database,
+        description: "Backup & Recovery",
       },
       {
         name: "Trash",

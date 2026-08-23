@@ -15,6 +15,7 @@ export type TransactionItem = {
     pkgCount?: number;
     pkgType?: string;
     qtyPerBox?: number;
+    showPkgDetails?: boolean;
     taxPercent: number;
     taxAmount?: number;
     totalAmount?: number;
@@ -98,6 +99,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
             unit: "NOS",
             pkgCount: 1,
             pkgType: "BOX",
+            showPkgDetails: true,
             taxPercent: 18,
             taxAmount: 0,
             totalAmount: 0
@@ -111,7 +113,8 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
             id: item.id || nanoid(),
             qty: Number(item.qty || 0),
             rate: Number(item.rate || 0),
-            taxPercent: Number(item.taxPercent || 0)
+            taxPercent: Number(item.taxPercent || 0),
+            showPkgDetails: item.showPkgDetails !== undefined ? Boolean(item.showPkgDetails) : true
         }));
         set((state) => ({ items: [...state.items, ...itemsWithIds] }));
     },
@@ -164,18 +167,44 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
             return {
                 ...rest,
                 id: nanoid(),
+                productId: item.productId || undefined,
+                description: item.description || "",
+                hsn: item.hsn || "",
+                unit: item.unit || "NOS",
+                pkgCount: Number(item.pkgCount || 0),
+                pkgType: item.pkgType || "BOX",
                 qtyPerBox: Number(item.qtyPerBox || 0),
+                showPkgDetails: item.showPkgDetails !== undefined ? Boolean(item.showPkgDetails) : true,
                 ...totals
             };
         });
 
-        set({
-            mode: data.mode || "INVOICE",
+        // Format dates to YYYY-MM-DD
+        let formattedDate = initialState.date;
+        if (data.date) {
+            if (typeof data.date === 'string') {
+                formattedDate = data.date.includes('T') ? data.date.split('T')[0] : data.date;
+            } else if (data.date instanceof Date) {
+                formattedDate = data.date.toISOString().split('T')[0];
+            }
+        }
+
+        let formattedValidUntil = "";
+        if (data.validUntil) {
+            if (typeof data.validUntil === 'string') {
+                formattedValidUntil = data.validUntil.includes('T') ? data.validUntil.split('T')[0] : data.validUntil;
+            } else if (data.validUntil instanceof Date) {
+                formattedValidUntil = data.validUntil.toISOString().split('T')[0];
+            }
+        }
+
+        set((state) => ({
+            mode: data.mode || (data.quotationNo ? "QUOTATION" : state.mode || "INVOICE"),
             entityId: data.clientId || data.vendorId || "",
-            date: data.date ? (typeof data.date === 'string' ? data.date : new Date(data.date).toISOString().split('T')[0]) : initialState.date,
-            validUntil: data.validUntil || "",
+            date: formattedDate,
+            validUntil: formattedValidUntil,
             gstType: data.gstType || "CGST_SGST",
-            invoiceNo: data.invoiceNo || "",
+            invoiceNo: data.invoiceNo || data.quotationNo || "",
             ewayBill: data.ewayBill || "",
             ewayBillUrl: data.ewayBillUrl || "",
             vehicleNo: data.vehicleNo || "",
@@ -202,7 +231,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
             isFreightCollect: data.isFreightCollect || false,
             freightAmount: Number(data.freightAmount || 0),
             freightTaxPercent: Number(data.freightTaxPercent || 0),
-        });
+        }));
     }
 }));
 

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { 
+  Download,
   Edit, 
   Trash2, 
   ExternalLink,
@@ -13,6 +14,7 @@ import {
 import { Button } from "@/ui/core/Button";
 import { deleteQuotationAction, restoreQuotationAction, permanentlyDeleteQuotationAction } from "@/features/billing/actions/quotations";
 import { useToast } from "@/context/ToastContext";
+import { fetchQuotationPdf, downloadPdf } from "@/lib/pdfService";
 
 interface QuotationListActionsProps {
   quotationId: string;
@@ -23,8 +25,22 @@ interface QuotationListActionsProps {
 export function QuotationListActions({ quotationId, isTrashed = false, onSuccess }: QuotationListActionsProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const { success, error } = useToast();
+
+  const handleDownload = async () => {
+    setIsDownloading(true);
+    try {
+      const { blob, fileName } = await fetchQuotationPdf(quotationId);
+      downloadPdf(blob, fileName);
+      success("Quotation PDF downloaded successfully.");
+    } catch (err) {
+      error("Failed to download quotation PDF.");
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   const handleDelete = async () => {
     if (!showConfirm) {
@@ -158,6 +174,17 @@ export function QuotationListActions({ quotationId, isTrashed = false, onSuccess
               <Edit className="w-4 h-4" />
             </Button>
           </Link>
+
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-9 w-9 p-0 rounded-xl hover:bg-emerald-50 text-slate-400 hover:text-emerald-600"
+            onClick={handleDownload}
+            disabled={isDownloading}
+            title="Download Quotation PDF"
+          >
+            {isDownloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+          </Button>
 
           <Button 
             variant="ghost" 

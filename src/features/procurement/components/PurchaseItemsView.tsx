@@ -61,7 +61,7 @@ export function PurchaseItemsView({ items }: PurchaseItemsViewProps) {
                                 <div className="flex justify-between items-center">
                                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Rate & Volume</span>
                                     <span className="text-sm font-black text-slate-900 italic tracking-tight">
-                                        {formatCurrency(Number(item.rate))} × {item.qty}
+                                        {formatCurrency(Number(item.rate))} × {Number(item.qty)}
                                     </span>
                                 </div>
                                 <div className="flex justify-between items-center">

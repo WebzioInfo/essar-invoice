@@ -16,6 +16,7 @@ import {
     drawBankAndSignatureSection, 
     drawPageFooter 
 } from "./sections";
+import { determinePlaceOfSupplyState, calculateGstBreakdown } from "@/utils/gst";
 
 export interface PDFGenerationResult {
     buffer: Uint8Array<ArrayBufferLike>;
@@ -139,21 +140,16 @@ export async function generateInvoicePDF(invoiceId: string): Promise<PDFGenerati
     const fTaxPercent = invoice.freightTaxPercent?.toNumber ? invoice.freightTaxPercent.toNumber() : Number(invoice.freightTaxPercent || 0);
     const hsnSummaryMap = aggregateHsnSummary(lineItems, freightVal, fTaxPercent);
 
+    const posState = determinePlaceOfSupplyState(invoice);
     const gstType = invoice.gstType || "CGST_SGST";
     y = drawHsnSummaryTable(doc, gstType, hsnSummaryMap, y);
 
     // 8. Draw GST Declaration
-    y = drawGstDeclaration(doc, invoice.billingState || invoice.client?.state || "Karnataka", y);
+    y = drawGstDeclaration(doc, posState, y);
 
     // 9. Process financial totals
     const taxVal = invoice.taxTotal?.toNumber ? invoice.taxTotal.toNumber() : Number(invoice.taxTotal || 0);
-    let cgst = 0, sgst = 0, igst = 0;
-    if (gstType === "CGST_SGST") {
-        cgst = taxVal / 2;
-        sgst = taxVal / 2;
-    } else {
-        igst = taxVal;
-    }
+    const { cgst, sgst, igst } = calculateGstBreakdown(taxVal, gstType);
 
     const grandTotalRaw = invoice.grandTotal?.toNumber ? invoice.grandTotal.toNumber() : Number(invoice.grandTotal || 0);
     const rounded = Math.round(grandTotalRaw);

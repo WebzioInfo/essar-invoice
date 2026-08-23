@@ -1,10 +1,13 @@
 import { db } from "@/db/prisma/client";
 import { serializePrisma } from "@/utils/serialization";
 import { recordAuditLog } from "@/lib/audit";
-import { StockService } from "@/features/inventory/services/StockService";
+import { validateData } from "@/lib/validation";
+import { quotationSchema } from "../validators/quotationSchema";
+import { calculateBillingTotals } from "@/utils/financials";
+import { determinePlaceOfSupplyState, determineGstType } from "@/utils/gst";
 
 // Local Enum Overrides (Hard Fix for Prisma Stale-ness on Windows)
-export type QuotationStatus = 'DRAFT' | 'SENT' | 'ACCEPTED' | 'REJECTED' | 'CONVERTED' | 'EXPIRED';
+export type QuotationStatus = 'DRAFT' | 'SENT' | 'ACCEPTED' | 'REJECTED' | 'CONVERTED' | 'EXPIRED' | 'CANCELLED';
 export const QuotationStatus = {
   DRAFT: 'DRAFT' as const,
   SENT: 'SENT' as const,
@@ -12,6 +15,7 @@ export const QuotationStatus = {
   REJECTED: 'REJECTED' as const,
   CONVERTED: 'CONVERTED' as const,
   EXPIRED: 'EXPIRED' as const,
+  CANCELLED: 'CANCELLED' as const,
 };
 
 export type InvoiceStatus = 'DRAFT' | 'SENT' | 'PARTIAL' | 'PAID' | 'OVERDUE' | 'CANCELLED';
@@ -35,8 +39,23 @@ export class QuotationService {
   /**
    * Creates a new quotation with line items.
    */
-  static async createQuotation(userId: string | null, data: any) {
-    return await db.$transaction(async (tx) => {
+  static async createQuotation(userId: string | null, rawData: any) {
+    const data = await validateData(quotationSchema, rawData);
+
+    const posState = determinePlaceOfSupplyState({
+      billingAddress: data.billingAddress,
+      shippingAddress: data.shippingAddress,
+      shippingSameAsBilling: data.shippingSameAsBilling
+    });
+    const effectiveGstType = data.gstType === "NONE" ? "NONE" : determineGstType(posState);
+
+    const computedTotals = calculateBillingTotals(
+      data.items.map((i: any) => ({ qty: Number(i.qty), rate: Number(i.rate), taxPercent: Number(i.taxPercent) })),
+      Number(data.freightAmount || 0),
+      Number(data.freightTaxPercent || 0)
+    );
+
+    const quotation = await db.$transaction(async (tx) => {
       // 1. Get next sequence number for quotations
       const lastQuo = await tx.quotation.findFirst({
         orderBy: { sequenceNumber: "desc" },
@@ -65,18 +84,18 @@ export class QuotationService {
       const quoNo = `JE/QUO/${seq}/${fy}`;
 
       // 2. Create the quotation
-      const quotation = await tx.quotation.create({
+      return await tx.quotation.create({
         data: {
           clientId: data.clientId,
           sequenceNumber: nextSeq,
           quotationNo: quoNo,
           date: new Date(data.date),
           validUntil: data.validUntil ? new Date(data.validUntil) : null,
-          gstType: data.gstType as GstType,
-          subTotal: data.subTotal,
-          taxTotal: data.taxTotal,
-          grandTotal: data.grandTotal,
-          notes: data.notes,
+          gstType: effectiveGstType as any,
+          subTotal: computedTotals.subTotal,
+          taxTotal: computedTotals.taxTotal,
+          grandTotal: computedTotals.grandTotal,
+          notes: data.notes ?? null,
           isFreightCollect: data.isFreightCollect || false,
           freightAmount: data.freightAmount || 0,
           freightTaxPercent: data.freightTaxPercent || 0,
@@ -84,13 +103,13 @@ export class QuotationService {
           status: QuotationStatus.DRAFT,
 
           // Address snapshots
-          billingName: data.billingAddress?.name,
-          billingAddress1: data.billingAddress?.address1,
-          billingAddress2: data.billingAddress?.address2,
-          billingState: data.billingAddress?.state,
-          billingPinCode: data.billingAddress?.pinCode,
-          billingPhone: data.billingAddress?.phone,
-          billingGst: data.billingAddress?.gst,
+          billingName: data.billingAddress?.name || null,
+          billingAddress1: data.billingAddress?.address1 || null,
+          billingAddress2: data.billingAddress?.address2 || null,
+          billingState: data.billingAddress?.state || null,
+          billingPinCode: data.billingAddress?.pinCode || null,
+          billingPhone: data.billingAddress?.phone || null,
+          billingGst: data.billingAddress?.gst || null,
           shippingSameAsBilling: data.shippingSameAsBilling,
           shippingName: data.shippingSameAsBilling ? data.billingAddress?.name : data.shippingAddress?.name,
           shippingAddress1: data.shippingSameAsBilling ? data.billingAddress?.address1 : data.shippingAddress?.address1,
@@ -102,31 +121,169 @@ export class QuotationService {
             create: data.items.map((item: any) => ({
               product: item.productId ? { connect: { id: item.productId } } : undefined,
               description: item.description,
-              hsn: item.hsn,
-              qty: parseFloat(item.qty),
+              hsn: item.hsn || null,
+              qty: parseFloat(String(item.qty)),
               rate: item.rate,
               taxPercent: item.taxPercent,
-              taxAmount: item.taxAmount,
+              taxAmount: item.taxAmount || 0,
+              unit: item.unit || "NOS",
               pkgCount: item.pkgCount || 0,
               pkgType: item.pkgType || "BOX",
               qtyPerBox: item.qtyPerBox || 0,
+              showPkgDetails: item.showPkgDetails !== undefined ? Boolean(item.showPkgDetails) : true,
               totalAmount: item.totalAmount,
             })),
           },
         },
+        include: {
+          client: true,
+          lineItems: {
+            orderBy: { id: "asc" },
+            include: { product: true },
+          },
+        },
+      });
+    }, { timeout: 30000, maxWait: 10000 });
+
+    // 3. Audit Log
+    recordAuditLog(db, {
+      userId,
+      action: "QUOTATION_CREATED",
+      entityType: "Quotation",
+      entityId: quotation.id,
+      details: { quotationNo: quotation.quotationNo, grandTotal: computedTotals.grandTotal },
+    }).catch(() => {});
+
+    return serializePrisma(quotation);
+  }
+
+  /**
+   * Updates an existing quotation and replaces line items transactionally.
+   */
+  static async updateQuotation(quotationId: string, userId: string | null, rawData: any) {
+    const data = await validateData(quotationSchema, rawData);
+
+    const posState = determinePlaceOfSupplyState({
+      billingAddress: data.billingAddress,
+      shippingAddress: data.shippingAddress,
+      shippingSameAsBilling: data.shippingSameAsBilling
+    });
+    const effectiveGstType = data.gstType === "NONE" ? "NONE" : determineGstType(posState);
+
+    const computedTotals = calculateBillingTotals(
+      data.items.map((i: any) => ({ qty: Number(i.qty), rate: Number(i.rate), taxPercent: Number(i.taxPercent) })),
+      Number(data.freightAmount || 0),
+      Number(data.freightTaxPercent || 0)
+    );
+
+    const updated = await db.$transaction(async (tx) => {
+      // 1. Ensure quotation exists and is not deleted
+      const existing = await tx.quotation.findUnique({
+        where: { id: quotationId, deletedAt: null },
       });
 
-      // 3. Audit Log
-      await recordAuditLog(tx, {
-        userId,
-        action: "QUOTATION_CREATED",
-        entityType: "Quotation",
-        entityId: quotation.id,
-        details: { quotationNo: quoNo, grandTotal: data.grandTotal },
+      if (!existing) {
+        throw new Error("Quotation record not found or inaccessible.");
+      }
+
+      if (existing.status === QuotationStatus.CONVERTED) {
+        throw new Error("Cannot modify a converted quotation.");
+      }
+
+      // 2. Delete existing line items
+      await tx.quotationLineItem.deleteMany({
+        where: { quotationId },
       });
 
-      return serializePrisma(quotation);
-    }, { timeout: 15000 });
+      // 3. Update quotation record and insert new line items
+      return await tx.quotation.update({
+        where: { id: quotationId },
+        data: {
+          clientId: data.clientId,
+          date: new Date(data.date),
+          validUntil: data.validUntil ? new Date(data.validUntil) : null,
+          gstType: effectiveGstType as any,
+          subTotal: computedTotals.subTotal,
+          taxTotal: computedTotals.taxTotal,
+          grandTotal: computedTotals.grandTotal,
+          notes: data.notes ?? null,
+          isFreightCollect: data.isFreightCollect || false,
+          freightAmount: data.freightAmount || 0,
+          freightTaxPercent: data.freightTaxPercent || 0,
+          updatedById: userId,
+
+          // Address snapshots
+          billingName: data.billingAddress?.name || null,
+          billingAddress1: data.billingAddress?.address1 || null,
+          billingAddress2: data.billingAddress?.address2 || null,
+          billingState: data.billingAddress?.state || null,
+          billingPinCode: data.billingAddress?.pinCode || null,
+          billingPhone: data.billingAddress?.phone || null,
+          billingGst: data.billingAddress?.gst || null,
+          shippingSameAsBilling: data.shippingSameAsBilling,
+          shippingName: data.shippingSameAsBilling ? data.billingAddress?.name : data.shippingAddress?.name,
+          shippingAddress1: data.shippingSameAsBilling ? data.billingAddress?.address1 : data.shippingAddress?.address1,
+          shippingAddress2: data.shippingSameAsBilling ? data.billingAddress?.address2 : data.shippingAddress?.address2,
+          shippingState: data.shippingSameAsBilling ? data.billingAddress?.state : data.shippingAddress?.state,
+          shippingPinCode: data.shippingSameAsBilling ? data.billingAddress?.pinCode : data.shippingAddress?.pinCode,
+
+          lineItems: {
+            create: data.items.map((item: any) => ({
+              product: item.productId ? { connect: { id: item.productId } } : undefined,
+              description: item.description,
+              hsn: item.hsn || null,
+              qty: parseFloat(String(item.qty)),
+              rate: item.rate,
+              taxPercent: item.taxPercent,
+              taxAmount: item.taxAmount || 0,
+              unit: item.unit || "NOS",
+              pkgCount: item.pkgCount || 0,
+              pkgType: item.pkgType || "BOX",
+              qtyPerBox: item.qtyPerBox || 0,
+              showPkgDetails: item.showPkgDetails !== undefined ? Boolean(item.showPkgDetails) : true,
+              totalAmount: item.totalAmount,
+            })),
+          },
+        },
+        include: {
+          client: true,
+          lineItems: {
+            orderBy: { id: "asc" },
+            include: { product: true },
+          },
+        },
+      });
+    }, { timeout: 30000, maxWait: 10000 });
+
+    // 4. Record Audit Log (non-blocking)
+    recordAuditLog(db, {
+      userId,
+      action: "QUOTATION_UPDATED",
+      entityType: "Quotation",
+      entityId: quotationId,
+      details: { quotationNo: updated.quotationNo, grandTotal: data.grandTotal },
+    }).catch(() => {});
+
+    return serializePrisma(updated);
+  }
+
+  /**
+   * Fetches quotation by ID with client and line items.
+   */
+  static async getQuotationById(id: string) {
+    const quotation = await db.quotation.findUnique({
+      where: { id, deletedAt: null },
+      include: {
+        client: true,
+        lineItems: {
+          orderBy: { id: "asc" },
+          include: { product: true },
+        },
+      },
+    });
+
+    if (!quotation) return null;
+    return serializePrisma(quotation);
   }
 
   /**
@@ -147,7 +304,7 @@ export class QuotationService {
    * Converts a quotation into an invoice.
    */
   static async convertToInvoice(userId: string | null, quotationId: string) {
-    return await db.$transaction(async (tx) => {
+    const invoice = await db.$transaction(async (tx) => {
       const quotation = await tx.quotation.findUnique({
         where: { id: quotationId },
         include: { lineItems: true },
@@ -184,7 +341,7 @@ export class QuotationService {
       const invNo = `JE/${prefix}/${seq}/${fy}`;
 
       // 2. Create the Invoice
-      const invoice = await tx.invoice.create({
+      const createdInvoice = await tx.invoice.create({
         data: {
           clientId: quotation.clientId,
           sequenceNumber: nextSeq,
@@ -226,6 +383,7 @@ export class QuotationService {
               taxAmount: item.taxAmount,
               totalAmount: item.totalAmount,
               hsn: item.hsn,
+              unit: item.unit || "NOS",
               pkgCount: item.pkgCount || 0,
               pkgType: item.pkgType || "BOX",
               qtyPerBox: item.qtyPerBox || 0,
@@ -239,21 +397,23 @@ export class QuotationService {
         where: { id: quotationId },
         data: {
           status: QuotationStatus.CONVERTED,
-          convertedInvoiceId: invoice.id,
+          convertedInvoiceId: createdInvoice.id,
         },
       });
 
-      // 4. Audit Log
-      await recordAuditLog(tx, {
-        userId,
-        action: "QUOTATION_CONVERTED",
-        entityType: "Quotation",
-        entityId: quotationId,
-        details: { quotationNo: quotation.quotationNo, invoiceNo: invNo },
-      });
+      return createdInvoice;
+    }, { timeout: 30000, maxWait: 10000 });
 
-      return serializePrisma(invoice);
-    }, { timeout: 15000 });
+    // 4. Audit Log
+    recordAuditLog(db, {
+      userId,
+      action: "QUOTATION_CONVERTED",
+      entityType: "Quotation",
+      entityId: quotationId,
+      details: { invoiceNo: invoice.invoiceNo },
+    }).catch(() => {});
+
+    return serializePrisma(invoice);
   }
 
   /**

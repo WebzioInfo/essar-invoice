@@ -1,13 +1,14 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { convertQuotationToInvoiceAction, updateQuotationStatusAction } from "@/features/billing/actions/quotations";
 import { useToast } from "@/context/ToastContext";
 import { Button } from "@/ui/core/Button";
-import { Send, CheckCircle2, TrendingUp, XCircle, ArrowRight, FileText, FileDown, Loader2 } from "lucide-react";
+import { Send, CheckCircle2, TrendingUp, XCircle, ArrowRight, FileText, FileDown, Loader2, Edit, Printer } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { QuotationStatus } from "@prisma/client";
+import { QuotationStatus } from "@/features/billing/types";
+import { fetchQuotationPdf, downloadPdf, printPdf } from "@/lib/pdfService";
 
 interface QuotationActionsProps {
     quotationId: string;
@@ -17,7 +18,9 @@ interface QuotationActionsProps {
 
 export function QuotationActions({ quotationId, status, convertedInvoiceId }: QuotationActionsProps) {
     const [isPending, startTransition] = useTransition();
-    const { success, error } = useToast();
+    const [isDownloading, setIsDownloading] = useState(false);
+    const [isPrinting, setIsPrinting] = useState(false);
+    const { success, error, info } = useToast();
     const router = useRouter();
 
     const handleUpdateStatus = (newStatus: QuotationStatus) => {
@@ -52,12 +55,61 @@ export function QuotationActions({ quotationId, status, convertedInvoiceId }: Qu
         });
     };
 
+    const handleDownloadPDF = async () => {
+        if (isDownloading || isPrinting) return;
+        setIsDownloading(true);
+        info("Generating Quotation PDF...");
+        try {
+            const { blob, fileName } = await fetchQuotationPdf(quotationId);
+            downloadPdf(blob, fileName);
+            success("Quotation PDF downloaded successfully.");
+        } catch (err: any) {
+            console.error("[QUOTATION_DOWNLOAD_ERROR]", err);
+            const errorMsg = err?.response?.data?.error || err?.message || "Failed to generate quotation PDF. Please try again.";
+            error(errorMsg);
+        } finally {
+            setIsDownloading(false);
+        }
+    };
+
+    const handlePrintPDF = async () => {
+        if (isPrinting || isDownloading) return;
+        setIsPrinting(true);
+        info("Preparing Quotation for print...");
+        try {
+            const { blob } = await fetchQuotationPdf(quotationId);
+            await printPdf(blob);
+            success("Quotation sent to print dialog.");
+        } catch (err: any) {
+            console.error("[QUOTATION_PRINT_ERROR]", err);
+            const errorMsg = err?.response?.data?.error || err?.message || "Failed to open print dialog.";
+            error(errorMsg);
+        } finally {
+            setIsPrinting(false);
+        }
+    };
+
+    const isDisabled = isPending || isDownloading || isPrinting;
+
     return (
         <div className="flex flex-wrap items-center gap-3">
+            {/* Edit / Modify button - available for non-converted proposals */}
+            {status !== QuotationStatus.CONVERTED && (
+                <Link href={`/quotations/${quotationId}/edit`}>
+                    <Button 
+                        disabled={isDisabled}
+                        variant="secondary"
+                        className="h-10 px-5 gap-2 border-slate-200 text-slate-700 hover:text-primary-600 hover:bg-primary-50/50"
+                    >
+                        <Edit className="w-4 h-4 text-indigo-500" /> Modify Proposal
+                    </Button>
+                </Link>
+            )}
+
             {status === QuotationStatus.DRAFT && (
                 <Button 
                     onClick={() => handleUpdateStatus(QuotationStatus.SENT)} 
-                    disabled={isPending}
+                    disabled={isDisabled}
                     variant="secondary"
                     className="h-10 px-6 gap-2 border-slate-200"
                 >
@@ -70,15 +122,16 @@ export function QuotationActions({ quotationId, status, convertedInvoiceId }: Qu
                 <>
                     <Button 
                         onClick={() => handleUpdateStatus(QuotationStatus.ACCEPTED)} 
-                        disabled={isPending}
-                        className="h-10 px-6 gap-2 shadow-xl shadow-success-500/20"
+                        disabled={isDisabled}
+                        className="h-10 px-6 gap-2 shadow-xl shadow-success-500/20 text-white"
                         style={{ background: "linear-gradient(135deg, #16A34A, #15803D)" }}
                     >
-                        <CheckCircle2 className="w-4 h-4" /> Accept Proposal
+                        {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
+                        Accept Proposal
                     </Button>
                     <Button 
                         onClick={() => handleUpdateStatus(QuotationStatus.REJECTED)} 
-                        disabled={isPending}
+                        disabled={isDisabled}
                         variant="ghost"
                         className="h-10 px-4 gap-2 text-danger-600 hover:bg-danger-50"
                     >
@@ -90,8 +143,8 @@ export function QuotationActions({ quotationId, status, convertedInvoiceId }: Qu
             {status === QuotationStatus.ACCEPTED && (
                 <Button 
                     onClick={handleConvert} 
-                    disabled={isPending}
-                    className="h-11 px-8 gap-3 shadow-2xl shadow-primary-500/20 rounded-2xl animate-pulse-subtle"
+                    disabled={isDisabled}
+                    className="h-11 px-8 gap-3 shadow-2xl shadow-primary-500/20 rounded-2xl animate-pulse-subtle text-white"
                     style={{ background: "linear-gradient(135deg, #1B3A6B, #152E55)" }}
                 >
                     {isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : <TrendingUp className="w-5 h-5" />}
@@ -107,8 +160,25 @@ export function QuotationActions({ quotationId, status, convertedInvoiceId }: Qu
                 </Link>
             )}
 
-            <Button variant="secondary" className="h-10 px-4 gap-2 border-slate-200">
-                <FileDown className="w-4 h-4" /> PDF
+            {/* Print PDF Button */}
+            <Button 
+                onClick={handlePrintPDF}
+                disabled={isDisabled}
+                variant="secondary" 
+                className="h-10 px-4 gap-2 border-slate-200 text-slate-700 hover:bg-slate-50"
+            >
+                {isPrinting ? <Loader2 className="w-4 h-4 animate-spin text-primary-600" /> : <Printer className="w-4 h-4 text-slate-400" />}
+                {isPrinting ? "Generating..." : "Print"}
+            </Button>
+
+            {/* Download PDF Button */}
+            <Button 
+                onClick={handleDownloadPDF}
+                disabled={isDisabled}
+                className="h-10 px-5 gap-2 bg-slate-900 text-white hover:bg-primary-600 shadow-md shadow-slate-900/10 transition-all active:scale-95"
+            >
+                {isDownloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileDown className="w-4 h-4" />}
+                {isDownloading ? "Generating..." : "Download PDF"}
             </Button>
         </div>
     );

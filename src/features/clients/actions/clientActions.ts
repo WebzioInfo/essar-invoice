@@ -21,9 +21,9 @@ export async function createClientAction(formData: FormData) {
     };
 
     try {
-        await ClientService.createClient(session.userId, data);
+        const client = await ClientService.createClient(session.userId, data);
         revalidatePath("/clients");
-        return { success: true };
+        return { success: true, client };
     } catch (error: any) {
         return handleActionError(error);
     }

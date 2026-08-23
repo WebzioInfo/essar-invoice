@@ -1,61 +1,62 @@
 import { z } from "zod";
 
 export const invoiceLineItemSchema = z.object({
-    productId: z.string().optional(),
+    productId: z.string().optional().nullable(),
     description: z.string().min(1, "Description is required"),
-    hsn: z.string().optional(),
-    qty: z.number().positive("Quantity must be greater than 0"),
-    rate: z.number().positive("Rate must be greater than 0"),
-    taxPercent: z.number().min(0, "GST % cannot be negative"),
-    taxAmount: z.number().min(0),
+    hsn: z.string().optional().nullable(),
+    qty: z.coerce.number().positive("Quantity must be greater than 0"),
+    rate: z.coerce.number().min(0, "Rate cannot be negative"),
+    taxPercent: z.coerce.number().min(0, "GST % cannot be negative"),
+    taxAmount: z.coerce.number().min(0).optional().default(0),
     unit: z.string().optional().default("NOS"),
-    pkgCount: z.number().int().min(0).optional().default(0),
+    pkgCount: z.coerce.number().int().min(0).optional().default(0),
     pkgType: z.string().optional().default("BOX"),
-    qtyPerBox: z.number().min(0).optional().default(0),
-    totalAmount: z.number().positive(),
+    qtyPerBox: z.coerce.number().min(0).optional().default(0),
+    showPkgDetails: z.boolean().optional().default(true),
+    totalAmount: z.coerce.number().min(0).optional().default(0),
 });
 
 export const invoiceSchema = z.object({
     clientId: z.string().min(1, "Please select a client"),
-    date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format"),
-    invoiceNo: z.string().optional(),
+    date: z.string().min(1, "Date is required"),
+    invoiceNo: z.string().optional().nullable(),
     gstType: z.enum(["CGST_SGST", "IGST", "NONE"]),
 
     // Totals
-    subTotal: z.number().min(0),
-    taxTotal: z.number().min(0),
-    grandTotal: z.number().min(0),
+    subTotal: z.coerce.number().min(0).optional().default(0),
+    taxTotal: z.coerce.number().min(0).optional().default(0),
+    grandTotal: z.coerce.number().min(0).optional().default(0),
 
     notes: z.string().optional().nullable(),
 
     // Logistics
-    ewayBill: z.string().optional(),
-    ewayBillUrl: z.string().optional(),
-    vehicleNo: z.string().optional(),
-    dispatchedThrough: z.string().optional(),
+    ewayBill: z.string().optional().nullable(),
+    ewayBillUrl: z.string().optional().nullable(),
+    vehicleNo: z.string().optional().nullable(),
+    dispatchedThrough: z.string().optional().nullable(),
     isFreightCollect: z.boolean().default(false),
-    freightAmount: z.number().min(0).optional().default(0),
-    freightTaxPercent: z.number().min(0).max(100).optional().default(0),
+    freightAmount: z.coerce.number().min(0).optional().default(0),
+    freightTaxPercent: z.coerce.number().min(0).max(100).optional().default(0),
 
     // Address Snapshots
     billingAddress: z.object({
-        name: z.string(),
-        address1: z.string(),
-        address2: z.string().optional(),
-        state: z.string(),
-        pinCode: z.string().optional(),
-        phone: z.string().optional(),
-        gst: z.string().optional()
-    }).optional(),
+        name: z.string().optional().nullable(),
+        address1: z.string().optional().nullable(),
+        address2: z.string().optional().nullable(),
+        state: z.string().optional().nullable(),
+        pinCode: z.string().optional().nullable(),
+        phone: z.string().optional().nullable(),
+        gst: z.string().optional().nullable()
+    }).optional().nullable(),
     shippingAddress: z.object({
-        name: z.string(),
-        address1: z.string(),
-        address2: z.string().optional(),
-        state: z.string(),
-        pinCode: z.string().optional(),
-        phone: z.string().optional(),
-        gst: z.string().optional()
-    }).optional(),
+        name: z.string().optional().nullable(),
+        address1: z.string().optional().nullable(),
+        address2: z.string().optional().nullable(),
+        state: z.string().optional().nullable(),
+        pinCode: z.string().optional().nullable(),
+        phone: z.string().optional().nullable(),
+        gst: z.string().optional().nullable()
+    }).optional().nullable(),
     shippingSameAsBilling: z.boolean().default(true),
 
     items: z.array(invoiceLineItemSchema).min(1, "At least one item is required"),

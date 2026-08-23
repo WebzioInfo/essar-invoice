@@ -38,3 +38,19 @@ export const SPACING = {
     TABLE_CELL_PADDING: 2.5,
     LINE_HEIGHT_RATIO: 0.45,
 };
+
+export const TABLE_TOKENS = {
+    TABLE_OUTER_BORDER_COLOR: [148, 163, 184] as [number, number, number], // #94A3B8 - Slate 400
+    TABLE_INNER_BORDER_COLOR: [209, 213, 219] as [number, number, number], // #D1D5DB - Gray 300
+    TABLE_HEADER_FILL: [243, 244, 246] as [number, number, number],        // #F3F4F6 - Light Gray
+    
+    TABLE_OUTER_BORDER_WIDTH: 0.16, // 0.16 mm ~ 0.45 pt
+    TABLE_INNER_BORDER_WIDTH: 0.12, // 0.12 mm ~ 0.35 pt
+    
+    CELL_PADDING: 2.2,   // 2.2 mm cell padding
+    HEADER_PADDING: 2.2, // 2.2 mm header padding
+    
+    HEADER_FONT_SIZE: 9,   // 9 pt
+    BODY_FONT_SIZE: 8.5,   // 8.5 pt
+};
+

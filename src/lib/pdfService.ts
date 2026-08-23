@@ -26,6 +26,26 @@ export async function fetchInvoicePdf(invoiceId: string): Promise<PdfResponse> {
 }
 
 /**
+ * Shared API fetcher for generating quotation PDF blob
+ */
+export async function fetchQuotationPdf(quotationId: string): Promise<PdfResponse> {
+    const res = await apiClient.post(
+        "/api/quotations/download",
+        { quotationId },
+        { responseType: "blob" }
+    );
+
+    const disposition = (res.headers as Record<string, string>)["content-disposition"] || "";
+    const fileNameMatch = disposition.match(/filename="?([^"]+)"?/);
+    const fileName = fileNameMatch ? fileNameMatch[1] : `quotation-${quotationId}.pdf`;
+
+    return {
+        blob: res.data as Blob,
+        fileName,
+    };
+}
+
+/**
  * Triggers a direct browser download of the PDF blob
  */
 export function downloadPdf(blob: Blob, fileName: string): void {

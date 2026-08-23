@@ -73,7 +73,7 @@ export class ExpenseService {
       });
 
       return serializePrisma(expense);
-    });
+    }, { timeout: 30000, maxWait: 10000 });
   }
 
   /**
@@ -111,6 +111,6 @@ export class ExpenseService {
       });
 
       return serializePrisma(expense);
-    });
+    }, { timeout: 30000, maxWait: 10000 });
   }
 }

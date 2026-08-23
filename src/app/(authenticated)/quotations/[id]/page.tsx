@@ -8,7 +8,7 @@ import {
    Clock, Building2, Phone, Mail, MapPin,
    Hash, Calendar, Edit, FileText, ArrowRight,
    TrendingUp, ShieldCheck, HelpCircle, XCircle,
-   ClipboardList, Info
+   ClipboardList, Info, Truck
 } from "lucide-react";
 import { QuotationActions } from "@/features/billing/components/QuotationActions";
 import { StatusBadge } from "@/features/billing/components/StatusBadge";
@@ -16,7 +16,6 @@ import { StatusBadge } from "@/features/billing/components/StatusBadge";
 interface PageProps {
    params: Promise<{ id: string }>;
 }
-
 
 export default async function QuotationDetailPage({ params }: PageProps) {
    const session = await verifySessionCookie();
@@ -35,6 +34,11 @@ export default async function QuotationDetailPage({ params }: PageProps) {
    if (!quotation) notFound();
 
    const grandTotal = quotation.grandTotal.toNumber();
+   const subTotal = quotation.subTotal.toNumber();
+   const taxTotal = quotation.taxTotal.toNumber();
+   const freightAmount = Number(quotation.freightAmount || 0);
+   const freightTaxPercent = Number(quotation.freightTaxPercent || 0);
+   const itemsSubTotal = subTotal - freightAmount;
 
    return (
       <div className="space-y-8 animate-fade-up max-w-6xl mx-auto pb-24">
@@ -58,7 +62,7 @@ export default async function QuotationDetailPage({ params }: PageProps) {
          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* ── Left Column: Proposal Details ── */}
             <div className="lg:col-span-8 space-y-8">
-               <div className="card border-0 shadow-2xl ring-1 ring-slate-200 p-0 overflow-hidden rounded-[2.5rem] group">
+               <div className="card border-0 shadow-2xl ring-1 ring-slate-200 p-0 overflow-hidden rounded-[2.5rem] group bg-white">
                   {/* ── Header Strip ── */}
                   <div className="px-10 py-8 bg-slate-950 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative overflow-hidden group-hover:bg-slate-900 transition-colors">
                      <div className="absolute right-0 top-0 p-20 opacity-5 pointer-events-none group-hover:rotate-12 transition-transform">
@@ -85,22 +89,27 @@ export default async function QuotationDetailPage({ params }: PageProps) {
                   <div className="p-10 grid grid-cols-1 md:grid-cols-2 gap-10">
                      <div className="space-y-6">
                         <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2">
-                           <Building2 className="w-4 h-4" /> Prospective Entity
+                           <Building2 className="w-4 h-4" /> Customer / Quoted To
                         </h3>
                         <div className="p-6 bg-slate-50 shadow-inner rounded-3xl border border-slate-100 space-y-4 relative overflow-hidden ring-4 ring-slate-500/5">
                            <div className="absolute right-0 top-0 p-4 opacity-5">
                               <Building2 className="w-16 h-16" />
                            </div>
-                           <p className="text-lg font-black text-slate-900 italic leading-none">{quotation.client.name}</p>
+                           <p className="text-lg font-black text-slate-900 italic leading-none">{quotation.billingName || quotation.client.name}</p>
                            <div className="space-y-3 pt-2 border-t border-slate-200/60">
                               <div className="flex items-start gap-2 text-xs text-slate-600 font-medium italic">
                                  <MapPin className="w-4 h-4 text-slate-300 mt-0.5 shrink-0" />
-                                 <span>{quotation.client.address1}{quotation.client.address2 ? `, ${quotation.client.address2}` : ""} — {quotation.client.state}</span>
+                                 <span>{quotation.billingAddress1 || quotation.client.address1}{(quotation.billingAddress2 || quotation.client.address2) ? `, ${quotation.billingAddress2 || quotation.client.address2}` : ""} — {[quotation.billingState || quotation.client.state, quotation.billingPinCode || quotation.client.pinCode].filter(Boolean).join(" - ")}</span>
                               </div>
-                              {quotation.client.gst && (
+                              {(quotation.billingGst || quotation.client.gst) && (
                                  <div className="flex items-center gap-2 text-xs text-slate-600 font-medium">
                                     <ShieldCheck className="w-4 h-4 text-slate-300 shrink-0" />
-                                    <span>GSTIN: <span className="font-mono text-[10px] font-bold">{quotation.client.gst}</span></span>
+                                    <span>GSTIN: <span className="font-mono text-[10px] font-bold">{quotation.billingGst || quotation.client.gst}</span></span>
+                                 </div>
+                              )}
+                              {(quotation.billingPhone || quotation.client.phone) && (
+                                 <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+                                    <span>Phone: <span className="font-mono text-[11px] font-bold">{quotation.billingPhone || quotation.client.phone}</span></span>
                                  </div>
                               )}
                            </div>
@@ -125,6 +134,17 @@ export default async function QuotationDetailPage({ params }: PageProps) {
                                  }
                               </p>
                            </div>
+                           {freightAmount > 0 && (
+                              <div className="col-span-2 pt-2 border-t border-slate-200/60 flex items-center justify-between">
+                                 <div className="flex items-center gap-2">
+                                    <Truck className="w-3.5 h-3.5 text-primary-600" />
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Freight Delivery</p>
+                                 </div>
+                                 <p className="text-xs font-black text-slate-900 tabular-nums">
+                                    {formatCurrency(freightAmount)} {freightTaxPercent > 0 ? `(+${freightTaxPercent}% GST)` : ""}
+                                 </p>
+                              </div>
+                           )}
                         </div>
                      </div>
                   </div>
@@ -148,9 +168,9 @@ export default async function QuotationDetailPage({ params }: PageProps) {
                                     <p className="font-bold text-slate-900 italic">{item.description}</p>
                                  </td>
                                  <td className="px-6 py-5 text-center text-slate-400 font-mono text-[10px] font-black tracking-widest">{item.hsn || "—"}</td>
-                                 <td className="px-6 py-5 text-right font-bold text-slate-700">{item.qty} units</td>
-                                 <td className="px-6 py-5 text-right font-bold text-slate-500">{formatCurrency(item.rate.toNumber())}</td>
-                                 <td className="px-10 py-5 text-right font-black text-slate-950">{formatCurrency(item.totalAmount.toNumber())}</td>
+                                 <td className="px-6 py-5 text-right font-bold text-slate-700">{Number(item.qty)} {item.unit || "units"}</td>
+                                 <td className="px-6 py-5 text-right font-bold text-slate-500">{formatCurrency(Number(item.rate))}</td>
+                                 <td className="px-10 py-5 text-right font-black text-slate-950">{formatCurrency(Number(item.totalAmount))}</td>
                               </tr>
                            ))}
                         </tbody>
@@ -163,21 +183,50 @@ export default async function QuotationDetailPage({ params }: PageProps) {
                         <div className="p-4 bg-white/5 border border-white/10 rounded-2xl flex gap-3">
                            <Info className="w-5 h-5 text-slate-500 shrink-0" />
                            <p className="text-[11px] leading-relaxed text-slate-400 font-medium italic">
-                              This is a formal quotation from ESSAR ENTERPRISES. All prices are subject to the terms and conditions of supply. Conversion to an invoice will initiate a B2B tax obligation.
+                              This is a formal quotation from ESSAR ENTERPRISES. All prices are subject to the commercial terms of supply. Conversion to an invoice will initiate a B2B tax obligation.
                            </p>
                         </div>
                      </div>
 
                      <div className="w-full md:w-80 space-y-3">
-                        <SummaryRow label="Supplied Valuation" value={formatCurrency(quotation.subTotal.toNumber())} />
-                        <SummaryRow label="Estimated Taxation" value={formatCurrency(quotation.taxTotal.toNumber())} />
+                        <SummaryRow label="Supplied Items Subtotal" value={formatCurrency(itemsSubTotal)} />
+                        {freightAmount > 0 && (
+                           <SummaryRow 
+                              label={quotation.isFreightCollect ? "Freight (Collect)" : "Freight / Delivery"} 
+                              value={formatCurrency(freightAmount)} 
+                           />
+                        )}
+                        <SummaryRow label="Estimated Taxation (GST)" value={formatCurrency(taxTotal)} />
                         <div className="flex justify-between items-center pt-4 border-t border-white/10">
-                           <span className="text-xs font-black uppercase tracking-widest text-slate-500">Proposal Grand Total</span>
+                           <span className="text-xs font-black uppercase tracking-widest text-slate-400">Proposal Grand Total</span>
                            <span className="text-2xl font-black text-white italic">{formatCurrency(grandTotal)}</span>
                         </div>
                      </div>
                   </div>
                </div>
+
+               {/* ── Terms & Conditions (Customer-Facing Section) ── */}
+               {quotation.notes && quotation.notes.trim().length > 0 && (
+                  <div className="card border-0 shadow-xl ring-1 ring-slate-200 overflow-hidden rounded-[2.5rem] bg-white p-8 space-y-4">
+                     <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                        <div className="flex items-center gap-3">
+                           <div className="w-9 h-9 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600 shadow-inner">
+                              <FileText className="w-5 h-5" />
+                           </div>
+                           <div>
+                              <h3 className="text-xs font-black uppercase tracking-widest text-slate-900 italic">Terms & Conditions</h3>
+                              <p className="text-[11px] text-slate-400 font-medium italic">Commercial terms, validity & supply protocols</p>
+                           </div>
+                        </div>
+                        <span className="text-[9px] font-black uppercase tracking-widest text-amber-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-100">
+                           Commercial Terms
+                        </span>
+                     </div>
+                     <div className="p-4 bg-slate-50/60 rounded-2xl border border-slate-100 text-sm text-slate-700 leading-relaxed font-medium whitespace-pre-line italic">
+                        {quotation.notes}
+                     </div>
+                  </div>
+               )}
             </div>
 
             {/* ── Right Column: Lifecycle & Conversion ── */}
@@ -203,7 +252,7 @@ export default async function QuotationDetailPage({ params }: PageProps) {
                )}
 
                {/* Linked Assets */}
-               <div className="card border-0 shadow-2xl ring-1 ring-slate-200 overflow-hidden rounded-4xl">
+               <div className="card border-0 shadow-2xl ring-1 ring-slate-200 overflow-hidden rounded-4xl bg-white">
                   <div className="px-8 py-5 flex items-center justify-between border-b border-slate-100 bg-slate-50">
                      <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest italic flex items-center gap-2">
                         <Building2 className="w-4 h-4 text-primary-600" /> Linked Documents
@@ -230,12 +279,15 @@ export default async function QuotationDetailPage({ params }: PageProps) {
                   </div>
                </div>
 
-               {/* Quick Actions Card */}
+               {/* Quick Summary Card */}
                <div className="card p-8 bg-slate-100 border-0 rounded-4xl space-y-4 ring-1 ring-slate-200">
                   <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 italic">Financial Summary</h4>
                   <div className="space-y-3">
-                     <SummaryItem label="Supplied Goods" value={formatCurrency(quotation.subTotal.toNumber())} />
-                     <SummaryItem label="Aggregate Tax" value={formatCurrency(quotation.taxTotal.toNumber())} />
+                     <SummaryItem label="Supplied Goods" value={formatCurrency(itemsSubTotal)} />
+                     {freightAmount > 0 && (
+                        <SummaryItem label="Freight Charges" value={formatCurrency(freightAmount)} />
+                     )}
+                     <SummaryItem label="Aggregate Tax" value={formatCurrency(taxTotal)} />
                      <div className="pt-3 border-t border-slate-200 flex justify-between items-center">
                         <span className="text-[10px] font-black uppercase tracking-widest text-slate-900">Final Estimate</span>
                         <span className="text-base font-black text-primary-600 italic">{formatCurrency(grandTotal)}</span>
@@ -251,7 +303,7 @@ export default async function QuotationDetailPage({ params }: PageProps) {
 function SummaryRow({ label, value }: { label: string; value: string }) {
    return (
       <div className="flex justify-between items-center">
-         <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{label}</span>
+         <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{label}</span>
          <span className="text-sm font-black text-slate-300 italic">{value}</span>
       </div>
    );

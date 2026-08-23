@@ -195,6 +195,19 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
                                         icon={<Layers size={20} />}
                                     />
                                 </div>
+                                <div className="md:col-span-4 flex items-center gap-3 p-4 bg-slate-50 border border-slate-200 rounded-2xl">
+                                    <input
+                                        type="checkbox"
+                                        id="showPkgDetails"
+                                        name="showPkgDetails"
+                                        value="true"
+                                        defaultChecked={product?.showPkgDetails !== undefined ? product.showPkgDetails : true}
+                                        className="w-5 h-5 rounded-lg border-slate-300 text-primary-600 focus:ring-primary-500"
+                                    />
+                                    <label htmlFor="showPkgDetails" className="text-xs font-bold text-slate-700 cursor-pointer select-none">
+                                        Show Package Details in Invoices / Quotations by default
+                                    </label>
+                                </div>
                             </div>
 
                             <div className="md:col-span-1 space-y-2">

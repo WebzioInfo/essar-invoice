@@ -10,6 +10,7 @@ export interface Product {
     notes?: string | null;
     pkgType?: string;
     qtyPerBox: number | any;
+    showPkgDetails?: boolean;
     active?: boolean;
     createdAt?: Date;
     updatedAt?: Date;

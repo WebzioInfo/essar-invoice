@@ -20,13 +20,14 @@ export async function createProductAction(formData: FormData) {
         notes: (formData.get("notes") as string) || undefined,
         pkgType: (formData.get("pkgType") as string) || "BOX",
         qtyPerBox: formData.get("qtyPerBox") as string,
+        showPkgDetails: formData.get("showPkgDetails") !== "false",
     };
 
     try {
-        await ProductService.createProduct(session.userId, data);
+        const product = await ProductService.createProduct(session.userId, data);
         revalidatePath("/products");
         revalidatePath("/dashboard");
-        return { success: true };
+        return { success: true, product };
     } catch (error: any) {
         return handleActionError(error);
     }
@@ -37,6 +38,7 @@ export async function createQuickProductAction(data: {
     purchaseRate: number;
     hsn?: string;
     unit?: string;
+    showPkgDetails?: boolean;
 }) {
     const session = await verifySessionVerified();
     if (!session) throw new Error("Unauthorized");
@@ -47,7 +49,8 @@ export async function createQuickProductAction(data: {
             purchaseRate: data.purchaseRate.toString(),
             sellingRate: (data.purchaseRate * 1.2).toString(), // Default 20% margin
             gstRate: "18", // Default
-            unit: data.unit || "NOS"
+            unit: data.unit || "NOS",
+            showPkgDetails: data.showPkgDetails !== undefined ? data.showPkgDetails : true
         });
         revalidatePath("/products");
         return { success: true, product };
@@ -71,13 +74,14 @@ export async function updateProductAction(productId: string, formData: FormData)
         notes: (formData.get("notes") as string) || undefined,
         pkgType: (formData.get("pkgType") as string) || "BOX",
         qtyPerBox: formData.get("qtyPerBox") as string,
+        showPkgDetails: formData.get("showPkgDetails") !== "false",
     };
 
     try {
-        await ProductService.updateProduct(session.userId, productId, data);
+        const product = await ProductService.updateProduct(session.userId, productId, data);
         revalidatePath("/products");
         revalidatePath("/dashboard");
-        return { success: true };
+        return { success: true, product };
     } catch (error: any) {
         return handleActionError(error);
     }

@@ -10,6 +10,8 @@ import { serializePrisma } from "@/utils/serialization";
 import { db } from "@/db/prisma/client";
 import { recordAuditLog } from "@/lib/audit";
 import { StockService } from "@/features/inventory/services/StockService";
+import { determinePlaceOfSupplyState, determineGstType } from "@/utils/gst";
+import { calculateBillingTotals } from "@/utils/financials";
 
 const invoiceRepo = new InvoiceRepository();
 
@@ -17,6 +19,19 @@ export class InvoiceService {
   async createInvoice(userId: string, rawData: any) {
     // 1. Validation
     const validatedData = await validateData(invoiceSchema, rawData);
+
+    const posState = determinePlaceOfSupplyState({
+      billingAddress: validatedData.billingAddress,
+      shippingAddress: validatedData.shippingAddress,
+      shippingSameAsBilling: validatedData.shippingSameAsBilling
+    });
+    const effectiveGstType = validatedData.gstType === "NONE" ? "NONE" : determineGstType(posState);
+
+    const computedTotals = calculateBillingTotals(
+      validatedData.items.map((i: any) => ({ qty: Number(i.qty), rate: Number(i.rate), taxPercent: Number(i.taxPercent) })),
+      Number(validatedData.freightAmount || 0),
+      Number(validatedData.freightTaxPercent || 0)
+    );
 
     return await invoiceRepo.db.$transaction(async (tx: Prisma.TransactionClient) => {
       // 2. Sequence Generation
@@ -62,10 +77,10 @@ export class InvoiceService {
           sequenceNumber: nextSequence,
           invoiceNo: invoiceNo,
           date: new Date(validatedData.date),
-          gstType: validatedData.gstType,
-          subTotal: validatedData.subTotal,
-          taxTotal: validatedData.taxTotal,
-          grandTotal: Math.round(Number(validatedData.grandTotal)),
+          gstType: effectiveGstType,
+          subTotal: computedTotals.subTotal,
+          taxTotal: computedTotals.taxTotal,
+          grandTotal: computedTotals.grandTotal,
           notes: validatedData.notes ?? null,
           ewayBill: validatedData.ewayBill,
           ewayBillUrl: validatedData.ewayBillUrl,
@@ -103,6 +118,7 @@ export class InvoiceService {
               pkgCount: item.pkgCount || 0,
               pkgType: item.pkgType || "BOX",
               qtyPerBox: item.qtyPerBox || 0,
+              showPkgDetails: item.showPkgDetails !== undefined ? Boolean(item.showPkgDetails) : true,
               totalAmount: item.totalAmount
             }))
           }
@@ -197,12 +213,25 @@ export class InvoiceService {
   async updateInvoice(invoiceId: string, userId: string, rawData: any) {
     const validatedData = await validateData(invoiceSchema, rawData);
     
+    const posState = determinePlaceOfSupplyState({
+      billingAddress: validatedData.billingAddress,
+      shippingAddress: validatedData.shippingAddress,
+      shippingSameAsBilling: validatedData.shippingSameAsBilling
+    });
+    const effectiveGstType = validatedData.gstType === "NONE" ? "NONE" : determineGstType(posState);
+
+    const computedTotals = calculateBillingTotals(
+      validatedData.items.map((i: any) => ({ qty: Number(i.qty), rate: Number(i.rate), taxPercent: Number(i.taxPercent) })),
+      Number(validatedData.freightAmount || 0),
+      Number(validatedData.freightTaxPercent || 0)
+    );
+
     const invoice = await invoiceRepo.updateWithItems(invoiceId, {
       date: new Date(validatedData.date),
-      gstType: validatedData.gstType,
-      subTotal: validatedData.subTotal,
-      taxTotal: validatedData.taxTotal,
-      grandTotal: Math.round(Number(validatedData.grandTotal)),
+      gstType: effectiveGstType,
+      subTotal: computedTotals.subTotal,
+      taxTotal: computedTotals.taxTotal,
+      grandTotal: computedTotals.grandTotal,
       notes: validatedData.notes ?? null,
       ewayBill: validatedData.ewayBill,
       ewayBillUrl: validatedData.ewayBillUrl,
@@ -243,6 +272,7 @@ export class InvoiceService {
         pkgCount: item.pkgCount || 0,
         pkgType: item.pkgType || "BOX",
         qtyPerBox: item.qtyPerBox || 0,
+        showPkgDetails: item.showPkgDetails !== undefined ? Boolean(item.showPkgDetails) : true,
         totalAmount: item.totalAmount
       }))
     });

@@ -10,9 +10,10 @@ import { AnimatePresence, motion } from "framer-motion";
 
 interface TransactionTableProps {
     products: any[];
+    onOpenQuickProduct?: (targetRowId?: string) => void;
 }
 
-const Row = React.memo(({ item, index, products }: { item: any; index: number; products: any[] }) => {
+const Row = React.memo(({ item, index, products, onOpenQuickProduct }: { item: any; index: number; products: any[]; onOpenQuickProduct?: (targetRowId?: string) => void }) => {
     const updateItem = useTransactionStore((state) => state.updateItem);
     const removeItem = useTransactionStore((state) => state.removeItem);
 
@@ -33,7 +34,18 @@ const Row = React.memo(({ item, index, products }: { item: any; index: number; p
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-end">
                     {/* Product & Description */}
                     <div className="col-span-1 lg:col-span-4 space-y-2">
-                        <label className="text-[10px] font-black uppercase text-slate-400 block px-1">Item Details</label>
+                        <div className="flex items-center justify-between px-1">
+                            <label className="text-[10px] font-black uppercase text-slate-400 block">Item Details</label>
+                            {onOpenQuickProduct && (
+                                <button
+                                    type="button"
+                                    onClick={() => onOpenQuickProduct(item.id)}
+                                    className="text-[9px] font-black uppercase text-primary-600 hover:text-primary-800 flex items-center gap-0.5 hover:underline"
+                                >
+                                    <Plus size={10} /> + New Product
+                                </button>
+                            )}
+                        </div>
                         <select
                             className="flex w-full rounded-xl border-0 bg-slate-100/50 px-3 py-2.5 text-xs shadow-inner ring-1 ring-slate-200 transition-all focus:ring-2 focus:ring-primary-500/20 focus:bg-white focus:outline-none appearance-none font-bold"
                             value={item.productId || ""}
@@ -48,7 +60,8 @@ const Row = React.memo(({ item, index, products }: { item: any; index: number; p
                                         taxPercent: Number(prod.gstRate || 18),
                                         unit: prod.unit || "NOS",
                                         pkgType: prod.pkgType || "BOX",
-                                        qtyPerBox: Number(prod.qtyPerBox || 0)
+                                        qtyPerBox: Number(prod.qtyPerBox || 0),
+                                        showPkgDetails: prod.showPkgDetails !== undefined ? prod.showPkgDetails : true
                                     });
                                 }
                             }}
@@ -132,32 +145,50 @@ const Row = React.memo(({ item, index, products }: { item: any; index: number; p
                     </div>
                 </div>
 
-                {/* Product Metadata (Non-editable clarification) */}
-                {item.productId && (
-                    <div className="mt-6 flex flex-wrap gap-4 items-center px-1 animate-in fade-in slide-in-from-left-2 duration-500">
-                        <div className="flex items-center gap-3 bg-slate-50 rounded-2xl px-4 py-2 border border-slate-100 shadow-sm">
-                            <div className="w-1.5 h-1.5 rounded-full bg-slate-300" />
-                            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">SKU</span>
-                            <span className="text-[11px] font-black text-slate-900 font-mono tracking-tighter">
-                                {products.find(p => p.id === item.productId)?.sku || 'N/A'}
-                            </span>
-                        </div>
-                        <div className="flex items-center gap-3 bg-slate-50 rounded-2xl px-4 py-2 border border-slate-100 shadow-sm">
-                            <div className="w-1.5 h-1.5 rounded-full bg-slate-300" />
-                            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Catalog Unit</span>
-                            <span className="text-[11px] font-black text-slate-900 italic uppercase">
-                                {products.find(p => p.id === item.productId)?.unit || item.unit}
-                            </span>
-                        </div>
-                        <div className="flex items-center gap-3 bg-slate-50 rounded-2xl px-4 py-2 border border-slate-100 shadow-sm">
-                            <div className="w-1.5 h-1.5 rounded-full bg-slate-300" />
-                            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Standard Packing</span>
-                            <span className="text-[11px] font-black text-slate-900">
-                                {products.find(p => p.id === item.productId)?.qtyPerBox || 0} {item.unit || 'NOS'} / {item.pkgType || 'BOX'}
-                            </span>
-                        </div>
+                {/* Packaging visibility toggle and Product Metadata */}
+                <div className="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4">
+                    <div className="flex items-center gap-2 px-1">
+                        <input
+                            type="checkbox"
+                            id={`showPkgDetails_${item.id}`}
+                            checked={item.showPkgDetails !== undefined ? Boolean(item.showPkgDetails) : true}
+                            onChange={(e) => updateItem(item.id, { showPkgDetails: e.target.checked })}
+                            className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500 cursor-pointer"
+                        />
+                        <label
+                            htmlFor={`showPkgDetails_${item.id}`}
+                            className="text-[11px] font-bold text-slate-600 cursor-pointer select-none"
+                        >
+                            Show Pkg Details in Document
+                        </label>
                     </div>
-                )}
+
+                    {item.productId && (
+                        <div className="flex flex-wrap gap-3 items-center animate-in fade-in slide-in-from-left-2 duration-500">
+                            <div className="flex items-center gap-2 bg-slate-50 rounded-xl px-3 py-1.5 border border-slate-100 shadow-sm">
+                                <div className="w-1.5 h-1.5 rounded-full bg-slate-300" />
+                                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">SKU</span>
+                                <span className="text-[10px] font-black text-slate-900 font-mono tracking-tighter">
+                                    {products.find(p => p.id === item.productId)?.sku || 'N/A'}
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-2 bg-slate-50 rounded-xl px-3 py-1.5 border border-slate-100 shadow-sm">
+                                <div className="w-1.5 h-1.5 rounded-full bg-slate-300" />
+                                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Catalog Unit</span>
+                                <span className="text-[10px] font-black text-slate-900 italic uppercase">
+                                    {products.find(p => p.id === item.productId)?.unit || item.unit}
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-2 bg-slate-50 rounded-xl px-3 py-1.5 border border-slate-100 shadow-sm">
+                                <div className="w-1.5 h-1.5 rounded-full bg-slate-300" />
+                                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Packing</span>
+                                <span className="text-[10px] font-black text-slate-900">
+                                    {products.find(p => p.id === item.productId)?.qtyPerBox || 0} {item.unit || 'NOS'} / {item.pkgType || 'BOX'}
+                                </span>
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Bottom Total Bar */}
@@ -181,7 +212,7 @@ const Row = React.memo(({ item, index, products }: { item: any; index: number; p
 
 Row.displayName = "TransactionRow";
 
-export function TransactionTable({ products }: TransactionTableProps) {
+export function TransactionTable({ products, onOpenQuickProduct }: TransactionTableProps) {
     const items = useTransactionStore((state) => state.items);
     const addItem = useTransactionStore((state) => state.addItem);
 
@@ -207,7 +238,13 @@ export function TransactionTable({ products }: TransactionTableProps) {
                     {items.length > 0 ? (
                         <div className="flex flex-col">
                             {items.map((item, index) => (
-                                <Row key={item.id} item={item} index={index} products={products} />
+                                <Row
+                                    key={item.id}
+                                    item={item}
+                                    index={index}
+                                    products={products}
+                                    onOpenQuickProduct={onOpenQuickProduct}
+                                />
                             ))}
                         </div>
                     ) : (

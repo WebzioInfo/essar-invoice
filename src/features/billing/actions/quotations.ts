@@ -21,6 +21,22 @@ export async function createQuotationAction(data: any) {
     }
 }
 
+export async function updateQuotationAction(quotationId: string, data: any) {
+    const session = await verifySessionVerified();
+    if (!session) throw new Error("Unauthorized");
+
+    try {
+        const quotation = await QuotationService.updateQuotation(quotationId, session.userId, data);
+        revalidatePath(`/quotations/${quotationId}`);
+        revalidatePath(`/quotations/${quotationId}/edit`);
+        revalidatePath("/quotations");
+        revalidatePath("/dashboard");
+        return { success: true, quotationId: quotation.id };
+    } catch (error: any) {
+        return handleActionError(error);
+    }
+}
+
 export async function convertQuotationToInvoiceAction(formData: FormData) {
     const session = await verifySessionVerified();
     if (!session) throw new Error("Unauthorized");
@@ -39,8 +55,6 @@ export async function convertQuotationToInvoiceAction(formData: FormData) {
         return handleActionError(error);
     }
 }
-
-
 
 export async function updateQuotationStatusAction(quotationId: string, status: QuotationStatus) {
     const session = await verifySessionVerified();

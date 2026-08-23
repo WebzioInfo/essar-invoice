@@ -1,9 +1,10 @@
 import { verifySessionCookie } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { CompanyService } from "@/features/settings/services/CompanyService";
 import {
   Building2, Save, Landmark, Globe, Mail, Phone,
-  MapPin, ShieldCheck, CheckCircle2, Info, CreditCard
+  MapPin, ShieldCheck, CheckCircle2, Info, CreditCard, Database
 } from "lucide-react";
 import { updateCompanySettingsAction } from "@/features/settings/actions/settings";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/ui/core/Card";
@@ -25,6 +26,13 @@ export default async function SettingsPage() {
           <h1 className="text-3xl font-black text-slate-900 tracking-tight italic">Company Profile</h1>
           <p className="text-sm font-bold text-slate-500 uppercase tracking-widest mt-1">Refine your business identity and billing details</p>
         </div>
+        <Link
+          href="/settings/data-management"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white border border-slate-200 text-slate-700 hover:text-primary-600 hover:border-primary-300 shadow-sm font-black text-xs transition-all uppercase tracking-wider"
+        >
+          <Database className="w-4 h-4 text-primary-600" />
+          <span>Data Management & Backup</span>
+        </Link>
       </div>
 
       <form

@@ -91,7 +91,7 @@ export class PaymentService {
       });
 
       return serializePrisma(payment);
-    });
+    }, { timeout: 30000, maxWait: 10000 });
   }
 
   /**

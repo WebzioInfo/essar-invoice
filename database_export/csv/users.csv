@@ -1,2 +1,0 @@
-id,email,name,passwordHash,role,lastLoginAt,lastLoginIp,failedLogins,isLockedOut,createdAt,updatedAt,deletedAt
-cmoh3woiz0000i8pk2fl0qxsz,admin@essar.com,Admin User,$2b$10$KRzRzrSBYk7knE2Z8O7MRu8wP0qUNgGBeJ5sz01Hu/TlHltEvoHdS,ADMIN,,,0,false,"""2026-04-27T11:21:14.795Z""","""2026-05-16T10:58:41.862Z""",
