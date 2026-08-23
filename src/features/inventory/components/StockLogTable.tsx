@@ -10,9 +10,10 @@ import {
     TableRow
 } from "@/ui/core/Table";
 import { format } from "date-fns";
-import { ArrowUpRight, ArrowDownRight, RefreshCw, AlertCircle } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight, RefreshCw, Layers } from "lucide-react";
 import { cn } from "@/utils";
 import { StockLogActions } from "./StockLogActions";
+import { Card } from "@/ui/core/Card";
 
 interface StockLog {
     id: string;
@@ -31,98 +32,118 @@ interface StockLog {
 }
 
 export function StockLogTable({ logs }: { logs: StockLog[] }) {
-    return (
-        <div className="glass shadow-2xl rounded-[2.5rem] overflow-hidden border-0">
-            <Table>
-                <TableHeader className="bg-slate-50/50">
-                    <TableRow>
-                        <TableHead className="px-8 text-[10px] font-black uppercase tracking-widest italic">Timestamp</TableHead>
-                        <TableHead className="text-[10px] font-black uppercase tracking-widest italic">Resource / SKU</TableHead>
-                        <TableHead className="text-[10px] font-black uppercase tracking-widest italic text-center">Protocol</TableHead>
-                        <TableHead className="text-[10px] font-black uppercase tracking-widest italic text-right">Delta</TableHead>
-                        <TableHead className="text-[10px] font-black uppercase tracking-widest italic text-right">Balance</TableHead>
-                        <TableHead className="text-[10px] font-black uppercase tracking-widest italic text-right pr-8">Actions</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {logs.map((log) => {
-                        const change = Number(log.quantityChange);
-                        const isPositive = change > 0;
-                        
-                        return (
-                            <TableRow key={log.id} className="group hover:bg-slate-50/50 transition-colors">
-                                <TableCell className="py-6 px-8">
-                                    <div className="flex flex-col">
-                                        <span className="text-sm font-black text-slate-900 italic tracking-tighter">
-                                            {format(new Date(log.createdAt), "MMM dd, HH:mm")}
-                                        </span>
-                                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">
-                                            Log ID: {log.id.slice(-6)}
-                                        </span>
-                                    </div>
-                                </TableCell>
-                                <TableCell>
-                                    <div className="flex flex-col">
-                                        <span className="text-xs font-black text-slate-800 uppercase tracking-tight truncate max-w-[200px]">
-                                            {log.product.description}
-                                        </span>
-                                        <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest">
-                                            {log.product.sku || "N/A"}
-                                        </span>
-                                    </div>
-                                </TableCell>
-                                <TableCell>
-                                    <div className="flex justify-center">
-                                        <div className={cn(
-                                            "inline-flex items-center gap-2 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest italic border",
-                                            log.type === 'ADD' ? "bg-emerald-50 text-emerald-700 border-emerald-100" :
-                                            log.type === 'REMOVE' ? "bg-rose-50 text-rose-700 border-rose-100" :
-                                            "bg-amber-50 text-amber-700 border-amber-100"
-                                        )}>
-                                            {log.type === 'ADD' && <ArrowUpRight size={10} />}
-                                            {log.type === 'REMOVE' && <ArrowDownRight size={10} />}
-                                            {log.type === 'MANUAL' && <RefreshCw size={10} />}
-                                            {log.type}
-                                        </div>
-                                    </div>
-                                </TableCell>
-                                <TableCell className="text-right">
-                                    <span className={cn(
-                                        "text-sm font-black italic tabular-nums",
-                                        isPositive ? "text-emerald-600" : "text-rose-600"
-                                    )}>
-                                        {isPositive ? "+" : ""}{change}
-                                    </span>
-                                </TableCell>
-                                <TableCell className="text-right">
-                                    <div className="flex flex-col items-end">
-                                        <span className="text-sm font-black text-slate-900 tabular-nums italic">
-                                            {Number(log.quantityAfter)}
-                                        </span>
-                                        <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest opacity-60">
-                                            Prev: {Number(log.quantityBefore)}
-                                        </span>
-                                    </div>
-                                </TableCell>
-                                <TableCell className="text-right pr-8">
-                                    <StockLogActions 
-                                        logId={log.id} 
-                                        currentQuantity={Number(log.quantityChange)} 
-                                        currentNotes={log.notes} 
-                                    />
-                                </TableCell>
-                            </TableRow>
-                        );
-                    })}
-                </TableBody>
-            </Table>
-            
-            {logs.length === 0 && (
-                <div className="py-20 text-center">
-                    <AlertCircle className="mx-auto h-10 w-10 text-slate-200 mb-4" />
-                    <p className="text-slate-400 font-bold uppercase tracking-widest text-xs italic">No activity logs recorded yet.</p>
+    if (logs.length === 0) {
+        return (
+            <Card className="border-0 shadow-2xl ring-1 ring-slate-200 overflow-hidden rounded-[2.5rem] bg-white/50 backdrop-blur-xl">
+                <div className="flex flex-col items-center justify-center py-32 text-slate-400 bg-slate-50/30">
+                    <div className="w-20 h-20 rounded-3xl bg-white flex items-center justify-center shadow-xl shadow-slate-200/50 mb-6">
+                        <Layers className="w-10 h-10 opacity-20" />
+                    </div>
+                    <p className="font-black text-slate-900 text-xl italic uppercase tracking-tight">Zero Inventory Logs</p>
+                    <p className="text-xs text-slate-500 mt-2 font-bold uppercase tracking-widest italic opacity-60">
+                        Stock movements and ledger logs will appear here
+                    </p>
                 </div>
-            )}
-        </div>
+            </Card>
+        );
+    }
+
+    return (
+        <Card className="border-0 shadow-2xl ring-1 ring-slate-200 overflow-hidden rounded-[2.5rem] bg-white/50 backdrop-blur-xl">
+            <div className="overflow-x-auto">
+                <Table className="w-full">
+                    <TableHeader className="bg-slate-900">
+                        <TableRow>
+                            <TableHead className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Timestamp</TableHead>
+                            <TableHead className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Product / SKU</TableHead>
+                            <TableHead className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 text-center">Movement</TableHead>
+                            <TableHead className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 text-right">Delta</TableHead>
+                            <TableHead className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 text-right">New Balance</TableHead>
+                            <TableHead className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 text-right">Actions</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody className="divide-y divide-slate-100">
+                        {logs.map((log) => {
+                            const change = Number(log.quantityChange);
+                            const isPositive = change > 0;
+
+                            return (
+                                <TableRow key={log.id} className="hover:bg-slate-50/80 transition-all group">
+                                    <TableCell className="py-6 px-8">
+                                        <div className="flex flex-col">
+                                            <span className="text-sm font-black text-slate-900 italic tracking-tight">
+                                                {format(new Date(log.createdAt), "MMM dd, yyyy · HH:mm")}
+                                            </span>
+                                            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
+                                                Log ID: {log.id.slice(-6)}
+                                            </span>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="px-8 py-6">
+                                        <div className="flex flex-col">
+                                            <span className="text-xs font-black text-slate-800 uppercase tracking-tight truncate max-w-[240px]">
+                                                {log.product?.description || "Product Item"}
+                                            </span>
+                                            {log.product?.sku && (
+                                                <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest mt-0.5">
+                                                    SKU: {log.product.sku}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="px-8 py-6 text-center">
+                                        <div className="inline-flex justify-center">
+                                            <div
+                                                className={cn(
+                                                    "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border",
+                                                    log.type === "ADD"
+                                                        ? "bg-emerald-50 text-emerald-700 border-emerald-100"
+                                                        : log.type === "REMOVE"
+                                                        ? "bg-rose-50 text-rose-700 border-rose-100"
+                                                        : "bg-amber-50 text-amber-700 border-amber-100"
+                                                )}
+                                            >
+                                                {log.type === "ADD" && <ArrowUpRight size={10} />}
+                                                {log.type === "REMOVE" && <ArrowDownRight size={10} />}
+                                                {log.type === "MANUAL" && <RefreshCw size={10} />}
+                                                {log.type}
+                                            </div>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="px-8 py-6 text-right">
+                                        <span
+                                            className={cn(
+                                                "text-sm font-black italic tabular-nums",
+                                                isPositive ? "text-emerald-600" : "text-rose-600"
+                                            )}
+                                        >
+                                            {isPositive ? "+" : ""}
+                                            {change}
+                                        </span>
+                                    </TableCell>
+                                    <TableCell className="px-8 py-6 text-right">
+                                        <div className="flex flex-col items-end">
+                                            <span className="text-sm font-black text-slate-900 tabular-nums italic">
+                                                {Number(log.quantityAfter)}
+                                            </span>
+                                            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
+                                                Units
+                                            </span>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="px-8 py-6 text-right">
+                                        <StockLogActions
+                                            logId={log.id}
+                                            currentQuantity={Number(log.quantityChange)}
+                                            currentNotes={log.notes}
+                                        />
+                                    </TableCell>
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
+            </div>
+        </Card>
     );
 }

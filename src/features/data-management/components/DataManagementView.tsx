@@ -164,18 +164,6 @@ export function DataManagementView({ stats, userRole }: DataManagementViewProps)
 
     return (
         <div className="space-y-10 animate-fade-up max-w-7xl mx-auto pb-24">
-            {/* ── Page Header ── */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-3xl font-black text-slate-900 tracking-tight italic flex items-center gap-3">
-                        <Database className="w-8 h-8 text-primary-600" /> Data Management & Disaster Recovery
-                    </h1>
-                    <p className="text-sm font-bold text-slate-500 uppercase tracking-widest mt-1">
-                        Ultra-safe, versioned database backups, validation, and multi-mode restore
-                    </p>
-                </div>
-            </div>
-
             {/* ── Section 1: System Health & Database Statistics ── */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Card className="border-0 shadow-md ring-1 ring-slate-200 rounded-3xl bg-white p-6">
@@ -210,7 +198,7 @@ export function DataManagementView({ stats, userRole }: DataManagementViewProps)
                         <div>
                             <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Last Backup Created</p>
                             <p className="text-sm font-black text-slate-800">
-                                {stats.lastBackupDate 
+                                {stats.lastBackupDate
                                     ? new Intl.DateTimeFormat("en-IN", { dateStyle: "medium", timeStyle: "short" }).format(new Date(stats.lastBackupDate))
                                     : "No record logged"}
                             </p>
@@ -306,11 +294,10 @@ export function DataManagementView({ stats, userRole }: DataManagementViewProps)
                                         key={meta.modelName}
                                         type="button"
                                         onClick={() => toggleModel(meta.modelName)}
-                                        className={`p-2.5 rounded-xl border text-left flex items-center justify-between transition-all ${
-                                            isSelected 
-                                                ? "border-primary-600 bg-primary-50/50 text-primary-950 font-bold" 
-                                                : "border-slate-200 bg-slate-50 text-slate-500 font-medium"
-                                        }`}
+                                        className={`p-2.5 rounded-xl border text-left flex items-center justify-between transition-all ${isSelected
+                                            ? "border-primary-600 bg-primary-50/50 text-primary-950 font-bold"
+                                            : "border-slate-200 bg-slate-50 text-slate-500 font-medium"
+                                            }`}
                                     >
                                         <span className="text-xs truncate">{meta.label}</span>
                                         {isSelected && <Check className="w-3.5 h-3.5 text-primary-600 shrink-0" />}
@@ -390,9 +377,8 @@ export function DataManagementView({ stats, userRole }: DataManagementViewProps)
                                 <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 flex items-center gap-2">
                                     <ShieldCheck className="w-5 h-5 text-emerald-500" /> Step 2 — Backup Verification Report
                                 </h3>
-                                <span className={`text-[10px] font-black uppercase px-3 py-1 rounded-full ${
-                                    validationResult.isValid ? "bg-emerald-100 text-emerald-800" : "bg-danger-100 text-danger-800"
-                                }`}>
+                                <span className={`text-[10px] font-black uppercase px-3 py-1 rounded-full ${validationResult.isValid ? "bg-emerald-100 text-emerald-800" : "bg-danger-100 text-danger-800"
+                                    }`}>
                                     {validationResult.isValid ? "Integrity Verified" : "Validation Failed"}
                                 </span>
                             </div>
@@ -441,11 +427,10 @@ export function DataManagementView({ stats, userRole }: DataManagementViewProps)
                                     {/* Mode A: Safe Merge */}
                                     <div
                                         onClick={() => setRestoreMode("SAFE_MERGE")}
-                                        className={`p-5 rounded-2xl border cursor-pointer transition-all ${
-                                            restoreMode === "SAFE_MERGE" 
-                                                ? "border-primary-600 bg-primary-50/50 ring-2 ring-primary-500/20" 
-                                                : "border-slate-200 bg-white hover:bg-slate-50"
-                                        }`}
+                                        className={`p-5 rounded-2xl border cursor-pointer transition-all ${restoreMode === "SAFE_MERGE"
+                                            ? "border-primary-600 bg-primary-50/50 ring-2 ring-primary-500/20"
+                                            : "border-slate-200 bg-white hover:bg-slate-50"
+                                            }`}
                                     >
                                         <div className="flex items-center justify-between mb-2">
                                             <span className="text-sm font-black text-slate-900">Safe Merge / Upsert</span>
@@ -459,11 +444,10 @@ export function DataManagementView({ stats, userRole }: DataManagementViewProps)
                                     {/* Mode B: Empty Database */}
                                     <div
                                         onClick={() => setRestoreMode("EMPTY_DB")}
-                                        className={`p-5 rounded-2xl border cursor-pointer transition-all ${
-                                            restoreMode === "EMPTY_DB" 
-                                                ? "border-primary-600 bg-primary-50/50 ring-2 ring-primary-500/20" 
-                                                : "border-slate-200 bg-white hover:bg-slate-50"
-                                        }`}
+                                        className={`p-5 rounded-2xl border cursor-pointer transition-all ${restoreMode === "EMPTY_DB"
+                                            ? "border-primary-600 bg-primary-50/50 ring-2 ring-primary-500/20"
+                                            : "border-slate-200 bg-white hover:bg-slate-50"
+                                            }`}
                                     >
                                         <div className="flex items-center justify-between mb-2">
                                             <span className="text-sm font-black text-slate-900">Empty DB Restore</span>
@@ -476,11 +460,10 @@ export function DataManagementView({ stats, userRole }: DataManagementViewProps)
                                     {/* Mode C: Replace All */}
                                     <div
                                         onClick={() => setRestoreMode("REPLACE_ALL")}
-                                        className={`p-5 rounded-2xl border cursor-pointer transition-all ${
-                                            restoreMode === "REPLACE_ALL" 
-                                                ? "border-danger-600 bg-danger-50/50 ring-2 ring-danger-500/20" 
-                                                : "border-slate-200 bg-white hover:bg-slate-50"
-                                        }`}
+                                        className={`p-5 rounded-2xl border cursor-pointer transition-all ${restoreMode === "REPLACE_ALL"
+                                            ? "border-danger-600 bg-danger-50/50 ring-2 ring-danger-500/20"
+                                            : "border-slate-200 bg-white hover:bg-slate-50"
+                                            }`}
                                     >
                                         <div className="flex items-center justify-between mb-2">
                                             <span className="text-sm font-black text-danger-900">Replace All Data</span>
@@ -519,15 +502,14 @@ export function DataManagementView({ stats, userRole }: DataManagementViewProps)
                                     type="button"
                                     onClick={handleExecuteRestore}
                                     disabled={
-                                        isRestoring || 
-                                        !validationResult.isValid || 
+                                        isRestoring ||
+                                        !validationResult.isValid ||
                                         (restoreMode === "REPLACE_ALL" && replaceConfirmText !== "RESTORE AND REPLACE ALL DATA")
                                     }
-                                    className={`font-black py-4 px-8 rounded-2xl flex items-center gap-2 shadow-lg ${
-                                        restoreMode === "REPLACE_ALL" 
-                                            ? "bg-danger-600 hover:bg-danger-700 text-white shadow-danger-600/20" 
-                                            : "bg-primary-600 hover:bg-primary-700 text-white shadow-primary-600/20"
-                                    }`}
+                                    className={`font-black py-4 px-8 rounded-2xl flex items-center gap-2 shadow-lg ${restoreMode === "REPLACE_ALL"
+                                        ? "bg-danger-600 hover:bg-danger-700 text-white shadow-danger-600/20"
+                                        : "bg-primary-600 hover:bg-primary-700 text-white shadow-primary-600/20"
+                                        }`}
                                 >
                                     {isRestoring ? <RefreshCw className="w-5 h-5 animate-spin" /> : <ShieldCheck className="w-5 h-5" />}
                                     <span>Execute Restore ({restoreMode})</span>

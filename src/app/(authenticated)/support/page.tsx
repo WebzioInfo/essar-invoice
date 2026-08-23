@@ -156,7 +156,7 @@ export default function SupportPage() {
               </div>
               <div>
                 <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Official Inquiry</p>
-                <h4 className="text-xl font-black italic tracking-tighter text-slate-700">info@webziointernational.in</h4>
+                <h4 className="text-xl font-black italic tracking-tighter text-slate-700">info@webiotech.in</h4>
               </div>
             </div>
           </div>

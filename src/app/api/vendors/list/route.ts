@@ -7,8 +7,11 @@ export async function GET(req: NextRequest) {
         const session = await verifySessionVerified();
         if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+        const { searchParams } = new URL(req.url);
+        const query = searchParams.get("q") || "";
+
         const vendorService = new VendorService();
-        const vendors = await vendorService.getAllVendors();
+        const vendors = await vendorService.getAllVendors(query);
 
         return NextResponse.json(vendors);
 

@@ -47,15 +47,6 @@ export default function InventoryPage() {
         <div className="space-y-12 animate-in fade-in duration-700 pb-20">
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-10">
-                <div className="max-w-2xl">
-                    <h1 className="text-5xl font-black tracking-tight text-slate-900 font-display italic">
-                        Stock <span className="text-primary-600">Dynamics</span>
-                    </h1>
-                    <p className="text-slate-500 mt-4 text-lg font-medium leading-relaxed italic">
-                        Real-time synchronization of physical assets across procurement pipelines and sales fulfillment.
-                    </p>
-                </div>
-
                 <div className="flex items-center gap-4">
                     <InventoryClient products={productList} />
                 </div>

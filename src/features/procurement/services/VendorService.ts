@@ -4,8 +4,8 @@ import { db } from "@/db/prisma/client";
 const vendorRepo = new VendorRepository();
 
 export class VendorService {
-  async getAllVendors() {
-    return await vendorRepo.findAll();
+  async getAllVendors(query?: string) {
+    return await vendorRepo.findAll(query);
   }
 
   async getVendorById(id: string) {
@@ -16,22 +16,22 @@ export class VendorService {
     return await vendorRepo.model.create({
       data: {
         ...data,
-        active: true
-      }
+        active: true,
+      },
     });
   }
 
   async updateVendor(id: string, data: any) {
     return await vendorRepo.model.update({
       where: { id },
-      data
+      data,
     });
   }
 
   async deleteVendor(id: string) {
     return await vendorRepo.model.update({
       where: { id },
-      data: { deletedAt: new Date(), active: false }
+      data: { deletedAt: new Date(), active: false },
     });
   }
 }
