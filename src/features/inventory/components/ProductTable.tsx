@@ -191,6 +191,7 @@ export function ProductTable({ products, onSuccess }: ProductTableProps) {
                 }}
             >
                 <ProductForm
+                    key={editingProduct?.id || (isAdding ? "new" : "empty")}
                     product={editingProduct || undefined}
                     onSuccess={() => {
                         setEditingProduct(null);

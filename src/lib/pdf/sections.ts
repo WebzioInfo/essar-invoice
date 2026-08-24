@@ -411,11 +411,20 @@ export function drawItemsTable(
 ): { endY: number; subTotal: number } {
     const dim = getDimensions(doc);
     const fontName = getFontName();
-    const showPkg = !!settings?.showPkgDetails;
 
-    const tableHead = showPkg
-        ? [["Sl", "Pkg Details", "Description of Goods", "HSN/SAC", "Quantity", "Rate", "per", "Amount"]]
-        : [["Sl", "Description of Goods", "HSN/SAC", "Quantity", "Rate", "per", "Amount"]];
+    // Determine if at least ONE item in this document has package details enabled
+    const hasAnyPkgDetails = lineItems.some((item: any) => {
+        const prod = productMap.get(item.productId);
+        return item.showPkgDetails !== undefined && item.showPkgDetails !== null
+            ? Boolean(item.showPkgDetails)
+            : (prod?.showPkgDetails !== undefined && prod?.showPkgDetails !== null
+                ? Boolean(prod.showPkgDetails)
+                : false);
+    });
+
+    const tableHead = hasAnyPkgDetails
+        ? [["Sl", "Pkg Details", "Description of Goods", "HSN/SAC", "Qty", "Rate", "per", "Amount"]]
+        : [["Sl", "Description of Goods", "HSN/SAC", "Qty", "Rate", "per", "Amount"]];
 
     const tableBody = lineItems.map((item: any, i: number) => {
         const prod = productMap.get(item.productId);
@@ -430,28 +439,33 @@ export function drawItemsTable(
             ? (rawPerBox as any).toNumber()
             : Number(rawPerBox || 0);
 
-        const pkgTypeRaw = (item.pkgType || "BOX").toUpperCase();
+        const pkgTypeRaw = (item.pkgType || prod?.pkgType || "BOX").toUpperCase();
         const pkgType = pkgCountStr > 1 ? (pkgTypeRaw.endsWith('X') ? `${pkgTypeRaw}ES` : `${pkgTypeRaw}S`) : pkgTypeRaw;
 
-        // Priority: Line Item Override -> Product Default -> System Default (true)
+        // Line Item snapshot priority
         const isItemPkgVisible = item.showPkgDetails !== undefined && item.showPkgDetails !== null
             ? Boolean(item.showPkgDetails)
             : (prod?.showPkgDetails !== undefined && prod?.showPkgDetails !== null
                 ? Boolean(prod.showPkgDetails)
-                : true);
+                : false);
 
-        const pkgValue = isItemPkgVisible
-            ? ((pkgCountStr > 0 && perBox > 0)
-                ? `${pkgCountStr} ${pkgType}\nX ${perBox} ${item.unit || prod?.unit || "NOS"}`
-                : (pkgCountStr > 0 ? `${pkgCountStr} ${pkgType}` : ""))
-            : "";
-
-        const pkgInDesc = (!showPkg && isItemPkgVisible && pkgCountStr > 0) ? `\nNo. & Kind of Pkgs: ${pkgValue}` : "";
+        let pkgValue = "—";
+        if (isItemPkgVisible) {
+            if (pkgCountStr > 0 && perBox > 0) {
+                pkgValue = `${pkgCountStr} ${pkgType}\n× ${perBox} ${item.unit || prod?.unit || "NOS"}`;
+            } else if (pkgCountStr > 0) {
+                pkgValue = `${pkgCountStr} ${pkgType}`;
+            } else {
+                pkgValue = "—";
+            }
+        } else {
+            pkgValue = "—";
+        }
 
         return [
             String(i + 1),
-            ...(showPkg ? [pkgValue] : []),
-            `${productName.toUpperCase()}${subTitle}${pkgInDesc}`,
+            ...(hasAnyPkgDetails ? [pkgValue] : []),
+            `${productName.toUpperCase()}${subTitle}`,
             item.hsn || "-",
             `${Number(item.qty).toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 3 })} ${item.unit || "NOS"}`,
             formatCurrency(item.rate?.toNumber ? item.rate.toNumber() : Number(item.rate)),
@@ -460,23 +474,23 @@ export function drawItemsTable(
         ];
     });
 
-    const columnStyles: any = showPkg ? {
-        0: { halign: "center", cellWidth: 8 },
-        1: { halign: "center", cellWidth: 18, fontSize: TABLE_TOKENS.BODY_FONT_SIZE - 1.0, cellPadding: 1, overflow: 'linebreak' },
-        2: { halign: "left" },
-        3: { halign: "center", cellWidth: 20 },
-        4: { halign: "center", cellWidth: 22 },
-        5: { halign: "right", cellWidth: 20 },
-        6: { halign: "center", cellWidth: 12 },
-        7: { halign: "right", cellWidth: 28 },
+    const columnStyles: any = hasAnyPkgDetails ? {
+        0: { halign: "center", cellWidth: 7, cellPadding: 1.2 },
+        1: { halign: "center", cellWidth: 18, fontSize: TABLE_TOKENS.BODY_FONT_SIZE - 0.5, cellPadding: 1, overflow: 'linebreak' },
+        2: { halign: "left", cellPadding: TABLE_TOKENS.CELL_PADDING },
+        3: { halign: "center", cellWidth: 16, cellPadding: 1.2 },
+        4: { halign: "center", cellWidth: 14, cellPadding: 1.2 },
+        5: { halign: "right", cellWidth: 18, cellPadding: 1.2 },
+        6: { halign: "center", cellWidth: 9, cellPadding: 1.2 },
+        7: { halign: "right", cellWidth: 25, cellPadding: 1.5 },
     } : {
-        0: { halign: "center", cellWidth: 8 },
-        1: { halign: "left" },
-        2: { halign: "center", cellWidth: 20 },
-        3: { halign: "center", cellWidth: 22 },
-        4: { halign: "right", cellWidth: 20 },
-        5: { halign: "center", cellWidth: 12 },
-        6: { halign: "right", cellWidth: 28 },
+        0: { halign: "center", cellWidth: 7, cellPadding: 1.2 },
+        1: { halign: "left", cellPadding: TABLE_TOKENS.CELL_PADDING },
+        2: { halign: "center", cellWidth: 17, cellPadding: 1.2 },
+        3: { halign: "center", cellWidth: 15, cellPadding: 1.2 },
+        4: { halign: "right", cellWidth: 19, cellPadding: 1.2 },
+        5: { halign: "center", cellWidth: 9, cellPadding: 1.2 },
+        6: { halign: "right", cellWidth: 26, cellPadding: 1.5 },
     };
 
     autoTable(doc, {

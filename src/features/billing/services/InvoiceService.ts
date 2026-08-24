@@ -118,9 +118,16 @@ export class InvoiceService {
               pkgCount: item.pkgCount || 0,
               pkgType: item.pkgType || "BOX",
               qtyPerBox: item.qtyPerBox || 0,
-              showPkgDetails: item.showPkgDetails !== undefined ? Boolean(item.showPkgDetails) : true,
+              showPkgDetails: item.showPkgDetails !== undefined && item.showPkgDetails !== null ? Boolean(item.showPkgDetails) : false,
               totalAmount: item.totalAmount
             }))
+          }
+        },
+        include: {
+          client: true,
+          lineItems: {
+            orderBy: { id: "asc" },
+            include: { product: true }
           }
         }
       });
@@ -272,7 +279,7 @@ export class InvoiceService {
         pkgCount: item.pkgCount || 0,
         pkgType: item.pkgType || "BOX",
         qtyPerBox: item.qtyPerBox || 0,
-        showPkgDetails: item.showPkgDetails !== undefined ? Boolean(item.showPkgDetails) : true,
+        showPkgDetails: item.showPkgDetails !== undefined && item.showPkgDetails !== null ? Boolean(item.showPkgDetails) : false,
         totalAmount: item.totalAmount
       }))
     });

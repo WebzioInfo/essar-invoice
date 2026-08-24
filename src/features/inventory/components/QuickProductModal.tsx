@@ -34,7 +34,7 @@ export function QuickProductModal({
         unit: "NOS",
         pkgType: "BOX",
         qtyPerBox: "0",
-        showPkgDetails: true,
+        showPkgDetails: false,
         notes: ""
     });
 
@@ -84,7 +84,7 @@ export function QuickProductModal({
                     unit: "NOS",
                     pkgType: "BOX",
                     qtyPerBox: "0",
-                    showPkgDetails: true,
+                    showPkgDetails: false,
                     notes: ""
                 });
                 onClose();

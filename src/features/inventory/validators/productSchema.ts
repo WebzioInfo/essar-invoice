@@ -16,10 +16,15 @@ export const productSchema = z.object({
   notes: z.string().optional().nullable(),
   pkgType: z.string().optional().default("BOX"),
   qtyPerBox: z.coerce.number().min(0).default(0),
-  showPkgDetails: z.preprocess(
-    (val) => (val === "false" ? false : val === "true" ? true : val === false ? false : true),
-    z.boolean().default(true)
-  ),
+  showPkgDetails: z.preprocess((val) => {
+    if (val === "false" || val === false || val === "off" || val === 0 || val === "0" || val === null || val === undefined) {
+      return false;
+    }
+    if (val === "true" || val === true || val === "on" || val === 1 || val === "1") {
+      return true;
+    }
+    return Boolean(val);
+  }, z.boolean().default(false)),
   active: z.boolean().optional().default(true),
 });
 

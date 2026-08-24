@@ -99,7 +99,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
             unit: "NOS",
             pkgCount: 1,
             pkgType: "BOX",
-            showPkgDetails: true,
+            showPkgDetails: false,
             taxPercent: 18,
             taxAmount: 0,
             totalAmount: 0
@@ -114,7 +114,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
             qty: Number(item.qty || 0),
             rate: Number(item.rate || 0),
             taxPercent: Number(item.taxPercent || 0),
-            showPkgDetails: item.showPkgDetails !== undefined ? Boolean(item.showPkgDetails) : true
+            showPkgDetails: item.showPkgDetails !== undefined && item.showPkgDetails !== null ? Boolean(item.showPkgDetails) : false
         }));
         set((state) => ({ items: [...state.items, ...itemsWithIds] }));
     },
@@ -128,18 +128,19 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
                     // Auto-calculate pkgCount if qty or qtyPerBox changes
                     if ('qty' in updates || 'qtyPerBox' in updates) {
                         const q = Number(updated.qty || 0);
-                        const qpb = Number(updated.qtyPerBox || 0);
-                        if (qpb > 0) {
-                            updated.pkgCount = Math.ceil(q / qpb);
+                        const b = Number(updated.qtyPerBox || 0);
+                        if (b > 0) {
+                            updated.pkgCount = Math.ceil(q / b);
                         }
                     }
 
-                    // Recalculate item totals if qty, rate, or tax changes
-                    if ('qty' in updates || 'rate' in updates || 'taxPercent' in updates) {
-                        const calculated = calculateItemTotals(updated.qty, updated.rate, updated.taxPercent);
-                        return { ...updated, ...calculated };
-                    }
-                    return updated;
+                    // Recalculate totals
+                    const qty = Number(updated.qty || 0);
+                    const rate = Number(updated.rate || 0);
+                    const taxPercent = Number(updated.taxPercent || 0);
+                    const totals = calculateItemTotals(qty, rate, taxPercent);
+
+                    return { ...updated, ...totals };
                 }
                 return item;
             });
@@ -153,9 +154,11 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
         }));
     },
 
-    reset: () => set(initialState),
+    reset: () => {
+        set(initialState);
+    },
 
-    initialize: (data) => {
+    initialize: (data: any) => {
         if (!data) return;
         
         const items = (data.lineItems || data.items || []).map((item: any) => {
@@ -174,7 +177,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
                 pkgCount: Number(item.pkgCount || 0),
                 pkgType: item.pkgType || "BOX",
                 qtyPerBox: Number(item.qtyPerBox || 0),
-                showPkgDetails: item.showPkgDetails !== undefined ? Boolean(item.showPkgDetails) : true,
+                showPkgDetails: item.showPkgDetails !== undefined && item.showPkgDetails !== null ? Boolean(item.showPkgDetails) : false,
                 ...totals
             };
         });

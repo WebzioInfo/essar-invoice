@@ -42,7 +42,7 @@ const Row = React.memo(({ item, index, products, onOpenQuickProduct }: { item: a
                                     onClick={() => onOpenQuickProduct(item.id)}
                                     className="text-[9px] font-black uppercase text-primary-600 hover:text-primary-800 flex items-center gap-0.5 hover:underline"
                                 >
-                                    <Plus size={10} /> + New Product
+                                    <Plus size={10} />New Product
                                 </button>
                             )}
                         </div>
@@ -61,7 +61,7 @@ const Row = React.memo(({ item, index, products, onOpenQuickProduct }: { item: a
                                         unit: prod.unit || "NOS",
                                         pkgType: prod.pkgType || "BOX",
                                         qtyPerBox: Number(prod.qtyPerBox || 0),
-                                        showPkgDetails: prod.showPkgDetails !== undefined ? prod.showPkgDetails : true
+                                        showPkgDetails: prod.showPkgDetails !== undefined ? Boolean(prod.showPkgDetails) : false
                                     });
                                 }
                             }}
@@ -151,7 +151,7 @@ const Row = React.memo(({ item, index, products, onOpenQuickProduct }: { item: a
                         <input
                             type="checkbox"
                             id={`showPkgDetails_${item.id}`}
-                            checked={item.showPkgDetails !== undefined ? Boolean(item.showPkgDetails) : true}
+                            checked={Boolean(item.showPkgDetails)}
                             onChange={(e) => updateItem(item.id, { showPkgDetails: e.target.checked })}
                             className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500 cursor-pointer"
                         />

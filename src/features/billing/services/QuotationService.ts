@@ -130,7 +130,7 @@ export class QuotationService {
               pkgCount: item.pkgCount || 0,
               pkgType: item.pkgType || "BOX",
               qtyPerBox: item.qtyPerBox || 0,
-              showPkgDetails: item.showPkgDetails !== undefined ? Boolean(item.showPkgDetails) : true,
+              showPkgDetails: item.showPkgDetails !== undefined && item.showPkgDetails !== null ? Boolean(item.showPkgDetails) : false,
               totalAmount: item.totalAmount,
             })),
           },
@@ -178,7 +178,7 @@ export class QuotationService {
 
     const updated = await db.$transaction(async (tx) => {
       // 1. Ensure quotation exists and is not deleted
-      const existing = await tx.quotation.findUnique({
+      const existing = await tx.quotation.findFirst({
         where: { id: quotationId, deletedAt: null },
       });
 
@@ -240,7 +240,7 @@ export class QuotationService {
               pkgCount: item.pkgCount || 0,
               pkgType: item.pkgType || "BOX",
               qtyPerBox: item.qtyPerBox || 0,
-              showPkgDetails: item.showPkgDetails !== undefined ? Boolean(item.showPkgDetails) : true,
+              showPkgDetails: item.showPkgDetails !== undefined && item.showPkgDetails !== null ? Boolean(item.showPkgDetails) : false,
               totalAmount: item.totalAmount,
             })),
           },
@@ -271,7 +271,7 @@ export class QuotationService {
    * Fetches quotation by ID with client and line items.
    */
   static async getQuotationById(id: string) {
-    const quotation = await db.quotation.findUnique({
+    const quotation = await db.quotation.findFirst({
       where: { id, deletedAt: null },
       include: {
         client: true,

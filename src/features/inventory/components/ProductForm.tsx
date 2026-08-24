@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState, useEffect } from "react";
 import { createProductAction, updateProductAction } from "@/features/inventory/actions/productActions";
 import { Input } from "@/ui/core/Input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/ui/core/Card";
@@ -16,6 +16,14 @@ interface ProductFormProps {
 export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) {
     const { success, error } = useToast();
     const isEdit = !!product;
+
+    const [showPkgDetails, setShowPkgDetails] = useState<boolean>(
+        product?.showPkgDetails !== undefined ? Boolean(product.showPkgDetails) : false
+    );
+
+    useEffect(() => {
+        setShowPkgDetails(product?.showPkgDetails !== undefined ? Boolean(product.showPkgDetails) : false);
+    }, [product?.id, product?.showPkgDetails]);
 
     const [state, formAction, pending] = useActionState(
         async (prevState: any, formData: FormData) => {
@@ -197,14 +205,18 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
                                 </div>
                                 <div className="md:col-span-4 flex items-center gap-3 p-4 bg-slate-50 border border-slate-200 rounded-2xl">
                                     <input
-                                        type="checkbox"
-                                        id="showPkgDetails"
+                                        type="hidden"
                                         name="showPkgDetails"
-                                        value="true"
-                                        defaultChecked={product?.showPkgDetails !== undefined ? product.showPkgDetails : true}
-                                        className="w-5 h-5 rounded-lg border-slate-300 text-primary-600 focus:ring-primary-500"
+                                        value={showPkgDetails ? "true" : "false"}
                                     />
-                                    <label htmlFor="showPkgDetails" className="text-xs font-bold text-slate-700 cursor-pointer select-none">
+                                    <input
+                                        type="checkbox"
+                                        id="showPkgDetails_input"
+                                        checked={showPkgDetails}
+                                        onChange={(e) => setShowPkgDetails(e.target.checked)}
+                                        className="w-5 h-5 rounded-lg border-slate-300 text-primary-600 focus:ring-primary-500 cursor-pointer"
+                                    />
+                                    <label htmlFor="showPkgDetails_input" className="text-xs font-bold text-slate-700 cursor-pointer select-none">
                                         Show Package Details in Invoices / Quotations by default
                                     </label>
                                 </div>

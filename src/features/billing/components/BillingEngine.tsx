@@ -93,7 +93,7 @@ export function BillingEngine({ clients, products, mode = "INVOICE", initialData
                 unit: newProduct.unit || "NOS",
                 pkgType: newProduct.pkgType || "BOX",
                 qtyPerBox: Number(newProduct.qtyPerBox || 0),
-                showPkgDetails: newProduct.showPkgDetails !== undefined ? newProduct.showPkgDetails : true
+                showPkgDetails: newProduct.showPkgDetails !== undefined ? Boolean(newProduct.showPkgDetails) : false
             });
         } else if (store.items.length > 0) {
             const lastItem = store.items[store.items.length - 1];
@@ -106,7 +106,7 @@ export function BillingEngine({ clients, products, mode = "INVOICE", initialData
                 unit: newProduct.unit || "NOS",
                 pkgType: newProduct.pkgType || "BOX",
                 qtyPerBox: Number(newProduct.qtyPerBox || 0),
-                showPkgDetails: newProduct.showPkgDetails !== undefined ? newProduct.showPkgDetails : true
+                showPkgDetails: newProduct.showPkgDetails !== undefined ? Boolean(newProduct.showPkgDetails) : false
             });
         }
     };

@@ -20,7 +20,7 @@ export async function createProductAction(formData: FormData) {
         notes: (formData.get("notes") as string) || undefined,
         pkgType: (formData.get("pkgType") as string) || "BOX",
         qtyPerBox: formData.get("qtyPerBox") as string,
-        showPkgDetails: formData.get("showPkgDetails") !== "false",
+        showPkgDetails: formData.get("showPkgDetails") === "true" || formData.get("showPkgDetails") === "on",
     };
 
     try {
@@ -50,7 +50,7 @@ export async function createQuickProductAction(data: {
             sellingRate: (data.purchaseRate * 1.2).toString(), // Default 20% margin
             gstRate: "18", // Default
             unit: data.unit || "NOS",
-            showPkgDetails: data.showPkgDetails !== undefined ? data.showPkgDetails : true
+            showPkgDetails: data.showPkgDetails !== undefined ? Boolean(data.showPkgDetails) : false
         });
         revalidatePath("/products");
         return { success: true, product };
@@ -74,7 +74,7 @@ export async function updateProductAction(productId: string, formData: FormData)
         notes: (formData.get("notes") as string) || undefined,
         pkgType: (formData.get("pkgType") as string) || "BOX",
         qtyPerBox: formData.get("qtyPerBox") as string,
-        showPkgDetails: formData.get("showPkgDetails") !== "false",
+        showPkgDetails: formData.get("showPkgDetails") === "true" || formData.get("showPkgDetails") === "on",
     };
 
     try {
