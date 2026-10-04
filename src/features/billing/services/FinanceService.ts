@@ -292,6 +292,63 @@ export class FinanceService {
     }
 
     /**
+     * Checks if an account has sufficient funds for a debit operation.
+     * Only applies to CASH/BANK/EQUITY accounts where negative balance is unsafe.
+     */
+    static async validateAccountBalance(accountId: string, amount: number): Promise<{ safe: boolean; level: 'SAFE' | 'WARNING' | 'BLOCK'; message?: string }> {
+        const account = await db.account.findUnique({ where: { id: accountId } });
+        if (!account) throw new Error("Account not found");
+
+        if (!['CASH', 'BANK', 'EQUITY'].includes(account.type)) return { safe: true, level: 'SAFE' };
+
+        const balance = await this.getAccountBalance(accountId);
+        
+        if (balance < amount) {
+            return { 
+                safe: false, 
+                level: 'BLOCK', 
+                message: `Insufficient funds. Current balance: ₹${balance.toLocaleString('en-IN')}, Requested: ₹${amount.toLocaleString('en-IN')}` 
+            };
+        }
+
+        if (balance - amount < 5000) {
+            return { 
+                safe: true, 
+                level: 'WARNING', 
+                message: "Low balance warning: Account will have less than ₹5,000 after this transaction." 
+            };
+        }
+
+        return { safe: true, level: 'SAFE' };
+    }
+
+    /**
+     * Context-aware transaction labels for UI.
+     */
+    static getBusinessLabel(type: LedgerTransactionType, debitAccountType?: string, creditAccountType?: string): string {
+        switch (type) {
+            case 'INVOICE':
+                return debitAccountType === 'CLIENT' ? 'Credit Sale' : 'Cash Sale';
+            case 'PURCHASE':
+                return creditAccountType === 'SUPPLIER' ? 'Credit Purchase' : 'Cash Purchase';
+            case 'PAYMENT_RECEIVED':
+                return 'Payment Received';
+            case 'PAYMENT_MADE':
+                return 'Payment Made';
+            case 'EXPENSE':
+                return 'Business Expense';
+            case 'TRANSFER':
+                return 'Internal Transfer';
+            case 'FOUNDER_CONTRIBUTION':
+                return 'Capital Infusion';
+            case 'FOUNDER_WITHDRAWAL':
+                return 'Owner Drawal';
+            default:
+                return type ? (type as any).replace('_', ' ') : 'Transaction';
+        }
+    }
+
+    /**
      * Standardized fetch for recent ledger entries.
      */
     static async getRecentTransactions(limit: number = 10) {
@@ -313,5 +370,4 @@ export class FinanceService {
             }
         });
     }
-
 }

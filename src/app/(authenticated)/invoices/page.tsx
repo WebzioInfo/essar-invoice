@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { StatusBadge } from "@/features/billing/components/StatusBadge";
 import { InvoiceListActions } from "@/features/billing/components/InvoiceListActions";
+import { InvoicesHeaderActions } from "@/features/billing/components/InvoicesHeaderActions";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/ui/core/Card";
 import { Button } from "@/ui/core/Button";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
@@ -99,13 +100,8 @@ export default function InvoicesPage() {
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-end sm:items-center justify-between gap-4 animate-in stagger-1 w-full sm:w-auto">
-              <Link href="/invoices/new" className="w-full sm:w-auto">
-                <Button variant="secondary" size="lg" className="w-full italic shadow-xl shadow-accent-500/20 whitespace-nowrap">
-                  <Plus className="w-5 h-5 mr-1" />
-                  Issue New Invoice
-                </Button>
-              </Link>
+            <div className="w-full sm:w-auto">
+              <InvoicesHeaderActions />
             </div>
           </div>
         </CardContent>

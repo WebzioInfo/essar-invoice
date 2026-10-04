@@ -12,8 +12,11 @@ datasource db {
 // ==========================================
 
 enum UserRole {
+  SUPER_ADMIN
   ADMIN
   MANAGER
+  STAFF
+  ACCOUNTANT
   VIEWER
 }
 
@@ -107,6 +110,8 @@ model User {
   updatedAt     DateTime   @updatedAt
   deletedAt     DateTime?
   createdAudits AuditLog[] @relation("UserAudits")
+  createdExports ExportLog[] @relation("UserExports")
+  createdMigrations MigrationBatch[] @relation("UserMigrations")
 
   @@index([role])
   @@index([deletedAt])
@@ -652,4 +657,61 @@ model Expense {
 
   @@index([date])
   @@map("expenses")
+}
+
+model ExportLog {
+  id           String   @id @default(cuid())
+  userId       String?
+  exportType   String   // e.g., INVOICE_ZIP, INVOICE_MERGED_PDF
+  format       String   // PDF, THERMAL, ORIGINAL
+  invoiceCount Int
+  filters      Json?    // Store filters used for this export
+  status       String   @default("COMPLETED") // COMPLETED, FAILED, PROCESSING
+  createdAt    DateTime @default(now())
+
+  user         User?    @relation("UserExports", fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("export_logs")
+}
+
+model MigrationBatch {
+  id           String   @id @default(cuid())
+  companyId    String   @default("essar-enterprises")
+  module       String   // e.g., "CLIENTS", "PRODUCTS", "INVOICES"
+  status       String   @default("PENDING") // PENDING, COMPLETED, PARTIAL, FAILED, ROLLED_BACK
+  totalRecords Int      @default(0)
+  successCount Int      @default(0)
+  errorCount   Int      @default(0)
+  fileUrl      String?
+  mappingConfig Json?
+  errorMessage String?  @db.Text
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  userId       String?
+
+  user         User?    @relation("UserMigrations", fields: [userId], references: [id])
+  logs         MigrationLog[]
+
+  @@index([module])
+  @@index([status])
+  @@map("migration_batches")
+}
+
+model MigrationLog {
+  id               String   @id @default(cuid())
+  batchId          String
+  sourceRow        Int
+  destinationId    String?  
+  destinationModel String?  
+  status           String   // SUCCESS, ERROR
+  message          String?  @db.Text
+  rawData          Json?    
+
+  batch            MigrationBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+
+  @@index([batchId])
+  @@index([status])
+  @@map("migration_logs")
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { GlobalSearchInput } from "@/components/common/GlobalSearchInput";
 import { motion, AnimatePresence } from "framer-motion";
 import { useUIStore } from "@/lib/store/uiStore";
 import Link from "next/link";
@@ -543,13 +544,7 @@ function Header({
       </div>
 
       <div className="flex items-center gap-4 md:gap-8">
-        <div className="hidden md:flex items-center gap-3 glass px-5 py-3 rounded-2xl w-80 transition-all focus-within:ring-4 focus-within:ring-primary-500/10 focus-within:bg-white group border-white/50 shadow-xl shadow-primary-900/5">
-          <Search size={18} className="text-slate-300 group-focus-within:text-primary-500 transition-colors" />
-          <input
-            placeholder="Search system..."
-            className="bg-transparent border-none text-[13px] focus:ring-0 placeholder:text-slate-300 w-full font-bold text-slate-600"
-          />
-        </div>
+        <GlobalSearchInput />
 
         <div className="flex items-center gap-3">
           <button className="w-12 h-12 glass clay-card flex items-center justify-center text-slate-400 hover:text-primary-600 transition-all relative group border-white/50 shadow-xl shadow-primary-900/5">

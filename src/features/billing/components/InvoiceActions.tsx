@@ -3,11 +3,12 @@
 import { useState, useTransition } from "react";
 import { markInvoiceSentAction, deleteInvoiceAction } from "@/features/billing/actions/billing";
 import { useToast } from "@/context/ToastContext";
-import { Send, FileDown, CheckCircle2, Edit, Loader2, Trash2, Printer } from "lucide-react";
+import { Send, FileDown, CheckCircle2, Edit, Loader2, Trash2, Printer, Share2, MessageSquare, Mail } from "lucide-react";
 import Link from "next/link";
 import { useConfirmStore } from "@/hooks/useConfirmStore";
 import { useRouter } from "next/navigation";
 import { fetchInvoicePdf, downloadPdf, printPdf } from "@/lib/pdfService";
+import { InvoiceShareModal } from "./InvoiceShareModal";
 
 interface InvoiceActionsProps {
     invoiceId: string;
@@ -18,6 +19,12 @@ export function InvoiceActions({ invoiceId, status }: InvoiceActionsProps) {
     const [isPending, startTransition] = useTransition();
     const [isDownloading, setIsDownloading] = useState(false);
     const [isPrinting, setIsPrinting] = useState(false);
+    const [shareModalConfig, setShareModalConfig] = useState<{
+        isOpen: boolean;
+        channel: 'WHATSAPP' | 'EMAIL';
+        actionType: 'SHARE' | 'FOLLOWUP';
+    }>({ isOpen: false, channel: 'WHATSAPP', actionType: 'SHARE' });
+
     const { success, error, info } = useToast();
     const { confirm } = useConfirmStore();
     const router = useRouter();
@@ -119,6 +126,26 @@ export function InvoiceActions({ invoiceId, status }: InvoiceActionsProps) {
                 </Link>
             )}
 
+            {/* WhatsApp Share / Followup */}
+            <button
+                onClick={() => setShareModalConfig({ isOpen: true, channel: 'WHATSAPP', actionType: status === 'PAID' ? 'SHARE' : 'FOLLOWUP' })}
+                disabled={isDisabled}
+                className="h-14 px-6 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl font-black text-[11px] uppercase tracking-widest shadow-sm hover:bg-emerald-100 transition-all flex items-center gap-2.5 active:scale-[0.98] disabled:opacity-50"
+            >
+                <MessageSquare className="w-4 h-4 text-emerald-600" />
+                {status === 'PAID' ? 'WhatsApp' : 'Followup WhatsApp'}
+            </button>
+
+            {/* Email Share / Followup */}
+            <button
+                onClick={() => setShareModalConfig({ isOpen: true, channel: 'EMAIL', actionType: status === 'PAID' ? 'SHARE' : 'FOLLOWUP' })}
+                disabled={isDisabled}
+                className="h-14 px-6 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-xl font-black text-[11px] uppercase tracking-widest shadow-sm hover:bg-indigo-100 transition-all flex items-center gap-2.5 active:scale-[0.98] disabled:opacity-50"
+            >
+                <Mail className="w-4 h-4 text-indigo-600" />
+                {status === 'PAID' ? 'Email PDF' : 'Followup Email'}
+            </button>
+
             {status === "DRAFT" && (
                 <Link href={`/invoices/${invoiceId}/edit`}>
                     <button
@@ -164,6 +191,16 @@ export function InvoiceActions({ invoiceId, status }: InvoiceActionsProps) {
             >
                 <Trash2 className="w-5 h-5 group-hover:scale-110 transition-transform" />
             </button>
+
+            {/* Share Modal Render */}
+            <InvoiceShareModal
+                isOpen={shareModalConfig.isOpen}
+                onClose={() => setShareModalConfig(prev => ({ ...prev, isOpen: false }))}
+                documentType="INVOICE"
+                invoiceId={invoiceId}
+                actionType={shareModalConfig.actionType}
+                channel={shareModalConfig.channel}
+            />
         </div>
     );
 }
